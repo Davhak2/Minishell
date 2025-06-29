@@ -1,3 +1,0 @@
-# Minishell
-
-Coming soon
