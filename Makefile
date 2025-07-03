@@ -1,20 +1,47 @@
-# Makefile for minishell project
+NAME					=	minishell
 
-NAME = minishell
-SRC_DIR = src
-INCLUDE_DIR = includes
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I$(INCLUDE_DIR)
+CC						=	cc
 
-all:
-	@echo "Add build rules here"
+RM						=	rm -f
+
+MAKEFILE				=	Makefile
+
+SRC_DIR			=	src/
+
+INC_DIR				=	includes/
+
+CFLAGS					=	-I$(INC_DIR) #-Wall -Wextra -Werror
+LDFLAGS  = -lreadline -lncurses
+
+SRC				=	$(SRC_DIR)main.c \
+					$(SRC_DIR)/signals/signal_handler.c \
+					$(SRC_DIR)/signals/signal_setup.c \
+							# $(SRC_DIR)monitor.c \
+							# $(SRC_DIR)parent_monitor.c \
+							# $(SRC_DIR)philosopher.c \
+							# $(SRC_DIR)routine.c \
+							# $(SRC_DIR)semaphores.c \
+							# $(SRC_DIR)other.c \
+							# $(SRC_DIR)local_semaphores.c
+
+OBJ_DIR					=	obj
+OBJ				=	$(SRC:%.c=$(OBJ_DIR)/%.o)
+
+all:					$(NAME)
+
+$(NAME):		$(OBJ) $(INC_DIR) $(MAKEFILE)
+						$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $@
+
+$(OBJ_DIR)/%.o:			%.c
+						@mkdir -p $(dir $@)
+						$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@echo "Add clean rules here"
+						rm -rf $(OBJ_DIR)
 
-fclean: clean
-	@echo "Add fclean rules here"
+fclean:					clean
+						$(RM) $(NAME)
 
-re: fclean all
+re:						fclean all
 
-.PHONY: all clean fclean re
+.PHONY:					all clean fclean re
