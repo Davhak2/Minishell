@@ -7,6 +7,8 @@
 # include <sys/types.h>
 # include <unistd.h>
 # include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 extern volatile sig_atomic_t	g_received_signal;
 

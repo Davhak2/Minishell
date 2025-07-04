@@ -7,11 +7,14 @@ RM						=	rm -f
 MAKEFILE				=	Makefile
 
 SRC_DIR			=	src/
-
 INC_DIR				=	includes/
 
-CFLAGS					=	-I$(INC_DIR) #-Wall -Wextra -Werror
-LDFLAGS  = -lreadline -lncurses
+LIBFT_DIR				=	libft/
+LIBFT					=	$(LIBFT_DIR)libft.a
+
+CFLAGS					=	-I$(INC_DIR) -I$(LIBFT_DIR) -Wall -Wextra -Werror
+
+LDFLAGS					=	-L$(LIBFT_DIR) -lft -lreadline -lncurses
 
 SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)/signals/signal_handler.c \
@@ -29,19 +32,24 @@ OBJ				=	$(SRC:%.c=$(OBJ_DIR)/%.o)
 
 all:					$(NAME)
 
-$(NAME):		$(OBJ) $(INC_DIR) $(MAKEFILE)
+$(NAME):				$(LIBFT) $(OBJ) $(INC_DIR) $(MAKEFILE)
 						$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $@
 
 $(OBJ_DIR)/%.o:			%.c
 						@mkdir -p $(dir $@)
 						$(CC) $(CFLAGS) -c $< -o $@
 
+$(LIBFT):
+						$(MAKE) -C $(LIBFT_DIR)
+
 clean:
+						$(MAKE) -C $(LIBFT_DIR) clean
 						rm -rf $(OBJ_DIR)
 
 fclean:					clean
+						$(MAKE) -C $(LIBFT_DIR) fclean
 						$(RM) $(NAME)
 
 re:						fclean all
 
-.PHONY:					all clean fclean re
+.PHONY:					all clean fclean re libft

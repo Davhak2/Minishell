@@ -1,6 +1,8 @@
 {
 	"files.associations": {
 		"minishell.h": "c",
-		"signals.h": "c"
+		"signals.h": "c",
+		"readline.h": "c",
+		"history.h": "c"
 	}
 }
