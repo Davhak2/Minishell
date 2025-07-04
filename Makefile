@@ -8,17 +8,20 @@ MAKEFILE				=	Makefile
 
 SRC_DIR			=	src/
 INC_DIR				=	includes/
+INC_FLAGS			=	-Iincludes/ -Iutils/
 
 LIBFT_DIR				=	libft/
 LIBFT					=	$(LIBFT_DIR)libft.a
 
-CFLAGS					=	-I$(INC_DIR) -I$(LIBFT_DIR) -Wall -Wextra -Werror
+CFLAGS					=	$(INC_FLAGS) -I$(LIBFT_DIR) #-Wall -Wextra -Werror
 
 LDFLAGS					=	-L$(LIBFT_DIR) -lft -lreadline -lncurses
 
 SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)/signals/signal_handler.c \
 					$(SRC_DIR)/signals/signal_setup.c \
+					$(SRC_DIR)/utils/char_utils.c \
+					$(SRC_DIR)/utils/token_utils.c \
 							# $(SRC_DIR)monitor.c \
 							# $(SRC_DIR)parent_monitor.c \
 							# $(SRC_DIR)philosopher.c \

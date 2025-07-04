@@ -3,6 +3,17 @@
 		"minishell.h": "c",
 		"signals.h": "c",
 		"readline.h": "c",
-		"history.h": "c"
+		"history.h": "c",
+		"executor.h": "c",
+		"array": "c",
+		"charconv": "c",
+		"compare": "c",
+		"complex": "c",
+		"functional": "c",
+		"ratio": "c",
+		"tuple": "c",
+		"type_traits": "c",
+		"utility": "c",
+		"variant": "c"
 	}
 }

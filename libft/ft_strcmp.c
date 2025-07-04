@@ -1,31 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luminous <luminous@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/04 16:41:12 by luminous          #+#    #+#             */
-/*   Updated: 2025/07/04 16:41:13 by luminous         ###   ########.fr       */
+/*   Created: 2025/07/04 16:35:50 by luminous          #+#    #+#             */
+/*   Updated: 2025/07/04 16:35:51 by luminous         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strchr(const char *s, int c)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	char			*offset;
-	unsigned char	target;
-
-	target = (unsigned char)c;
-	offset = (char *)s;
-	while (*offset)
+	while (*s1 && (*s1 == *s2))
 	{
-		if (*offset == target)
-			return (offset);
-		offset++;
+		s1++;
+		s2++;
 	}
-	if (target == '\0')
-		return (offset);
-	return (NULL);
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
