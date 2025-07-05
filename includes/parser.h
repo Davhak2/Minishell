@@ -17,8 +17,9 @@ typedef enum e_tokens
 	LPAREN,           // (
 	RPAREN,           // )
 	EOF_,             // EOF
-	/* future - > VARIABLE, EXIT_STATUS, S_QUOTE, D_QUOTE, WHITESPACE, NEWLINE_,
-		CUR_DIR*/
+						/* future - > VARIABLE, EXIT_STATUS, S_QUOTE, D_QUOTE,
+							WHITESPACE, NEWLINE_,
+							CUR_DIR*/
 }					t_tokens;
 
 typedef struct s_token
@@ -33,6 +34,20 @@ typedef struct s_type
 	t_tokens		type;
 	char			*value;
 }					t_type;
+
+typedef struct s_node
+{
+	t_tokens		type;
+	char			*value;
+	struct s_node	*left;
+	struct s_node	*right;
+}					t_node;
+
+typedef struct s_cmd
+{
+	char			*cmd;
+	char			**args;
+}					t_cmd;
 
 t_token				*tokenize(char *line);
 

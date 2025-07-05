@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 16:44:13 by luminous          #+#    #+#             */
-/*   Updated: 2025/07/05 17:33:29 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/07/05 18:52:15 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 t_token	*tokenize(char *line)
 {
-	t_token *list;
-	char *ptr;
-	t_type type;
-	char *start;
-	int len;
-	char *word;
+	t_token	*list;
+	char	*ptr;
+	t_type	type;
+	char	*start;
+	int		len;
+	char	*word;
 
 	list = NULL;
 	ptr = line;
@@ -34,7 +34,6 @@ t_token	*tokenize(char *line)
 			if ((*ptr == '<' && *(ptr + 1) == '<') || (*ptr == '>' && *(ptr
 						+ 1) == '>') || (*ptr == '|' && *(ptr + 1) == '|')
 				|| (*ptr == '&' && *(ptr + 1) == '&'))
-
 			{
 				type = set_type(*ptr, 0);
 				ptr += 2;

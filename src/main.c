@@ -64,6 +64,7 @@ int	main(int argc, char **argv, char **envp)
 
 			t_token *tokens = tokenize(input);
 			print_tokens(tokens);
+
 			free_token_list(tokens);
 		}
 
