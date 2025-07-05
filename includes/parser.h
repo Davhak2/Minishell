@@ -11,11 +11,11 @@ typedef enum e_tokens
 	REDIRECT_OUT,     // >
 	REDIRECT_APPEND,  // >>
 	REDIRECT_HEREDOC, // <<
-	PIPE,             // | (для pipes)
-	AND,              // && (добавим позже)
-	OR,               // || (добавим позже)
-	LPAREN,           // ( (для приоритетов)
-	RPAREN,           // ) (для приоритетов)
+	PIPE,             // |
+	AND,              // &&
+	OR,               // ||
+	LPAREN,           // (
+	RPAREN,           // )
 	EOF_,             // EOF
 	/* future - > VARIABLE, EXIT_STATUS, S_QUOTE, D_QUOTE, WHITESPACE, NEWLINE_,
 		CUR_DIR*/

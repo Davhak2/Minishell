@@ -6,7 +6,7 @@ t_type	set_type(char op, bool mode)
 
 	type.type = WORD;
 	type.value = NULL;
-	if (mode) // Одинарные операторы
+	if (mode)
 	{
 		if (op == '|')
 		{
@@ -39,7 +39,7 @@ t_type	set_type(char op, bool mode)
 			type.value = ft_strdup("&");
 		}
 	}
-	else // Двойные операторы
+	else 
 	{
 		if (op == '<')
 		{
