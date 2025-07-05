@@ -1,46 +1,39 @@
 #ifndef PARSER_H
-#define PARSER_H
+# define PARSER_H
 
-#include "minishell.h"
+# include <stdbool.h>
+# include <stdlib.h>
 
 typedef enum e_tokens
 {
-	WORD,			  // CMD
-	REDIRECT_IN,	  // <
-	REDIRECT_OUT,	  // >
+	WORD,             // CMD, arguments, filenames
+	REDIRECT_IN,      // <
+	REDIRECT_OUT,     // >
 	REDIRECT_APPEND,  // >>
 	REDIRECT_HEREDOC, // <<
-	VARIABLE,		  // env vars
-	EXIT_STATUS,	  //$?
-	S_QUOTE,		  // '
-	D_QUOTE,		  // "
-	WHITESPACE,		  // space/tab
-	NEWLINE_,		  // EOL
-	EOF_,			  // EOF
-	PIPE,			  // |
-	AND,			  // &&
-	OR,				  // ||
-	LPAREN,			  // (
-	RPAREN,			  // )
-	CUR_DIR,		  // *
-} t_tokens;
-
-typedef enum e_node_type
-{
-	NODE_COMMAND,
-	NODE_PIPE,
-	NODE_REDIRECT,
-	NODE_AND,
-	NODE_OR,
-	NODE_PARENTHESIS,
-} t_node_type;
+	PIPE,             // | (для pipes)
+	AND,              // && (добавим позже)
+	OR,               // || (добавим позже)
+	LPAREN,           // ( (для приоритетов)
+	RPAREN,           // ) (для приоритетов)
+	EOF_,             // EOF
+	/* future - > VARIABLE, EXIT_STATUS, S_QUOTE, D_QUOTE, WHITESPACE, NEWLINE_,
+		CUR_DIR*/
+}					t_tokens;
 
 typedef struct s_token
 {
-	t_tokens type;
-	char *value;
-	struct s_token *next;
-} t_token;
+	t_tokens		type;
+	char			*value;
+	struct s_token	*next;
+}					t_token;
 
+typedef struct s_type
+{
+	t_tokens		type;
+	char			*value;
+}					t_type;
+
+t_token				*tokenize(char *line);
 
 #endif // PARSER_H

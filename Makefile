@@ -18,11 +18,12 @@ CFLAGS					=	$(INC_FLAGS) -I$(LIBFT_DIR) #-Wall -Wextra -Werror
 LDFLAGS					=	-L$(LIBFT_DIR) -lft -lreadline -lncurses
 
 SRC				=	$(SRC_DIR)main.c \
-					$(SRC_DIR)/signals/signal_handler.c \
-					$(SRC_DIR)/signals/signal_setup.c \
-					$(SRC_DIR)/utils/char_utils.c \
-					$(SRC_DIR)/utils/token_utils.c \
-							# $(SRC_DIR)monitor.c \
+					$(SRC_DIR)signals/signal_handler.c \
+					$(SRC_DIR)signals/signal_setup.c \
+					$(SRC_DIR)utils/char_utils.c \
+					$(SRC_DIR)utils/token_utils.c \
+					$(SRC_DIR)utils/lexer_utils.c \
+					$(SRC_DIR)parser/lexer.c \
 							# $(SRC_DIR)parent_monitor.c \
 							# $(SRC_DIR)philosopher.c \
 							# $(SRC_DIR)routine.c \
