@@ -20,35 +20,52 @@ typedef enum e_tokens
 						/* future - > VARIABLE, EXIT_STATUS, S_QUOTE, D_QUOTE,
 							WHITESPACE, NEWLINE_,
 							CUR_DIR*/
-}					t_tokens;
+}						t_tokens;
 
 typedef struct s_token
 {
-	t_tokens		type;
-	char			*value;
-	struct s_token	*next;
-}					t_token;
+	t_tokens			type;
+	char				*value;
+	struct s_token		*next;
+}						t_token;
 
 typedef struct s_type
 {
-	t_tokens		type;
-	char			*value;
-}					t_type;
+	t_tokens			type;
+	char				*value;
+}						t_type;
 
 typedef struct s_node
 {
-	t_tokens		type;
-	char			*value;
-	struct s_node	*left;
-	struct s_node	*right;
-}					t_node;
+	t_tokens			type;
+	char				*value;
+	struct s_node		*left;
+	struct s_node		*right;
+}						t_node;
+
+typedef struct s_redirect
+{
+	t_tokens			type;
+	char				*filename;
+	struct s_redirect	*next;
+}						t_redirect;
 
 typedef struct s_cmd
 {
-	char			*cmd;
-	char			**args;
-}					t_cmd;
+	char				*cmd;
+	char				**args;
+	t_redirect			*redirects;
+}						t_cmd;
 
-t_token				*tokenize(char *line);
+t_token					*tokenize(char *line);
+t_node					*parse_or(t_token **list);
+t_node					*parse_and(t_token **list);
+t_node					*parse_pipe(t_token **list);
+t_node					*parse_parenthesis(t_token **list);
+t_node					*parse(t_token **list);
+
+// FREE
+void					free_ast(t_node *node);
+void					free_redirects(t_redirect *redir);
 
 #endif // PARSER_H
