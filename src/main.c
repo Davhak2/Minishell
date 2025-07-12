@@ -2,46 +2,49 @@
 #include "parser.h"
 #include "utils.h"
 
-const char	*get_token_type_name(t_tokens type)
+char *get_token_type_name(t_tokens type)
 {
-	static const char *token_names[] = {
-		"WORD",             // 0
-		"REDIRECT_IN",      // 1
-		"REDIRECT_OUT",     // 2
-		"REDIRECT_APPEND",  // 3
+	static char *token_names[] = {
+		"WORD",				// 0
+		"REDIRECT_IN",		// 1
+		"REDIRECT_OUT",		// 2
+		"REDIRECT_APPEND",	// 3
 		"REDIRECT_HEREDOC", // 4
-		"PIPE",             // 5
-		"AND",              // 6
-		"OR",               // 7
-		"LPAREN",           // 8
-		"RPAREN",           // 9
-		"EOF_"              // 10
+		"PIPE",				// 5
+		"AND",				// 6
+		"OR",				// 7
+		"LPAREN",			// 8
+		"RPAREN",			// 9
+		"EOF_"				// 10
 	};
-	if (type >= 0 && type < sizeof(token_names) / sizeof(token_names[0]))
+	if (type >= 0 && type <= sizeof(token_names) / sizeof(token_names[0]))
+	{
 		return (token_names[type]);
+	}
 	return ("UNKNOWN");
 }
 
-void	print_redirects(t_redirect *redir, int depth)
+void print_redirects(t_redirect *redir, int depth)
 {
-	const char	*redir_type = get_token_type_name(redir->type);
+	char	*redir_type;
 
 	while (redir)
 	{
+		redir_type = get_token_type_name(redir->type);
 		for (int i = 0; i < depth + 1; i++)
 			printf("  ");
 		printf("↳ redirect: %s %s\n", redir_type,
-			redir->filename ? redir->filename : "(null)");
+			   redir->filename ? redir->filename : "(null)");
 		redir = redir->next;
 	}
 }
-void	print_ast(t_node *node, int depth)
+void print_ast(t_node *node, int depth)
 {
-	const char	*type;
-	t_cmd		*cmd;
+	const char *type;
+	t_cmd *cmd;
 
 	if (!node)
-		return ;
+		return;
 	type = get_token_type_name(node->type);
 	for (int i = 0; i < depth; i++)
 		printf("  ");
@@ -64,9 +67,9 @@ void	print_ast(t_node *node, int depth)
 	print_ast(node->right, depth + 1);
 }
 
-void	print_tokens(t_token *tokens)
+void print_tokens(t_token *tokens)
 {
-	int	token_count;
+	int token_count;
 
 	token_count = 0;
 	printf("\n🔍 \033[1;36mTokens found:\033[0m\n");
@@ -76,20 +79,20 @@ void	print_tokens(t_token *tokens)
 	while (tokens)
 	{
 		printf("│ %-3d │ %-15s │ %-15s │\n", ++token_count,
-			get_token_type_name(tokens->type),
-			tokens->value ? tokens->value : "(null)");
+			   get_token_type_name(tokens->type),
+			   tokens->value ? tokens->value : "(null)");
 		tokens = tokens->next;
 	}
 	printf("└─────┴─────────────────┴─────────────────┘\n");
 	printf("Total tokens: %d\n\n", token_count);
 }
 
-int	main(int argc, char **argv, char **envp)
+int main(int argc, char **argv, char **envp)
 {
-	char	*input;
-	t_token	*tokens;
-	t_token	*tokens_copy;
-	t_node	*ast;
+	char *input;
+	t_token *tokens;
+	t_token *tokens_copy;
+	t_node *ast;
 
 	(void)argc;
 	(void)argv;
@@ -99,7 +102,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		input = readline("\001\033[1;32m\002💚 🐚 ms: ➜\001\033[0m\002 ");
 		if (!input)
-			break ;
+			break;
 		// TEMPORARY
 		if (strcmp(input, "exit") == 0)
 			return (0);
@@ -117,7 +120,7 @@ int	main(int argc, char **argv, char **envp)
 				if (tokens)
 					free_token_list(tokens);
 				free(input);
-				continue ;
+				continue;
 			}
 			printf("\n🌳 \033[1;35mAST:\033[0m\n");
 			print_ast(ast, 0);
