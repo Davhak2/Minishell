@@ -24,7 +24,7 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)utils/token_utils.c \
 					$(SRC_DIR)utils/lexer_utils.c \
 					$(SRC_DIR)utils/parser_utils.c \
-					$(SRC_DIR)parser/lexer.c \
+					$(SRC_DIR)lexer/lexer.c \
 					$(SRC_DIR)parser/parser.c \
 							# $(SRC_DIR)parent_monitor.c \
 							# $(SRC_DIR)philosopher.c \
