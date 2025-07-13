@@ -102,10 +102,16 @@ int main(int argc, char **argv, char **envp)
 	{
 		input = readline("\001\033[1;32m\002💚 🐚 ms: ➜\001\033[0m\002 ");
 		if (!input)
+		{
+			printf("exit");
 			break;
+		}
 		// TEMPORARY
 		if (strcmp(input, "exit") == 0)
+		{
+			printf("exit");
 			return (0);
+		}
 		//
 		if (strlen(input) > 0)
 		{

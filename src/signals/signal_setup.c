@@ -3,5 +3,5 @@
 void init_signals()
 {
 	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, sigquit_handler); // TODO: fix CTRL + \ ""
+	signal(SIGQUIT, SIG_IGN); // TODO: fix CTRL + \ ""
 }
