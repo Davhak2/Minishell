@@ -31,7 +31,7 @@ t_node	*simple_command(t_token **list)
 			}
 			redir->type = cur->type;
 			cur = cur->next;
-			if (!cur || cur->type != WORD)
+			if (!cur || (cur->type != WORD && cur->type != SINGLE_QUOTED))
 			{
 				free_redirects(redir_head);
 				return (NULL);

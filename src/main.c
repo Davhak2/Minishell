@@ -6,17 +6,17 @@ char	*get_token_type_name(t_tokens type)
 {
 	static char *token_names[] = {
 		"WORD",             // 0
-		"SINGLE_QUOTE",		// 1
-		"REDIRECT_IN",      // 2
-		"REDIRECT_OUT",     // 3
-		"REDIRECT_APPEND",  // 4
-		"REDIRECT_HEREDOC", // 5
-		"PIPE",             // 6
-		"AND",              // 7
-		"OR",               // 8
-		"LPAREN",           // 9
-		"RPAREN",           // 10
-		"EOF_"              // 11
+		"REDIRECT_IN",      // 1
+		"REDIRECT_OUT",     // 2
+		"REDIRECT_APPEND",  // 3
+		"REDIRECT_HEREDOC", // 4
+		"PIPE",             // 5
+		"AND",              // 6
+		"OR",               // 7
+		"LPAREN",           // 8
+		"RPAREN",           // 9
+		"EOF_"              // 10
+		"SINGLE_QUOTE",     // 11
 	};
 	if (type >= 0 && type <= sizeof(token_names) / sizeof(token_names[0]))
 	{
@@ -121,7 +121,6 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		input = readline("\001\033[1;32m\002💚 🐚 ms: ➜\001\033[0m\002 ");
-		
 		// TEMPORARY
 		if (!input || strcmp(input, "exit") == 0)
 		{

@@ -8,7 +8,6 @@
 typedef enum e_tokens
 {
 	WORD,             // CMD, arguments, filenames
-	SINGLE_QUOTED,    // for expander
 	REDIRECT_IN,      // <
 	REDIRECT_OUT,     // >
 	REDIRECT_APPEND,  // >>
@@ -19,9 +18,11 @@ typedef enum e_tokens
 	LPAREN,           // (
 	RPAREN,           // )
 	EOF_,             // EOF
-						/* future - > VARIABLE, EXIT_STATUS, S_QUOTE, D_QUOTE,
-							WHITESPACE, NEWLINE_,
-							CUR_DIR*/
+	SINGLE_QUOTED,    // for expander
+
+	/* future - > VARIABLE, EXIT_STATUS, S_QUOTE, D_QUOTE,
+		WHITESPACE, NEWLINE_,
+		CUR_DIR*/
 }						t_tokens;
 
 typedef struct s_token

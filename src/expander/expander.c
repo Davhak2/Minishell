@@ -4,6 +4,8 @@
 #include <string.h>
 
 static char	*expand_word(const char *word, char **envp, int last_status);
+static char	*expand_var(const char *str, char **envp, int last_status);
+static bool	is_single_quote(const char *str);
 static char	*get_env_value(const char *name, char **envp)
 {
 	size_t	name_len;
@@ -19,8 +21,7 @@ static char	*get_env_value(const char *name, char **envp)
 	}
 	return (NULL);
 }
-static char	*expand_var(const char *str, char **envp, int last_status);
-static bool	is_single_quote(const char *str);
+
 
 void	expand_ast(t_node *node, char **envp, int last_status)
 {
