@@ -36,7 +36,7 @@ t_node	*simple_command(t_token **list)
 				free_redirects(redir_head);
 				return (NULL);
 			}
-			redir->filename = cur->value;
+			redir->filename = ft_strdup(cur->value);
 			redir->next = redir_head;
 			redir_head = redir;
 		}
@@ -55,7 +55,7 @@ t_node	*simple_command(t_token **list)
 			|| cur->type == REDIRECT_APPEND))
 	{
 		if (cur->type == WORD)
-			argv[i++] = cur->value;
+			argv[i++] = ft_strdup(cur->value);
 		else
 			cur = cur->next;
 		cur = cur->next;

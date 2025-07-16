@@ -1,3 +1,4 @@
+#include "expander.h"
 #include "minishell.h"
 #include "parser.h"
 #include "utils.h"
@@ -159,6 +160,9 @@ int	main(int argc, char **argv, char **envp)
 				continue ;
 			}
 			printf("\n🌳 \033[1;35mAST:\033[0m\n");
+			print_ast(ast, 0);
+			expand_ast(ast, envp, 0);
+			printf("\n\n🌳 \033[1;35mAST after expand:\033[0m\n");
 			print_ast(ast, 0);
 			if (ast)
 				free_ast(ast);

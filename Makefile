@@ -13,7 +13,7 @@ INC_FLAGS			=	-Iincludes/ -Iutils/
 LIBFT_DIR				=	libft/
 LIBFT					=	$(LIBFT_DIR)libft.a
 
-CFLAGS					=	$(INC_FLAGS) -I$(LIBFT_DIR) #-Wall -Wextra -Werror
+CFLAGS					=	-g $(INC_FLAGS) -I$(LIBFT_DIR) #-Wall -Wextra -Werror
 
 LDFLAGS					=	-L$(LIBFT_DIR) -lft -lreadline -lncurses
 
@@ -26,6 +26,7 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)utils/parser_utils.c \
 					$(SRC_DIR)lexer/lexer.c \
 					$(SRC_DIR)parser/parser.c \
+					$(SRC_DIR)expander/expander.c \
 							# $(SRC_DIR)parent_monitor.c \
 							# $(SRC_DIR)philosopher.c \
 							# $(SRC_DIR)routine.c \
