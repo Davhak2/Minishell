@@ -30,7 +30,7 @@ static char	*expand_word(const char *word, char **envp, int last_status)
 	char	*val;
 	size_t	vlen;
 	size_t	var_len;
-	char	var_name[128];
+	char	*var_name;
 
 	i = 0;
 	j = 0;
@@ -48,7 +48,7 @@ static char	*expand_word(const char *word, char **envp, int last_status)
 			{
 				val = expand_var("?", envp, last_status);
 				vlen = ft_strlen(val);
-				memcpy(result + j, val, vlen);
+				ft_memcpy(result + j, val, vlen);
 				j += vlen;
 				free(val);
 				i++;
@@ -58,12 +58,27 @@ static char	*expand_word(const char *word, char **envp, int last_status)
 				while (word[i] && (ft_isalnum(word[i]) || word[i] == '_'))
 					i++;
 				var_len = i - var_start;
-				ft_strlcpy(var_name, word + var_start, var_len + 1);
-				val = expand_var(var_name, envp, last_status);
-				vlen = ft_strlen(val);
-				memcpy(result + j, val, vlen);
-				j += vlen;
-				free(val);
+				if (var_len > 0)
+				{
+					var_name = malloc(var_len + 1);
+					if (!var_name)
+					{
+						free(result);
+						return (NULL);
+					}
+					ft_memcpy(var_name, word + var_start, var_len);
+					var_name[var_len] = '\0';
+					val = expand_var(var_name, envp, last_status);
+					vlen = ft_strlen(val);
+					ft_memcpy(result + j, val, vlen);
+					j += vlen;
+					free(val);
+					free(var_name);
+				}
+				else
+				{
+					result[j++] = '$';
+				}
 			}
 		}
 		else
