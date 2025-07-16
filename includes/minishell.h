@@ -18,6 +18,8 @@
 # include "signals.h"
 # include "utils.h"
 
+extern int g_last_status;
+
 // Main structures and functions for minishell
 
 #endif // MINISHELL_H

@@ -11,9 +11,3 @@ void	sigint_handler(int sig)
     rl_redisplay();
 }
 
-void	sigquit_handler(int sig)
-{
-	g_received_signal = sig;
-
-	return;
-}

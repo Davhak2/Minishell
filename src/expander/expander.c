@@ -4,7 +4,6 @@
 #include <string.h>
 
 static char	*expand_word(const char *word, char **envp, int last_status);
-static char	*get_env_value(const char *name, char **envp);
 
 static char	*expand_var(const char *str, char **envp, int last_status)
 {
@@ -103,8 +102,7 @@ void	expand_ast(t_node *node, char **envp, int last_status)
 		while (cmd->args && cmd->args[i])
 		{
 			char *expanded = expand_word(cmd->args[i], envp, last_status);
-			if (expanded != cmd->args[i])
-				free(cmd->args[i]);
+			free(cmd->args[i]);
 			cmd->args[i] = expanded;
 			i++;
 		}
@@ -112,8 +110,7 @@ void	expand_ast(t_node *node, char **envp, int last_status)
 		while (redir)
 		{
 			char *expanded = expand_word(redir->filename, envp, last_status);
-			if (expanded != redir->filename)
-				free(redir->filename);
+			free(redir->filename);
 			redir->filename = expanded;
 			redir = redir->next;
 		}
