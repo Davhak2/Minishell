@@ -75,7 +75,7 @@ static char	*expand_word(const char *word, char **envp, int last_status)
 	return (result);
 }
 
-static char	*get_env_value(const char *name, char **envp)
+char	*get_env_value(const char *name, char **envp)
 {
 	size_t	name_len;
 	int		i;
