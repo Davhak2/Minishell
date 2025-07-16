@@ -23,6 +23,7 @@
 		"optional": "c",
 		"ostream": "c",
 		"system_error": "c",
-		"string.h": "c"
+		"string.h": "c",
+		"errors.h": "c"
 	}
 }

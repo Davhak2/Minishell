@@ -3,6 +3,8 @@
 #include "parser.h"
 #include "utils.h"
 
+int		g_last_status = 0;
+
 char	*get_token_type_name(t_tokens type)
 {
 	static char *token_names[] = {
@@ -117,7 +119,6 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	g_last_status = 0;
 	init_signals();
 	while (1)
 	{
