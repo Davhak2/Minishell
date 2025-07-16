@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 16:44:13 by luminous          #+#    #+#             */
-/*   Updated: 2025/07/13 12:20:18 by letto            ###   ########.fr       */
+/*   Updated: 2025/07/16 16:38:14 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,66 +73,12 @@ t_token	*tokenize(char *line)
 				return (free_token_list(list), NULL);
 			ft_strlcpy(word, start, len + 1);
 			type.type = WORD;
+			if (quote == '\'')
+				type.type = SINGLE_QUOTED;
 			type.value = word;
 			create_and_add(&list, type);
 			if (*ptr == quote)
 				ptr++;
-		}
-		else if (*ptr == '$')
-		{
-			type.type = WORD;
-			word = malloc(2);
-			if (!word)
-				return (free_token_list(list), NULL);
-			word[0] = '$';
-			word[1] = '\0';
-			type.value = word;
-			create_and_add(&list, type);
-			ptr++;
-			if (*ptr == '{')
-			{
-				ptr++;
-				start = ptr;
-				while (*ptr && *ptr != '}')
-					ptr++;
-				len = ptr - start;
-				word = malloc(len + 1);
-				if (!word)
-					return (free_token_list(list), NULL);
-				ft_strlcpy(word, start, len + 1);
-				type.type = WORD;
-				type.value = word;
-				create_and_add(&list, type);
-				if (*ptr == '}')
-					ptr++;
-			}
-			else if (*ptr && (ft_isalpha(*ptr) || *ptr == '_'))
-			{
-				start = ptr;
-				while (*ptr && (ft_isalnum(*ptr) || *ptr == '_'))
-					ptr++;
-				len = ptr - start;
-				word = malloc(len + 1);
-				if (!word)
-					return (free_token_list(list), NULL);
-				ft_strlcpy(word, start, len + 1);
-				type.type = WORD;
-				type.value = word;
-				create_and_add(&list, type);
-			}
-			else if (*ptr)
-			{
-				start = ptr;
-				ptr++;
-				len = ptr - start;
-				word = malloc(len + 1);
-				if (!word)
-					return (free_token_list(list), NULL);
-				ft_strlcpy(word, start, len + 1);
-				type.type = WORD;
-				type.value = word;
-				create_and_add(&list, type);
-			}
 		}
 	}
 	return (list);

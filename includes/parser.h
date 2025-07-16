@@ -2,12 +2,13 @@
 # define PARSER_H
 
 # include <stdbool.h>
-# include <stdlib.h>
 # include <stdio.h>
+# include <stdlib.h>
 
 typedef enum e_tokens
 {
 	WORD,             // CMD, arguments, filenames
+	SINGLE_QUOTED,    // for expander
 	REDIRECT_IN,      // <
 	REDIRECT_OUT,     // >
 	REDIRECT_APPEND,  // >>

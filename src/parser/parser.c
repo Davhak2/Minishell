@@ -1,7 +1,7 @@
 #include "parser.h"
 #include "utils.h"
 
-t_node	*simple_command(t_token **list) // TODO: fix segfault
+t_node	*simple_command(t_token **list)
 {
 	int			argc;
 	t_token		*cur;
@@ -15,11 +15,11 @@ t_node	*simple_command(t_token **list) // TODO: fix segfault
 	argc = 0;
 	cur = *list;
 	redir_head = NULL;
-	while (cur && (cur->type == WORD || cur->type == REDIRECT_IN
-			|| cur->type == REDIRECT_OUT || cur->type == REDIRECT_HEREDOC
-			|| cur->type == REDIRECT_APPEND))
+	while (cur && (cur->type == WORD || cur->type == SINGLE_QUOTED
+			|| cur->type == REDIRECT_IN || cur->type == REDIRECT_OUT
+			|| cur->type == REDIRECT_HEREDOC || cur->type == REDIRECT_APPEND))
 	{
-		if (cur->type == WORD)
+		if (cur->type == WORD || cur->type == SINGLE_QUOTED)
 			argc++;
 		else
 		{
