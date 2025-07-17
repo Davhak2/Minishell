@@ -27,6 +27,7 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)lexer/lexer.c \
 					$(SRC_DIR)parser/parser.c \
 					$(SRC_DIR)expander/expander.c \
+					$(SRC_DIR)executor/executor.c \
 					$(SRC_DIR)builtins/ft_pwd.c \
 					$(SRC_DIR)builtins/ft_echo.c \
 					$(SRC_DIR)builtins/ft_cd.c \
