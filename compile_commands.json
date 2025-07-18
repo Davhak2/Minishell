@@ -1,0 +1,932 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_atoi.o",
+      "ft_atoi.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_atoi.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_atoi.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_bzero.o",
+      "ft_bzero.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_bzero.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_bzero.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_calloc.o",
+      "ft_calloc.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_calloc.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_calloc.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_isalnum.o",
+      "ft_isalnum.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_isalnum.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_isalnum.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_isalpha.o",
+      "ft_isalpha.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_isalpha.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_isalpha.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_isascii.o",
+      "ft_isascii.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_isascii.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_isascii.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_isdigit.o",
+      "ft_isdigit.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_isdigit.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_isdigit.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_isprint.o",
+      "ft_isprint.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_isprint.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_isprint.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_memchr.o",
+      "ft_memchr.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_memchr.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_memchr.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_memcmp.o",
+      "ft_memcmp.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_memcmp.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_memcmp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_memcpy.o",
+      "ft_memcpy.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_memcpy.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_memcpy.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_memmove.o",
+      "ft_memmove.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_memmove.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_memmove.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_memset.o",
+      "ft_memset.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_memset.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_memset.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_putchar_fd.o",
+      "ft_putchar_fd.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_putchar_fd.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_putchar_fd.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_putendl_fd.o",
+      "ft_putendl_fd.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_putendl_fd.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_putendl_fd.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_putstr_fd.o",
+      "ft_putstr_fd.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_putstr_fd.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_putstr_fd.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strchr.o",
+      "ft_strchr.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strchr.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strchr.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strdup.o",
+      "ft_strdup.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strdup.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strdup.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strlcat.o",
+      "ft_strlcat.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strlcat.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strlcat.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strlcpy.o",
+      "ft_strlcpy.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strlcpy.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strlcpy.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strlen.o",
+      "ft_strlen.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strlen.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strlen.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strncmp.o",
+      "ft_strncmp.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strncmp.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strncmp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strrchr.o",
+      "ft_strrchr.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strrchr.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strrchr.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_tolower.o",
+      "ft_tolower.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_tolower.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_tolower.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_toupper.o",
+      "ft_toupper.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_toupper.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_toupper.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_itoa.o",
+      "ft_itoa.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_itoa.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_itoa.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_split.o",
+      "ft_split.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_split.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_split.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_putnbr_fd.o",
+      "ft_putnbr_fd.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_putnbr_fd.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_putnbr_fd.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_substr.o",
+      "ft_substr.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_substr.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_substr.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strtrim.o",
+      "ft_strtrim.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strtrim.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strtrim.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strjoin.o",
+      "ft_strjoin.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strjoin.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strjoin.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strmapi.o",
+      "ft_strmapi.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strmapi.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strmapi.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strnstr.o",
+      "ft_strnstr.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strnstr.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strnstr.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_striteri.o",
+      "ft_striteri.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_striteri.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_striteri.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strcmp.o",
+      "ft_strcmp.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strcmp.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strcmp.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_strstr.o",
+      "ft_strstr.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strstr.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_strstr.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_free_array.o",
+      "ft_free_array.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_free_array.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_free_array.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_lstnew_bonus.o",
+      "ft_lstnew_bonus.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstnew_bonus.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstnew_bonus.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_lstadd_front_bonus.o",
+      "ft_lstadd_front_bonus.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstadd_front_bonus.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstadd_front_bonus.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_lstsize_bonus.o",
+      "ft_lstsize_bonus.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstsize_bonus.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstsize_bonus.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_lstlast_bonus.o",
+      "ft_lstlast_bonus.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstlast_bonus.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstlast_bonus.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_lstadd_back_bonus.o",
+      "ft_lstadd_back_bonus.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstadd_back_bonus.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstadd_back_bonus.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_lstdelone_bonus.o",
+      "ft_lstdelone_bonus.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstdelone_bonus.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstdelone_bonus.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_lstclear_bonus.o",
+      "ft_lstclear_bonus.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstclear_bonus.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstclear_bonus.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_lstiter_bonus.o",
+      "ft_lstiter_bonus.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstiter_bonus.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstiter_bonus.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "ft_lstmap_bonus.o",
+      "ft_lstmap_bonus.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell/libft",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstmap_bonus.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/libft/ft_lstmap_bonus.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/main.o",
+      "src/main.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/main.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/signals/signal_handler.o",
+      "src/signals/signal_handler.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/signals/signal_handler.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/signals/signal_handler.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/signals/signal_setup.o",
+      "src/signals/signal_setup.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/signals/signal_setup.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/signals/signal_setup.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/utils/char_utils.o",
+      "src/utils/char_utils.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/utils/char_utils.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/utils/char_utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/utils/token_utils.o",
+      "src/utils/token_utils.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/utils/token_utils.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/utils/token_utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/utils/lexer_utils.o",
+      "src/utils/lexer_utils.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/utils/lexer_utils.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/utils/lexer_utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/utils/parser_utils.o",
+      "src/utils/parser_utils.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/utils/parser_utils.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/utils/parser_utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/utils/free_shell.o",
+      "src/utils/free_shell.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/utils/free_shell.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/utils/free_shell.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/lexer/lexer.o",
+      "src/lexer/lexer.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/lexer/lexer.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/lexer/lexer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/parser/parser.o",
+      "src/parser/parser.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/parser/parser.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/parser/parser.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/expander/expander.o",
+      "src/expander/expander.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/expander/expander.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/expander/expander.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/executor/executor.o",
+      "src/executor/executor.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/executor/executor.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/executor/executor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/builtins/ft_pwd.o",
+      "src/builtins/ft_pwd.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/builtins/ft_pwd.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/builtins/ft_pwd.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/builtins/ft_echo.o",
+      "src/builtins/ft_echo.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/builtins/ft_echo.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/builtins/ft_echo.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/builtins/ft_cd.o",
+      "src/builtins/ft_cd.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/builtins/ft_cd.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/builtins/ft_cd.o"
+  }
+]

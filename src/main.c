@@ -18,7 +18,7 @@ char	*get_token_type_name(t_tokens type)
 		"OR",               // 7
 		"LPAREN",           // 8
 		"RPAREN",           // 9
-		"EOF_"              // 10
+		"EOF_",              // 10
 		"SINGLE_QUOTE",     // 11
 	};
 	if (type >= 0 && type <= sizeof(token_names) / sizeof(token_names[0]))

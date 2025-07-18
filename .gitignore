@@ -4,3 +4,4 @@ minishell
 *.a
 test.c
 a.out
+.cache
