@@ -35,26 +35,20 @@ char *exec_path(t_cmd *cmd, char **envp)
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (NULL);
-
-	// If it's a direct path
 	if (ft_strchr(cmd->args[0], '/'))
 	{
 		if (access(cmd->args[0], F_OK | X_OK) == 0)
 			return (ft_strdup(cmd->args[0]));
 		return (NULL);
 	}
-
-	// Get PATH from environment
 	env_path = my_getenv("PATH", envp);
 	if (!env_path)
 		return (NULL);
-
 	dirs = ft_split(env_path, ':');
 	if (!dirs)
 		return (NULL);
-
-	i = 0;
-	while (dirs[i])
+	i = -1;
+	while (dirs[++i])
 	{
 		part = ft_strjoin(dirs[i], "/");
 		if (!part)
@@ -75,7 +69,6 @@ char *exec_path(t_cmd *cmd, char **envp)
 			return (full_path);
 		}
 		free(full_path);
-		i++;
 	}
 	ft_free_array(dirs);
 	return (NULL);
