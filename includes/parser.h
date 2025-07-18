@@ -60,6 +60,13 @@ typedef struct s_cmd
 	t_redirect			*redirects;
 }						t_cmd;
 
+typedef struct s_shell
+{
+	t_node				*node;
+	t_redirect			*redir;
+	t_token				*token;
+}						t_shell;
+
 t_token					*tokenize(char *line);
 t_node					*parse_or(t_token **list);
 t_node					*parse_and(t_token **list);

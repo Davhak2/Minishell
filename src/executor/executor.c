@@ -74,7 +74,6 @@ char *exec_path(t_cmd *cmd, char **envp)
 	return (NULL);
 }
 
-
 int execute_command(t_cmd *cmd, char **envp)
 {
 	pid_t pid;
@@ -109,7 +108,7 @@ int execute_command(t_cmd *cmd, char **envp)
 	}
 }
 
-void execute_ast(t_node *node, char **envp, int last_status)
+void execute_ast(t_node *node, char **envp, int last_status, t_shell *shell)
 {
 	if (!node)
 		return;
@@ -123,44 +122,70 @@ void execute_ast(t_node *node, char **envp, int last_status)
 	else if (node->type == PIPE)
 	{
 		int pipefd[2];
+		pid_t pid1, pid2;
+		int status;
+
 		if (pipe(pipefd) == -1)
 		{
 			perror("pipe");
 			return;
 		}
-
-		pid_t pid = fork();
-		if (pid == 0)
+		pid1 = fork();
+		if (pid1 == 0)
 		{
-			close(pipefd[0]);
 			dup2(pipefd[1], STDOUT_FILENO);
+			close(pipefd[0]);
 			close(pipefd[1]);
-			execute_ast(node->left, envp, last_status);
+			execute_ast(node->left, envp, last_status, shell);
+			free_shell(shell);
 			exit(0);
 		}
-		else if (pid > 0)
+		else if (pid1 < 0)
 		{
-			close(pipefd[1]);
-			dup2(pipefd[0], STDIN_FILENO);
+			perror("fork");
 			close(pipefd[0]);
-			execute_ast(node->right, envp, last_status);
-			waitpid(pid, NULL, 0);
+			close(pipefd[1]);
+			return;
 		}
+
+		pid2 = fork();
+		if (pid2 == 0)
+		{
+			dup2(pipefd[0], STDIN_FILENO);
+			close(pipefd[1]);
+			close(pipefd[0]);
+			execute_ast(node->right, envp, last_status, shell);
+			free_shell(shell);
+			exit(0);
+		}
+		else if (pid2 < 0)
+		{
+			perror("fork");
+			close(pipefd[0]);
+			close(pipefd[1]);
+			waitpid(pid1, NULL, 0);
+			return;
+		}
+		close(pipefd[0]);
+		close(pipefd[1]);
+		waitpid(pid1, NULL, 0);
+		waitpid(pid2, &status, 0);
+		last_status = WEXITSTATUS(status);
 	}
 	else if (node->type == AND)
 	{
-		execute_ast(node->left, envp, last_status);
+		execute_ast(node->left, envp, last_status, shell);
 		if (last_status == 0)
 		{
-			execute_ast(node->right, envp, last_status);
+			execute_ast(node->right, envp, last_status, shell);
 		}
 	}
 	else if (node->type == OR)
 	{
-		execute_ast(node->left, envp, last_status);
+		execute_ast(node->left, envp, last_status, shell);
 		if (last_status != 0)
 		{
-			execute_ast(node->right, envp, last_status);
+			execute_ast(node->right, envp, last_status, shell);
 		}
 	}
 }

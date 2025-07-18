@@ -117,9 +117,12 @@ int	main(int argc, char **argv, char **envp)
 	char	*tmp;
 	char	*joined;
 	char	*test;
+	t_shell *shell;
+
 
 	(void)argc;
 	(void)argv;
+	shell = (t_shell *)malloc(sizeof(t_shell));
 	init_signals();
 	while (1)
 	{
@@ -127,6 +130,7 @@ int	main(int argc, char **argv, char **envp)
 		// TEMPORARY
 		if (!input || strcmp(input, "exit") == 0)
 		{
+			free_shell(shell);
 			printf("exit");
 			break ;
 		}
@@ -150,9 +154,12 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(input);
 			tokens = tokenize(input);
+			shell->token = tokens;
 			print_tokens(tokens);
 			tokens_copy = tokens;
 			ast = parse(&tokens_copy);
+			shell->node = ast;
+			shell->redir = NULL; // temporary
 			if (!ast)
 			{
 				printf("\033[1;31mParse error: invalid syntax or memory error\033[0m\n");
@@ -164,7 +171,7 @@ int	main(int argc, char **argv, char **envp)
 			printf("\n🌳 \033[1;35mAST:\033[0m\n");
 			print_ast(ast, 0);
 			expand_ast(ast, envp, g_last_status);
-			execute_ast(ast, envp, g_last_status);
+			execute_ast(ast, envp, g_last_status, shell);
 			printf("\n\n🌳 \033[1;35mAST after expand:\033[0m\n");
 			print_ast(ast, 0);
 			if (ast)

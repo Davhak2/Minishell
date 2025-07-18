@@ -21,4 +21,7 @@ void	free_token_list(t_token *head);
 t_type	set_type(char op, bool mode);
 void	create_and_add(t_token **list, t_type type);
 
+void	free_shell(t_shell *shell);
+
+
 #endif // UTILS_H
