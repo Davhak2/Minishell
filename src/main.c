@@ -155,11 +155,11 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 			tokens = tokenize(input);
 			shell->token = tokens;
-			// print_tokens(tokens);
+			print_tokens(tokens);
 			tokens_copy = tokens;
 			ast = parse(&tokens_copy);
 			shell->node = ast;
-			shell->redir = NULL; // temporary
+			shell->redir = NULL;
 			if (!ast)
 			{
 				printf("\033[1;31mParse error: invalid syntax or memory error\033[0m\n");
