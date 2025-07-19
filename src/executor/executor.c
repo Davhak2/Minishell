@@ -138,6 +138,7 @@ void execute_ast(t_node *node, char **envp, int last_status, t_shell *shell)
 			close(pipefd[1]);
 			execute_ast(node->left, envp, last_status, shell);
 			free_shell(shell);
+			close(STDOUT_FILENO);
 			exit(0);
 		}
 		else if (pid1 < 0)
@@ -156,6 +157,7 @@ void execute_ast(t_node *node, char **envp, int last_status, t_shell *shell)
 			close(pipefd[0]);
 			execute_ast(node->right, envp, last_status, shell);
 			free_shell(shell);
+			close(STDIN_FILENO);
 			exit(0);
 		}
 		else if (pid2 < 0)
