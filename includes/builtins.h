@@ -2,7 +2,8 @@
 # define BUILTINS_H
 
 // Prototypes for built-in commands
-# include "minishell.h"
+
+#include "libft.h"
 
 // TODO: global exit status handling
 

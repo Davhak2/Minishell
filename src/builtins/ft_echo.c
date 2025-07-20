@@ -1,4 +1,5 @@
 #include "builtins.h"
+#include "stdio.h"
 
 int	ft_echo(char **args)
 {

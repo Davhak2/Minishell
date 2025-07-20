@@ -2,6 +2,9 @@
 #include "minishell.h"
 #include "parser.h"
 #include "utils.h"
+#include "libft.h"
+#include "signals.h"
+#include "executor.h"
 
 int		g_last_status = 0;
 

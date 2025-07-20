@@ -1,5 +1,5 @@
+#include "libft.h"
 #include "parser.h"
-#include "utils.h"
 
 t_node	*simple_command(t_token **list)
 {

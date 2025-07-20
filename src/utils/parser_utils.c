@@ -1,5 +1,5 @@
 #include "parser.h"
-#include "minishell.h"
+#include "libft.h"
 
 void	free_redirects(t_redirect *redir)
 {
@@ -25,7 +25,7 @@ void	free_ast(t_node *node)
 		t_cmd *cmd = (t_cmd *)node->value;
 		if (cmd->args)
 			ft_free_array(cmd->args);// axper akazivaeca dvuxmerni masivy prosto free() einq anum dra hamar er memory leak
-		if (cmd->redirects)
+		if (cmd->redirects) // KAYF
 			free_redirects(cmd->redirects);
 		free(cmd);
 	}

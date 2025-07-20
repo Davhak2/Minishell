@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "libft.h"
 
 bool	is_whitespace(char c)
 {

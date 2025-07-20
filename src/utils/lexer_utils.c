@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "libft.h"
 
 t_type	set_type(char op, bool mode)
 {

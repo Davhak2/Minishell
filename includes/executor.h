@@ -1,7 +1,6 @@
 #ifndef EXECUTOR_H
 # define EXECUTOR_H
 
-# include "minishell.h"
 # include "parser.h"
 
 int		execute_command(t_cmd *cmd, char **envp);

@@ -1,10 +1,8 @@
 #ifndef UTILS_H
 # define UTILS_H
 
-# include "libft.h"
 # include "parser.h"
 # include <stdbool.h>
-# include <stdlib.h>
 
 // char_utils
 bool	is_whitespace(char c);
@@ -22,6 +20,5 @@ t_type	set_type(char op, bool mode);
 void	create_and_add(t_token **list, t_type type);
 
 void	free_shell(t_shell *shell);
-
 
 #endif // UTILS_H
