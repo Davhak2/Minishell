@@ -129,8 +129,13 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		input = readline("\001\033[1;32m\002💚 🐚 ms: ➜\001\033[0m\002 ");
-		
-		shell = (t_shell *)malloc(sizeof(t_shell));
+		if (!input)
+		{
+			printf ("exit\n");
+			break ;
+		}
+		else
+			shell = (t_shell *)malloc(sizeof(t_shell));
 		if (!shell)
 			break ;
 		while (has_unclosed_quote(input))
@@ -178,6 +183,8 @@ int	main(int argc, char **argv, char **envp)
 			// 	free_token_list(tokens);
 			free_shell(shell);
 		}
+		// if (shell)
+		// 	free_shell(shell);
 		free(input);
 	}
 	return (0);

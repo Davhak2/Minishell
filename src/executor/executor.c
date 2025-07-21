@@ -31,7 +31,7 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-int	execute_builtin(t_cmd *cmd, char **envp)
+int	execute_builtin(t_cmd *cmd, char **envp, t_shell *shell)
 {
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
@@ -42,7 +42,7 @@ int	execute_builtin(t_cmd *cmd, char **envp)
 	if (ft_strcmp(cmd->args[0], "pwd") == 0)
 		return (ft_pwd(envp));
 	if (ft_strcmp(cmd->args[0], "exit") == 0)
-		return (ft_exit(cmd->args));
+		return (ft_exit(cmd->args, shell));
 	if (ft_strcmp(cmd->args[0], "export") == 0)
 		return (ft_export(cmd->args, envp));
 	return (1);
@@ -206,7 +206,7 @@ char	*exec_path(t_cmd *cmd, char **envp)
 	return (NULL);
 }
 
-int	execute_command(t_cmd *cmd, char **envp)
+int	execute_command(t_cmd *cmd, char **envp, t_shell *shell)
 {
 	pid_t				pid;
 	char				*path;
@@ -235,7 +235,7 @@ int	execute_command(t_cmd *cmd, char **envp)
 	}
 	if (is_builtin(cmd->args[0]))
 	{
-		status = execute_builtin(cmd, envp);
+		status = execute_builtin(cmd, envp, shell);
 		if (redirect_mode)
 		{
 			dup2(stdin_fd, 0);
@@ -304,7 +304,7 @@ void	execute_ast(t_node *node, char **envp, int last_status, t_shell *shell)
 	if (node->type == WORD && node->value)
 	{
 		cmd = (t_cmd *)node->value;
-		status = execute_command(cmd, envp);
+		status = execute_command(cmd, envp, shell);
 		last_status = status;
 	}
 	else if (node->type == PIPE)
