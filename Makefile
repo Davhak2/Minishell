@@ -32,6 +32,8 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)builtins/ft_pwd.c \
 					$(SRC_DIR)builtins/ft_echo.c \
 					$(SRC_DIR)builtins/ft_cd.c \
+					$(SRC_DIR)builtins/ft_exit.c \
+					$(SRC_DIR)builtins/ft_export.c \
 							# $(SRC_DIR)parent_monitor.c \
 							# $(SRC_DIR)philosopher.c \
 							# $(SRC_DIR)routine.c \

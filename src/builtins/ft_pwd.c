@@ -3,6 +3,6 @@
 
 int	ft_pwd(char **envp)
 {
-	printf("\n%s", get_env_value("PWD", envp));
+	printf("%s\n", get_env_value("PWD", envp));
 	return (0);
 }

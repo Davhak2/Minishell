@@ -928,5 +928,37 @@
     "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
     "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/builtins/ft_cd.c",
     "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/builtins/ft_cd.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/builtins/ft_exit.o",
+      "src/builtins/ft_exit.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/builtins/ft_exit.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/builtins/ft_exit.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-g",
+      "-Iincludes/",
+      "-Iutils/",
+      "-Ilibft/",
+      "-c",
+      "-o",
+      "obj/src/builtins/ft_export.o",
+      "src/builtins/ft_export.c"
+    ],
+    "directory": "/home/letto/Desktop/DESKTOP/github/minishell",
+    "file": "/home/letto/Desktop/DESKTOP/github/minishell/src/builtins/ft_export.c",
+    "output": "/home/letto/Desktop/DESKTOP/github/minishell/obj/src/builtins/ft_export.o"
   }
 ]

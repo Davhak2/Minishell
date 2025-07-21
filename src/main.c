@@ -129,12 +129,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		input = readline("\001\033[1;32m\002💚 🐚 ms: ➜\001\033[0m\002 ");
-		// TEMPORARY
-		if (!input || strcmp(input, "exit") == 0)
-		{
-			printf("exit");
-			break ;
-		}
+		
 		shell = (t_shell *)malloc(sizeof(t_shell));
 		if (!shell)
 			break ;
@@ -158,7 +153,7 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 			tokens = tokenize(input);
 			shell->token = tokens;
-			print_tokens(tokens);
+			// print_tokens(tokens);
 			tokens_copy = tokens;
 			ast = parse(&tokens_copy);
 			shell->node = ast;
@@ -171,12 +166,12 @@ int	main(int argc, char **argv, char **envp)
 				free(input);
 				continue ;
 			}
-			printf("\n🌳 \033[1;35mAST:\033[0m\n");
-			print_ast(ast, 0);
+			// printf("\n🌳 \033[1;35mAST:\033[0m\n");
+			// print_ast(ast, 0);
 			expand_ast(ast, envp, g_last_status);
 			execute_ast(ast, envp, g_last_status, shell);
-			printf("\n\n🌳 \033[1;35mAST after expand:\033[0m\n");
-			print_ast(ast, 0);
+			// printf("\n\n🌳 \033[1;35mAST after expand:\033[0m\n");
+			// print_ast(ast, 0);
 			// if (ast)
 			// 	free_ast(ast);
 			// if (tokens)

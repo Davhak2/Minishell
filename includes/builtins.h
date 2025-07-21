@@ -1,10 +1,6 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-// Prototypes for built-in commands
-
-#include "libft.h"
-
 // TODO: global exit status handling
 
 int	ft_echo(char **args);
