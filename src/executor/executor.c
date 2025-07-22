@@ -28,6 +28,8 @@ int	is_builtin(char *cmd)
 		return (1);
 	if (ft_strcmp(cmd, "export") == 0)
 		return (1);
+	if (ft_strcmp(cmd, "env") == 0)
+		return (1);
 	return (0);
 }
 
@@ -45,6 +47,8 @@ int	execute_builtin(t_cmd *cmd, t_shell *shell)
 		return (ft_exit(cmd->args, shell));
 	if (ft_strcmp(cmd->args[0], "export") == 0)
 		return (ft_export(cmd->args, shell));
+	if (ft_strcmp(cmd->args[0], "env") == 0)
+		return (ft_env(cmd->args,*(shell->envp)));
 	return (1);
 }
 
@@ -295,10 +299,10 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 
 void	execute_ast(t_node *node, int last_status, t_shell *shell)
 {
-	t_cmd	*cmd;
-	int		status;
-	int		pipefd[2];
-	extern int g_last_status;
+	t_cmd		*cmd;
+	int			status;
+	int			pipefd[2];
+	extern int	g_last_status;
 
 	if (!node)
 		return ;

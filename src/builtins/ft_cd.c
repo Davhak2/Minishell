@@ -5,6 +5,7 @@
 
 int	ft_cd(char **args, char **envp)
 {
+	return (0);
 }
 
 /* TODO:

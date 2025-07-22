@@ -28,6 +28,7 @@
 		"chrono": "c",
 		"format": "c",
 		"ranges": "c",
-		"typeinfo": "cpp"
+		"typeinfo": "cpp",
+		"builtins.h": "c"
 	}
 }
