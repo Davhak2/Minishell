@@ -160,7 +160,7 @@ int	main(int argc, char **argv, char **envp)
 			add_history(input);
 			tokens = tokenize(input);
 			shell->token = tokens;
-			// print_tokens(tokens);
+			print_tokens(tokens);
 			tokens_copy = tokens;
 			ast = parse(&tokens_copy);
 			shell->node = ast;

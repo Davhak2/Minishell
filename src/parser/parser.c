@@ -50,11 +50,11 @@ t_node	*simple_command(t_token **list)
 	}
 	cur = *list;
 	i = 0;
-	while (cur && (cur->type == WORD || cur->type == REDIRECT_IN
+	while (cur && (cur->type == WORD || cur->type == SINGLE_QUOTED || cur->type == REDIRECT_IN
 			|| cur->type == REDIRECT_OUT || cur->type == REDIRECT_HEREDOC
 			|| cur->type == REDIRECT_APPEND))
 	{
-		if (cur->type == WORD)
+		if (cur->type == WORD || cur->type == SINGLE_QUOTED) // maxarich unes anelu
 			argv[i++] = ft_strdup(cur->value);
 		else
 			cur = cur->next;

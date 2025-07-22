@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: luminous <luminous@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/04 16:44:13 by luminous          #+#    #+#             */
-/*   Updated: 2025/07/20 21:57:42 by letto            ###   ########.fr       */
+/*   Created: 2025/07/23 01:14:44 by luminous          #+#    #+#             */
+/*   Updated: 2025/07/23 01:24:13 by luminous         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_token	*tokenize(char *line)
 			start = ptr;
 			while (*ptr && *ptr != quote)
 				ptr++;
-			if (!*ptr) // Unclosed quote
+			if (!*ptr)
 			{
 				printf("minishell: syntax error: unclosed quote\n");
 				free_token_list(list);
@@ -59,7 +59,7 @@ t_token	*tokenize(char *line)
 			type.type = (quote == '\'') ? SINGLE_QUOTED : WORD;
 			type.value = word;
 			create_and_add(&list, type);
-			ptr++; // Skip closing quote
+			ptr++;
 		}
 		else if (is_operator_char(*ptr))
 		{

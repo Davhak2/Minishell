@@ -110,17 +110,30 @@ void	expand_ast(t_node *node, char **envp, int last_status)
 {
 	if (!node)
 		return ;
-	if (node->type == WORD && node->value)
+	if (node->type == WORD && node->value) // TODO: ste pryam celi stringy vekalum a
 	{
 		t_cmd *cmd = (t_cmd *)node->value;
 		int i = 0;
 		while (cmd->args && cmd->args[i])
 		{
+			//printf("cmd->args[%d] = %s",i, cmd->args[i]); // DEBUG
 			char *expanded = expand_word(cmd->args[i], envp, last_status);
 			free(cmd->args[i]);
 			cmd->args[i] = expanded;
 			i++;
 		}
+	}
+	else if (node->type == SINGLE_QUOTED && node->value)
+	{
+		t_cmd *cmd = (t_cmd *)node->value;
+		int i = 0;
+		//printf("ban tpi ara"); // DEBUG
+		while (cmd->args && cmd->args[i])
+			i++;
+	}
+	else
+	{
+		t_cmd *cmd = (t_cmd *)node->value;
 		t_redirect *redir = cmd->redirects;
 		while (redir)
 		{
