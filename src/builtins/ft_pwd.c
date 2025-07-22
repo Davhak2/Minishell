@@ -3,6 +3,13 @@
 
 int	ft_pwd(char **envp)
 {
-	printf("%s\n", get_env_value("PWD", envp)); // TODO: leaks detected
+	char	*pwd;
+
+	pwd = get_env_value("PWD", envp);
+	if (pwd)
+	{
+		printf("%s\n", pwd);
+		free(pwd);
+	}
 	return (0);
 }

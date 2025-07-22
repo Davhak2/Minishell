@@ -65,6 +65,7 @@ typedef struct s_shell
 	t_node				*node;
 	t_redirect			*redir;
 	t_token				*token;
+	char				***envp;
 }						t_shell;
 
 t_token					*tokenize(char *line);

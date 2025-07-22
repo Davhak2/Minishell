@@ -27,6 +27,7 @@
 		"errors.h": "c",
 		"chrono": "c",
 		"format": "c",
-		"ranges": "c"
+		"ranges": "c",
+		"typeinfo": "cpp"
 	}
 }

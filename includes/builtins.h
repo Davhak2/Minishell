@@ -2,12 +2,12 @@
 # define BUILTINS_H
 
 // TODO: global exit status handling
-#include "parser.h"
+# include "parser.h"
 
 int	ft_echo(char **args);
 int	ft_cd(char **args, char **envp);
 int	ft_pwd(char **envp);
-int	ft_export(char **args, char **envp);
+int	ft_export(char **args, t_shell *shell);
 int	ft_unset(char **args, char **envp);
 int	ft_env(char **envp);
 int	ft_exit(char **args, t_shell *shell);

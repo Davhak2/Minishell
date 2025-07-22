@@ -31,20 +31,20 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-int	execute_builtin(t_cmd *cmd, char **envp, t_shell *shell)
+int	execute_builtin(t_cmd *cmd, t_shell *shell)
 {
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
 	if (ft_strcmp(cmd->args[0], "echo") == 0)
 		return (ft_echo(cmd->args));
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
-		return (ft_cd(cmd->args, envp));
+		return (ft_cd(cmd->args, *(shell->envp)));
 	if (ft_strcmp(cmd->args[0], "pwd") == 0)
-		return (ft_pwd(envp));
+		return (ft_pwd(*(shell->envp)));
 	if (ft_strcmp(cmd->args[0], "exit") == 0)
 		return (ft_exit(cmd->args, shell));
 	if (ft_strcmp(cmd->args[0], "export") == 0)
-		return (ft_export(cmd->args, envp));
+		return (ft_export(cmd->args, shell));
 	return (1);
 }
 
@@ -206,7 +206,7 @@ char	*exec_path(t_cmd *cmd, char **envp)
 	return (NULL);
 }
 
-int	execute_command(t_cmd *cmd, char **envp, t_shell *shell)
+int	execute_command(t_cmd *cmd, t_shell *shell)
 {
 	pid_t				pid;
 	char				*path;
@@ -235,7 +235,7 @@ int	execute_command(t_cmd *cmd, char **envp, t_shell *shell)
 	}
 	if (is_builtin(cmd->args[0]))
 	{
-		status = execute_builtin(cmd, envp, shell);
+		status = execute_builtin(cmd, shell);
 		if (redirect_mode)
 		{
 			dup2(stdin_fd, 0);
@@ -245,7 +245,7 @@ int	execute_command(t_cmd *cmd, char **envp, t_shell *shell)
 		}
 		return (status);
 	}
-	path = exec_path(cmd, envp);
+	path = exec_path(cmd, *(shell->envp));
 	if (!path)
 	{
 		if (redirect_mode)
@@ -260,7 +260,7 @@ int	execute_command(t_cmd *cmd, char **envp, t_shell *shell)
 	pid = fork();
 	if (!pid)
 	{
-		execve(path, cmd->args, envp);
+		execve(path, cmd->args, *(shell->envp));
 		perror("execve");
 		free(path);
 		exit(1);
@@ -293,18 +293,20 @@ int	execute_command(t_cmd *cmd, char **envp, t_shell *shell)
 	return (WEXITSTATUS(status));
 }
 
-void	execute_ast(t_node *node, char **envp, int last_status, t_shell *shell)
+void	execute_ast(t_node *node, int last_status, t_shell *shell)
 {
 	t_cmd	*cmd;
 	int		status;
 	int		pipefd[2];
+	extern int g_last_status;
 
 	if (!node)
 		return ;
 	if (node->type == WORD && node->value)
 	{
 		cmd = (t_cmd *)node->value;
-		status = execute_command(cmd, envp, shell);
+		status = execute_command(cmd, shell);
+		g_last_status = status;
 		last_status = status;
 	}
 	else if (node->type == PIPE)
@@ -321,7 +323,7 @@ void	execute_ast(t_node *node, char **envp, int last_status, t_shell *shell)
 			dup2(pipefd[1], STDOUT_FILENO);
 			close(pipefd[0]);
 			close(pipefd[1]);
-			execute_ast(node->left, envp, last_status, shell);
+			execute_ast(node->left, last_status, shell);
 			free_shell(shell);
 			exit(0);
 		}
@@ -338,7 +340,7 @@ void	execute_ast(t_node *node, char **envp, int last_status, t_shell *shell)
 			dup2(pipefd[0], STDIN_FILENO);
 			close(pipefd[1]);
 			close(pipefd[0]);
-			execute_ast(node->right, envp, last_status, shell);
+			execute_ast(node->right, last_status, shell);
 			free_shell(shell);
 			exit(0);
 		}
@@ -358,14 +360,14 @@ void	execute_ast(t_node *node, char **envp, int last_status, t_shell *shell)
 	}
 	else if (node->type == AND)
 	{
-		execute_ast(node->left, envp, last_status, shell);
+		execute_ast(node->left, last_status, shell);
 		if (last_status == 0)
-			execute_ast(node->right, envp, last_status, shell);
+			execute_ast(node->right, last_status, shell);
 	}
 	else if (node->type == OR)
 	{
-		execute_ast(node->left, envp, last_status, shell);
+		execute_ast(node->left, last_status, shell);
 		if (last_status != 0)
-			execute_ast(node->right, envp, last_status, shell);
+			execute_ast(node->right, last_status, shell);
 	}
 }

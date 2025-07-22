@@ -21,4 +21,8 @@ void	create_and_add(t_token **list, t_type type);
 
 void	free_shell(t_shell *shell);
 
+// envp utils
+char	**duplicate_envp(char **envp);
+void	free_envp(char **envp);
+
 #endif // UTILS_H

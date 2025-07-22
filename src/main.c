@@ -1,10 +1,10 @@
+#include "executor.h"
 #include "expander.h"
+#include "libft.h"
 #include "minishell.h"
 #include "parser.h"
-#include "utils.h"
-#include "libft.h"
 #include "signals.h"
-#include "executor.h"
+#include "utils.h"
 
 int		g_last_status = 0;
 
@@ -21,7 +21,7 @@ char	*get_token_type_name(t_tokens type)
 		"OR",               // 7
 		"LPAREN",           // 8
 		"RPAREN",           // 9
-		"EOF_",              // 10
+		"EOF_",             // 10
 		"SINGLE_QUOTE",     // 11
 	};
 	if (type >= 0 && type <= sizeof(token_names) / sizeof(token_names[0]))
@@ -120,24 +120,26 @@ int	main(int argc, char **argv, char **envp)
 	char	*tmp;
 	char	*joined;
 	char	*test;
-	t_shell *shell;
-
+	t_shell	*shell;
+	char	**my_envp;
 
 	(void)argc;
 	(void)argv;
+	my_envp = duplicate_envp(envp);
 	init_signals();
 	while (1)
 	{
 		input = readline("\001\033[1;32m\002💚 🐚 ms: ➜\001\033[0m\002 ");
 		if (!input)
 		{
-			printf ("exit\n");
+			printf("exit\n");
 			break ;
 		}
 		else
 			shell = (t_shell *)malloc(sizeof(t_shell));
 		if (!shell)
 			break ;
+		shell->envp = &my_envp;
 		while (has_unclosed_quote(input))
 		{
 			next = readline("> ");
@@ -165,7 +167,6 @@ int	main(int argc, char **argv, char **envp)
 			shell->redir = NULL;
 			if (!ast)
 			{
-				printf("\033[1;31mParse error: invalid syntax or memory error\033[0m\n");
 				if (tokens)
 					free_token_list(tokens);
 				free(input);
@@ -173,8 +174,8 @@ int	main(int argc, char **argv, char **envp)
 			}
 			// printf("\n🌳 \033[1;35mAST:\033[0m\n");
 			// print_ast(ast, 0);
-			expand_ast(ast, envp, g_last_status);
-			execute_ast(ast, envp, g_last_status, shell);
+			expand_ast(ast, *(shell->envp), g_last_status);
+			execute_ast(ast, g_last_status, shell);
 			// printf("\n\n🌳 \033[1;35mAST after expand:\033[0m\n");
 			// print_ast(ast, 0);
 			// if (ast)
@@ -187,5 +188,7 @@ int	main(int argc, char **argv, char **envp)
 		// 	free_shell(shell);
 		free(input);
 	}
+	if (my_envp)
+		free_envp(my_envp);
 	return (0);
 }
