@@ -108,41 +108,50 @@ char	*get_env_value(const char *name, char **envp)
 
 void	expand_ast(t_node *node, char **envp, int last_status)
 {
+	t_cmd		*cmd;
+	int			i;
+	char		*expanded;
+	t_redirect	*redir;
+
 	if (!node)
 		return ;
-	if (node->type == WORD && node->value) // TODO: ste pryam celi stringy vekalum a
+	if (node->type == WORD && node->value)
 	{
-		t_cmd *cmd = (t_cmd *)node->value;
-		int i = 0;
-		while (cmd->args && cmd->args[i])
+		cmd = (t_cmd *)node->value;
+		i = 0;
+		if (cmd->args && cmd->arg_types)
 		{
-			//printf("cmd->args[%d] = %s",i, cmd->args[i]); // DEBUG
-			char *expanded = expand_word(cmd->args[i], envp, last_status);
-			free(cmd->args[i]);
-			cmd->args[i] = expanded;
-			i++;
+			while (cmd->args[i])
+			{
+				if (cmd->arg_types[i] != SINGLE_QUOTED)
+				{
+					expanded = expand_word(cmd->args[i], envp, last_status);
+					if (expanded)
+					{
+						free(cmd->args[i]);
+						cmd->args[i] = expanded;
+					}
+				}
+				i++;
+			}
 		}
-	}
-	else if (node->type == SINGLE_QUOTED && node->value)
-	{
-		t_cmd *cmd = (t_cmd *)node->value;
-		int i = 0;
-		//printf("ban tpi ara"); // DEBUG
-		while (cmd->args && cmd->args[i])
-			i++;
-	}
-	else
-	{
-		t_cmd *cmd = (t_cmd *)node->value;
-		t_redirect *redir = cmd->redirects;
+		redir = cmd->redirects;
 		while (redir)
 		{
-			char *expanded = expand_word(redir->filename, envp, last_status);
-			free(redir->filename);
-			redir->filename = expanded;
+			if (redir->filename)
+			{
+				expanded = expand_word(redir->filename, envp, last_status);
+				if (expanded)
+				{
+					free(redir->filename);
+					redir->filename = expanded;
+				}
+			}
 			redir = redir->next;
 		}
 	}
-	expand_ast(node->left, envp, last_status);
-	expand_ast(node->right, envp, last_status);
+	if (node->left)
+		expand_ast(node->left, envp, last_status);
+	if (node->right)
+		expand_ast(node->right, envp, last_status);
 }

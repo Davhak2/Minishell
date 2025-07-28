@@ -11,6 +11,7 @@ t_node	*simple_command(t_token **list)
 	t_node		*node;
 	t_redirect	*redir_head;
 	t_redirect	*redir;
+	t_tokens	*arg_types;
 
 	argc = 0;
 	cur = *list;
@@ -43,36 +44,42 @@ t_node	*simple_command(t_token **list)
 		cur = cur->next;
 	}
 	argv = malloc(sizeof(char *) * (argc + 1));
-	if (!argv)
+	arg_types = malloc(sizeof(t_tokens) * argc);
+	if (!argv || !arg_types)
 	{
+		free(argv);
+		free(arg_types);
 		free_redirects(redir_head);
 		return (NULL);
 	}
 	cur = *list;
 	i = 0;
-	while (cur && (cur->type == WORD || cur->type == SINGLE_QUOTED || cur->type == REDIRECT_IN
-			|| cur->type == REDIRECT_OUT || cur->type == REDIRECT_HEREDOC
-			|| cur->type == REDIRECT_APPEND))
+	while (cur && (cur->type == WORD || cur->type == SINGLE_QUOTED
+			|| cur->type == REDIRECT_IN || cur->type == REDIRECT_OUT
+			|| cur->type == REDIRECT_HEREDOC || cur->type == REDIRECT_APPEND))
 	{
-		if (cur->type == WORD || cur->type == SINGLE_QUOTED) // maxarich unes anelu
-			argv[i++] = ft_strdup(cur->value);
-		else
-			cur = cur->next;
+		if (cur->type == WORD || cur->type == SINGLE_QUOTED)
+		{
+			argv[i] = ft_strdup(cur->value);
+			arg_types[i] = cur->type;
+			i++;
+		}
 		cur = cur->next;
 	}
 	argv[i] = NULL;
 	if (argc == 0)
 	{
 		free(argv);
+		free(arg_types);
 		free_redirects(redir_head);
 		return (NULL);
 	}
-	*list = cur;
 	cmd = malloc(sizeof(t_cmd));
 	node = malloc(sizeof(t_node));
 	if (!cmd || !node)
 	{
 		free(argv);
+		free(arg_types);
 		free(cmd);
 		free(node);
 		free_redirects(redir_head);
@@ -80,11 +87,13 @@ t_node	*simple_command(t_token **list)
 	}
 	cmd->cmd = argv[0];
 	cmd->args = argv;
+	cmd->arg_types = arg_types;
 	cmd->redirects = redir_head;
 	node->type = WORD;
 	node->value = (char *)cmd;
 	node->left = NULL;
 	node->right = NULL;
+	*list = cur;
 	return (node);
 }
 

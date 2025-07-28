@@ -57,6 +57,7 @@ typedef struct s_cmd
 {
 	char				*cmd;
 	char				**args;
+	t_tokens			*arg_types;
 	t_redirect			*redirects;
 }						t_cmd;
 
