@@ -25,4 +25,8 @@ void	free_shell(t_shell *shell);
 char	**duplicate_envp(char **envp);
 void	free_envp(char **envp);
 
+int		is_valid_identifier(char *str);
+int		count_env_vars(char **envp);
+int		find_env_var(char **envp, char *var_name);
+
 #endif // UTILS_H

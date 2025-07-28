@@ -3,24 +3,6 @@
 #include "utils.h"
 #include <stdio.h>
 
-int	is_valid_identifier(char *str)
-{
-	int	i;
-
-	if (!str || !*str)
-		return (0);
-	if (!ft_isalpha(str[0]) && str[0] != '_')
-		return (0);
-	i = 1;
-	while (str[i])
-	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 int	has_special_chars(char *str)
 {
 	int		i;
@@ -47,35 +29,6 @@ char	*get_var_name(char *str)
 		i++;
 	name = ft_substr(str, 0, i);
 	return (name);
-}
-
-int	find_env_var(char **envp, char *var_name)
-{
-	int	i;
-	int	len;
-
-	if (!var_name)
-		return (-1);
-	len = ft_strlen(var_name);
-	i = 0;
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], var_name, len) == 0 && (envp[i][len] == '='
-				|| envp[i][len] == '\0'))
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-int	count_env_vars(char **envp)
-{
-	int	count;
-
-	count = 0;
-	while (envp[count])
-		count++;
-	return (count);
 }
 
 char	**update_env_var(char **envp, char *new_var, int index)
