@@ -70,7 +70,7 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 	current = redirects;
 	while (current)
 	{
-		if (current->type == REDIRECT_OUT)
+		if (current->type == REDIRECT_OUT) // TODO: fix free error
 		{
 			fd = open(current->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (fd == -1)
@@ -109,7 +109,7 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 			}
 			close(fd);
 		}
-		else if (current->type == REDIRECT_HEREDOC)
+		else if (current->type == REDIRECT_HEREDOC) //TODO: fix heredoc
 		{
 			if (pipe(state->pipefd) == -1)
 			{
@@ -369,13 +369,13 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 	else if (node->type == AND)
 	{
 		execute_ast(node->left, last_status, shell);
-		if (last_status == 0)
+		if (g_last_status == 0)
 			execute_ast(node->right, last_status, shell);
 	}
 	else if (node->type == OR)
 	{
 		execute_ast(node->left, last_status, shell);
-		if (last_status != 0)
+		if (g_last_status != 0)
 			execute_ast(node->right, last_status, shell);
 	}
 }
