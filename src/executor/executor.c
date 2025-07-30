@@ -267,6 +267,7 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 		execve(path, cmd->args, *(shell->envp));
 		perror("execve");
 		free(path);
+		free_envp(*(shell->envp));
 		exit(1);
 	}
 	else if (pid < 0)
@@ -328,6 +329,7 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 			close(pipefd[0]);
 			close(pipefd[1]);
 			execute_ast(node->left, last_status, shell);
+			free_envp(*(shell->envp));
 			free_shell(shell);
 			exit(0);
 		}
@@ -345,6 +347,7 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 			close(pipefd[1]);
 			close(pipefd[0]);
 			execute_ast(node->right, last_status, shell);
+			free_envp(*(shell->envp));
 			free_shell(shell);
 			exit(0);
 		}
