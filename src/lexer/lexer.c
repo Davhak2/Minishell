@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 01:14:44 by luminous          #+#    #+#             */
-/*   Updated: 2025/07/31 18:50:00 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/07/31 18:50:59 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*process_quotes(char **ptr)
 	char	*temp;
 	char	quote;
 	char	*start;
-	char	*joined;
 	char	*joined;
 
 	result = ft_strdup("");
