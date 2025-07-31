@@ -149,7 +149,7 @@ int	is_valid_second_var(char *str)
 	free(var_name);
 	return (result);
 }
-int	ft_export(char **args, t_shell *shell)
+int	ft_export(char **args, t_shell *shell) //TODO: export =====13
 {
 	int i;
 	char *var_name;

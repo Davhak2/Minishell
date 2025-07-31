@@ -2,7 +2,7 @@
 #include "stdio.h"
 #include "libft.h"
 
-int	ft_echo(char **args, t_shell *shell) // TODO: fix space problem: echo "'"$USER"'"
+int	ft_echo(char **args, t_shell *shell)
 {
 	int i = 1;
 	int newline = 1;

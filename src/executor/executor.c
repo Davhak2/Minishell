@@ -109,7 +109,7 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 			}
 			close(fd);
 		}
-		else if (current->type == REDIRECT_HEREDOC) // TODO: fix heredoc
+		else if (current->type == REDIRECT_HEREDOC) //TODO: fix heredoc
 		{
 			if (pipe(state->pipefd) == -1)
 			{
