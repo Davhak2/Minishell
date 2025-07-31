@@ -3,15 +3,79 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: luminous <luminous@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 01:14:44 by luminous          #+#    #+#             */
-/*   Updated: 2025/07/23 01:24:13 by luminous         ###   ########.fr       */
+/*   Updated: 2025/07/31 18:50:00 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "utils.h"
+
+char	*process_quotes(char **ptr)
+{
+	char	*result;
+	char	*temp;
+	char	quote;
+	char	*start;
+	char	*joined;
+	char	*joined;
+
+	result = ft_strdup("");
+	if (!result)
+		return (NULL);
+	while (**ptr)
+	{
+		if (is_quote(**ptr))
+		{
+			quote = **ptr;
+			(*ptr)++;
+			start = *ptr;
+			while (**ptr && **ptr != quote)
+				(*ptr)++;
+			if (**ptr == quote)
+			{
+				temp = ft_substr(start, 0, *ptr - start);
+				if (!temp)
+				{
+					free(result);
+					return (NULL);
+				}
+				joined = ft_strjoin(result, temp);
+				free(temp);
+				free(result);
+				result = joined;
+				(*ptr)++;
+			}
+			else
+			{
+				printf("minishell: syntax error: unclosed quote\n");
+				free(result);
+				return (NULL);
+			}
+		}
+		else if (!is_whitespace(**ptr) && **ptr != '\0')
+		{
+			start = *ptr;
+			while (**ptr && !is_whitespace(**ptr) && !is_quote(**ptr))
+				(*ptr)++;
+			temp = ft_substr(start, 0, *ptr - start);
+			if (!temp)
+			{
+				free(result);
+				return (NULL);
+			}
+			joined = ft_strjoin(result, temp);
+			free(temp);
+			free(result);
+			result = joined;
+		}
+		else
+			break ;
+	}
+	return (result);
+}
 
 t_token	*tokenize(char *line)
 {
@@ -22,6 +86,7 @@ t_token	*tokenize(char *line)
 	int		len;
 	char	*word;
 	char	quote;
+	char	*processed;
 
 	list = NULL;
 	ptr = line;
@@ -40,26 +105,15 @@ t_token	*tokenize(char *line)
 		}
 		if (is_quote(*ptr))
 		{
-			quote = *ptr;
-			ptr++;
-			start = ptr;
-			while (*ptr && *ptr != quote)
-				ptr++;
-			if (!*ptr)
+			processed = process_quotes(&ptr);
+			if (!processed)
 			{
-				printf("minishell: syntax error: unclosed quote\n");
 				free_token_list(list);
 				return (NULL);
 			}
-			len = ptr - start;
-			word = malloc(len + 1);
-			if (!word)
-				return (free_token_list(list), NULL);
-			ft_strlcpy(word, start, len + 1);
-			type.type = (quote == '\'') ? SINGLE_QUOTED : WORD;
-			type.value = word;
+			type.type = WORD;
+			type.value = processed;
 			create_and_add(&list, type);
-			ptr++;
 		}
 		else if (is_operator_char(*ptr))
 		{

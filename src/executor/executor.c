@@ -40,7 +40,7 @@ int	execute_builtin(t_cmd *cmd, t_shell *shell)
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
 	if (ft_strcmp(cmd->args[0], "echo") == 0)
-		return (ft_echo(cmd->args));
+		return (ft_echo(cmd->args, shell));
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
 		return (ft_cd(cmd->args, *(shell->envp)));
 	if (ft_strcmp(cmd->args[0], "pwd") == 0)
@@ -109,7 +109,7 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 			}
 			close(fd);
 		}
-		else if (current->type == REDIRECT_HEREDOC) //TODO: fix heredoc
+		else if (current->type == REDIRECT_HEREDOC) // TODO: fix heredoc
 		{
 			if (pipe(state->pipefd) == -1)
 			{
