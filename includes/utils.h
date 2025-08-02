@@ -24,5 +24,6 @@ void	free_shell(t_shell *shell);
 // envp utils
 char	**duplicate_envp(char **envp);
 void	free_envp(char **envp);
+int		update_env_value(const char *name, const char *value, t_shell *shell);
 
 #endif // UTILS_H

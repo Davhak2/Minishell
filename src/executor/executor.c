@@ -40,7 +40,7 @@ int	execute_builtin(t_cmd *cmd, t_shell *shell)
 	if (ft_strcmp(cmd->args[0], "echo") == 0)
 		return (ft_echo(cmd->args));
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
-		return (ft_cd(cmd->args, *(shell->envp)));
+		return (ft_cd(cmd->args, shell));
 	if (ft_strcmp(cmd->args[0], "pwd") == 0)
 		return (ft_pwd(*(shell->envp)));
 	if (ft_strcmp(cmd->args[0], "exit") == 0)

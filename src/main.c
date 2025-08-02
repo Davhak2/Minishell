@@ -169,6 +169,8 @@ int	main(int argc, char **argv, char **envp)
 			{
 				if (tokens)
 					free_token_list(tokens);
+				if (shell)
+					free_shell(shell);
 				free(input);
 				continue ;
 			}
