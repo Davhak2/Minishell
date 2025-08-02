@@ -4,7 +4,7 @@
 # include "parser.h"
 
 int	ft_echo(char **args, t_shell *shell);
-int	ft_cd(char **args, char **envp);
+int	ft_cd(char **args, t_shell *shell);
 int	ft_pwd(char **envp);
 int	ft_export(char **args, t_shell *shell);
 int	ft_unset(char **args, t_shell *shell);

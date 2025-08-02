@@ -28,5 +28,7 @@ void	free_envp(char **envp);
 int		is_valid_identifier(char *str);
 int		count_env_vars(char **envp);
 int		find_env_var(char **envp, char *var_name);
+int		update_env_value(const char *name, const char *value, t_shell *shell);
+
 
 #endif // UTILS_H
