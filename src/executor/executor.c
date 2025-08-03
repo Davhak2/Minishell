@@ -3,6 +3,7 @@
 #include "expander.h"
 #include "libft.h"
 #include "parser.h"
+#include "signals.h"
 #include "utils.h"
 #include <fcntl.h>
 #include <readline/readline.h>
@@ -62,10 +63,10 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 	t_redirect	*current;
 	int			fd;
 	int			tty_fd;
-				char buffer[1024];
-				char line[1024];
+	char		buffer[1024];
+	char		line[1024];
 	int			line_pos;
-				ssize_t bytes_read;
+	ssize_t		bytes_read;
 
 	state->has_pipe = 0;
 	current = redirects;
@@ -126,8 +127,18 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 				close(state->pipefd[1]);
 				return (-1);
 			}
+			setup_heredoc_signals();
+			g_received_signal = 0;
 			while (1)
 			{
+				if (g_received_signal == SIGINT)
+				{
+					close(tty_fd);
+					close(state->pipefd[0]);
+					close(state->pipefd[1]);
+					restore_signals();
+					return (-1);
+				}
 				write(STDERR_FILENO, "> ", 2);
 				line_pos = 0;
 				while (line_pos < 1023)
@@ -135,10 +146,11 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 					bytes_read = read(tty_fd, buffer, 1);
 					if (bytes_read <= 0)
 					{
-						// EOF (Ctrl+D)
 						close(tty_fd);
 						close(state->pipefd[0]);
 						close(state->pipefd[1]);
+						restore_signals();
+						write(STDERR_FILENO, "\n", 1);
 						return (-1);
 					}
 					if (buffer[0] == '\n')
@@ -157,6 +169,7 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 			}
 			close(tty_fd);
 			close(state->pipefd[1]);
+			restore_signals();
 			if (dup2(state->pipefd[0], STDIN_FILENO) == -1)
 			{
 				perror("dup2");

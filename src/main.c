@@ -129,7 +129,8 @@ int	main(int argc, char **argv, char **envp)
 	init_signals();
 	while (1)
 	{
-		input = readline("\001\033[1;32m\002💚 🐚 ms: ➜\001\033[0m\002 ");
+		g_received_signal = 0;
+		input = readline("\001\033[1;32m\002 🐚 ms: ➜\001\033[0m\002 ");
 		if (!input)
 		{
 			printf("exit\n");
@@ -140,6 +141,11 @@ int	main(int argc, char **argv, char **envp)
 		if (!shell)
 			break ;
 		shell->envp = &my_envp;
+		if (g_received_signal == SIGINT)
+		{
+			free(shell);
+			continue ;
+		}
 		while (has_unclosed_quote(input))
 		{
 			next = readline("> ");
@@ -155,7 +161,7 @@ int	main(int argc, char **argv, char **envp)
 			free(input);
 			input = joined;
 		}
-		if (strlen(input) > 0)
+		if (ft_strlen(input) > 0)
 		{
 			add_history(input);
 			tokens = tokenize(input);
@@ -184,8 +190,6 @@ int	main(int argc, char **argv, char **envp)
 			// 	free_token_list(tokens);
 			free_shell(shell);
 		}
-		// if (shell)
-		// 	free_shell(shell);
 		free(input);
 	}
 	if (my_envp)
