@@ -5,6 +5,7 @@
 #include "parser.h"
 #include "utils.h"
 #include <fcntl.h>
+#include <readline/readline.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -60,17 +61,17 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 {
 	t_redirect	*current;
 	int			fd;
-	char		buffer[1024];
-	char		line_buffer[1024];
+	int			tty_fd;
+				char buffer[1024];
+				char line[1024];
 	int			line_pos;
-	ssize_t		bytes_read;
-	int			i;
+				ssize_t bytes_read;
 
 	state->has_pipe = 0;
 	current = redirects;
 	while (current)
 	{
-		if (current->type == REDIRECT_OUT) // TODO: fix free error
+		if (current->type == REDIRECT_OUT)
 		{
 			fd = open(current->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (fd == -1)
@@ -109,7 +110,7 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 			}
 			close(fd);
 		}
-		else if (current->type == REDIRECT_HEREDOC) //TODO: fix heredoc
+		else if (current->type == REDIRECT_HEREDOC)
 		{
 			if (pipe(state->pipefd) == -1)
 			{
@@ -117,38 +118,44 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 				return (-1);
 			}
 			state->has_pipe = 1;
+			tty_fd = open("/dev/tty", O_RDONLY);
+			if (tty_fd == -1)
+			{
+				perror("open /dev/tty");
+				close(state->pipefd[0]);
+				close(state->pipefd[1]);
+				return (-1);
+			}
 			while (1)
 			{
-				write(STDOUT_FILENO, "> ", 2);
+				write(STDERR_FILENO, "> ", 2);
 				line_pos = 0;
-				while (1)
+				while (line_pos < 1023)
 				{
-					bytes_read = read(STDIN_FILENO, buffer, 1);
+					bytes_read = read(tty_fd, buffer, 1);
 					if (bytes_read <= 0)
 					{
+						// EOF (Ctrl+D)
+						close(tty_fd);
 						close(state->pipefd[0]);
 						close(state->pipefd[1]);
 						return (-1);
 					}
 					if (buffer[0] == '\n')
-						break ;
-					if (line_pos < 1023)
 					{
-						line_buffer[line_pos] = buffer[0];
-						line_pos++;
+						break ;
 					}
+					line[line_pos++] = buffer[0];
 				}
-				line_buffer[line_pos] = '\0';
-				if (ft_strcmp(line_buffer, current->filename) == 0)
-					break ;
-				i = 0;
-				while (line_buffer[i])
+				line[line_pos] = '\0';
+				if (ft_strcmp(line, current->filename) == 0)
 				{
-					write(state->pipefd[1], &line_buffer[i], 1);
-					i++;
+					break ;
 				}
+				write(state->pipefd[1], line, ft_strlen(line));
 				write(state->pipefd[1], "\n", 1);
 			}
+			close(tty_fd);
 			close(state->pipefd[1]);
 			if (dup2(state->pipefd[0], STDIN_FILENO) == -1)
 			{
