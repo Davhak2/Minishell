@@ -64,6 +64,10 @@ t_node	*simple_command(t_token **list)
 			arg_types[i] = cur->type;
 			i++;
 		}
+		else
+		{
+			cur = cur->next;
+		}
 		cur = cur->next;
 	}
 	argv[i] = NULL;

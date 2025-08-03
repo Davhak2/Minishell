@@ -30,5 +30,6 @@
 		"ranges": "c",
 		"typeinfo": "cpp",
 		"builtins.h": "c"
-	}
+	},
+	"makefile.configureOnOpen": false
 }
