@@ -146,7 +146,7 @@ int	main(int argc, char **argv, char **envp)
 			free(shell);
 			continue ;
 		}
-		while (has_unclosed_quote(input))
+		while (has_unclosed_quote(input)) // TODO: add needs continuation, example: ls &&
 		{
 			next = readline("> ");
 			if (!next)
