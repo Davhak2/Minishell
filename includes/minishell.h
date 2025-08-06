@@ -8,6 +8,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <minishell.h>
 
 extern int	g_last_status;
 
