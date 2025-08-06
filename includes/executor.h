@@ -10,5 +10,5 @@ typedef struct s_redirect_state
 } t_redirect_state;
 
 int		execute_command(t_cmd *cmd, t_shell *shell);
-void	execute_ast(t_node *node, int last_status, t_shell *shell);
+void	execute_ast(t_node *node, t_shell *shell);
 #endif // EXECUTOR_H

@@ -2,6 +2,7 @@
 #include "executor.h"
 #include "expander.h"
 #include "libft.h"
+#include "minishell.h"
 #include "parser.h"
 #include "signals.h"
 #include "utils.h"
@@ -321,12 +322,11 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 	return (WEXITSTATUS(status));
 }
 
-void	execute_ast(t_node *node, int last_status, t_shell *shell)
+void	execute_ast(t_node *node, t_shell *shell)
 {
 	t_cmd		*cmd;
 	int			status;
 	int			pipefd[2];
-	extern int	g_last_status;
 
 	if (!node)
 		return ;
@@ -334,8 +334,7 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 	{
 		cmd = (t_cmd *)node->value;
 		status = execute_command(cmd, shell);
-		g_last_status = status;
-		last_status = status;
+		shell->last_status = status;
 	}
 	else if (node->type == PIPE)
 	{
@@ -351,7 +350,7 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 			dup2(pipefd[1], STDOUT_FILENO);
 			close(pipefd[0]);
 			close(pipefd[1]);
-			execute_ast(node->left, last_status, shell);
+			execute_ast(node->left, shell);
 			free_shell(shell);
 			exit(0);
 		}
@@ -368,7 +367,7 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 			dup2(pipefd[0], STDIN_FILENO);
 			close(pipefd[1]);
 			close(pipefd[0]);
-			execute_ast(node->right, last_status, shell);
+			execute_ast(node->right, shell);
 			free_shell(shell);
 			exit(0);
 		}
@@ -384,18 +383,18 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 		close(pipefd[1]);
 		waitpid(pid1, NULL, 0);
 		waitpid(pid2, &status, 0);
-		last_status = WEXITSTATUS(status);
+		shell->last_status = WEXITSTATUS(status);
 	}
 	else if (node->type == AND)
 	{
-		execute_ast(node->left, last_status, shell);
-		if (g_last_status == 0)
-			execute_ast(node->right, last_status, shell);
+		execute_ast(node->left, shell);
+		if (shell->last_status == 0)
+			execute_ast(node->right, shell);
 	}
 	else if (node->type == OR)
 	{
-		execute_ast(node->left, last_status, shell);
-		if (g_last_status != 0)
-			execute_ast(node->right, last_status, shell);
+		execute_ast(node->left, shell);
+		if (shell->last_status != 0)
+			execute_ast(node->right, shell);
 	}
 }

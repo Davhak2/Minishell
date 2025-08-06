@@ -6,8 +6,6 @@
 #include "signals.h"
 #include "utils.h"
 
-int		g_last_status = 0;
-
 char	*get_token_type_name(t_tokens type)
 {
 	static char *token_names[] = {
@@ -126,6 +124,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	my_envp = duplicate_envp(envp);
+	shell = (t_shell *)malloc(sizeof(t_shell));
+	if (!shell)
+		return (1);
+	shell->envp = &my_envp;
+	shell->last_status = 0;
 	init_signals();
 	while (1)
 	{
@@ -136,14 +139,8 @@ int	main(int argc, char **argv, char **envp)
 			printf("exit\n");
 			break ;
 		}
-		else
-			shell = (t_shell *)malloc(sizeof(t_shell));
-		if (!shell)
-			break ;
-		shell->envp = &my_envp;
 		if (g_received_signal == SIGINT)
 		{
-			free(shell);
 			continue ;
 		}
 		while (has_unclosed_quote(input)) // TODO: add needs continuation, example: ls &&
@@ -175,24 +172,30 @@ int	main(int argc, char **argv, char **envp)
 			{
 				if (tokens)
 					free_token_list(tokens);
+				shell->token = NULL; // Prevent double free
 				free(input);
 				continue ;
 			}
 			// printf("\n🌳 \033[1;35mAST:\033[0m\n");
 			// print_ast(ast, 0);
-			expand_ast(ast, *(shell->envp), g_last_status);
-			execute_ast(ast, g_last_status, shell);
+			expand_ast(ast, *(shell->envp), shell);
+			execute_ast(ast, shell);
 			// printf("\n\n🌳 \033[1;35mAST after expand:\033[0m\n");
 			// print_ast(ast, 0);
-			// if (ast)
-			// 	free_ast(ast);
-			// if (tokens)
-			// 	free_token_list(tokens);
-			free_shell(shell);
+			// Clean up after each command
+			if (ast)
+				free_ast(ast);
+			if (tokens)
+				free_token_list(tokens);
+			// Reset shell pointers to avoid double free
+			shell->node = NULL;
+			shell->token = NULL;
 		}
 		free(input);
 	}
 	if (my_envp)
 		free_envp(my_envp);
+	if (shell)
+		free(shell);
 	return (0);
 }

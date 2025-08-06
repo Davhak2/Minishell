@@ -25,6 +25,8 @@ void	free_ast(t_node *node)
 		t_cmd *cmd = (t_cmd *)node->value;
 		if (cmd->args)
 			ft_free_array(cmd->args);
+		if (cmd->arg_types)
+			free(cmd->arg_types);
 		if (cmd->redirects)
 			free_redirects(cmd->redirects);
 		free(cmd);

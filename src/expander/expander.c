@@ -1,5 +1,6 @@
 #include "expander.h"
 #include "libft.h"
+#include "parser.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -169,7 +170,7 @@ char	*get_env_value(const char *name, char **envp)
 	return (NULL);
 }
 
-void	expand_ast(t_node *node, char **envp, int last_status)
+void	expand_ast(t_node *node, char **envp, t_shell *shell)
 {
 	t_cmd		*cmd;
 	int			i;
@@ -189,7 +190,7 @@ void	expand_ast(t_node *node, char **envp, int last_status)
 				if (cmd->arg_types[i] != SINGLE_QUOTED)
 				{
 					// First expand variables
-					expanded = expand_word(cmd->args[i], envp, last_status);
+					expanded = expand_word(cmd->args[i], envp, shell->last_status);
 					if (expanded)
 					{
 						free(cmd->args[i]);
@@ -215,7 +216,7 @@ void	expand_ast(t_node *node, char **envp, int last_status)
 			if (redir->filename)
 			{
 				// First expand variables
-				expanded = expand_word(redir->filename, envp, last_status);
+				expanded = expand_word(redir->filename, envp, shell->last_status);
 				if (expanded)
 				{
 					free(redir->filename);
@@ -236,7 +237,7 @@ void	expand_ast(t_node *node, char **envp, int last_status)
 		}
 	}
 	if (node->left)
-		expand_ast(node->left, envp, last_status);
+		expand_ast(node->left, envp, shell);
 	if (node->right)
-		expand_ast(node->right, envp, last_status);
+		expand_ast(node->right, envp, shell);
 }
