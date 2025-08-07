@@ -11,13 +11,14 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-int	exec_fail(char *str)
+void exec_fail(char *str)
 {
-	printf("minishell: %s: command not found\n", str);
-	return (127);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(": command not found\n", 2);
 }
 
-int	is_builtin(char *cmd)
+int is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
@@ -38,7 +39,7 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-int	execute_builtin(t_cmd *cmd, t_shell *shell)
+int execute_builtin(t_cmd *cmd, t_shell *shell)
 {
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
@@ -59,15 +60,15 @@ int	execute_builtin(t_cmd *cmd, t_shell *shell)
 	return (1);
 }
 
-int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
+int handle_redirects(t_redirect *redirects, t_redirect_state *state)
 {
-	t_redirect	*current;
-	int			fd;
-	int			tty_fd;
-	char		buffer[1024];
-	char		line[1024];
-	int			line_pos;
-	ssize_t		bytes_read;
+	t_redirect *current;
+	int fd;
+	int tty_fd;
+	char buffer[1024];
+	char line[1024];
+	int line_pos;
+	ssize_t bytes_read;
 
 	state->has_pipe = 0;
 	current = redirects;
@@ -156,14 +157,14 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 					}
 					if (buffer[0] == '\n')
 					{
-						break ;
+						break;
 					}
 					line[line_pos++] = buffer[0];
 				}
 				line[line_pos] = '\0';
 				if (ft_strcmp(line, current->filename) == 0)
 				{
-					break ;
+					break;
 				}
 				write(state->pipefd[1], line, ft_strlen(line));
 				write(state->pipefd[1], "\n", 1);
@@ -185,13 +186,13 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 	return (0);
 }
 
-char	*exec_path(t_cmd *cmd, char **envp)
+char *exec_path(t_cmd *cmd, char **envp)
 {
-	char	*env_path;
-	char	**dirs;
-	char	*part;
-	char	*full_path;
-	int		i;
+	char *env_path;
+	char **dirs;
+	char *part;
+	char *full_path;
+	int i;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (NULL);
@@ -235,19 +236,19 @@ char	*exec_path(t_cmd *cmd, char **envp)
 	return (NULL);
 }
 
-int	execute_command(t_cmd *cmd, t_shell *shell)
+int execute_command(t_cmd *cmd, t_shell *shell)
 {
-	pid_t				pid;
-	char				*path;
-	int					status;
-	int					redirect_mode;
-	int					stdin_fd;
-	int					stdout_fd;
-	t_redirect_state	state;
+	pid_t pid;
+	char *path;
+	int status;
+	int redirect_mode;
+	int stdin_fd;
+	int stdout_fd;
+	t_redirect_state state;
 
 	redirect_mode = 0;
 	if (!cmd || !cmd->cmd)
-		return (exec_fail("Invalid command"));
+		return (127);
 	if (cmd->redirects)
 	{
 		stdin_fd = dup(0);
@@ -284,7 +285,7 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 			close(stdin_fd);
 			close(stdout_fd);
 		}
-		return (exec_fail(cmd->args[0]));
+		return (127); // TODO: needs to handle the error
 	}
 	pid = fork();
 	if (!pid)
@@ -322,14 +323,14 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 	return (WEXITSTATUS(status));
 }
 
-void	execute_ast(t_node *node, t_shell *shell)
+void execute_ast(t_node *node, t_shell *shell)
 {
-	t_cmd		*cmd;
-	int			status;
-	int			pipefd[2];
+	t_cmd *cmd;
+	int status;
+	int pipefd[2];
 
 	if (!node)
-		return ;
+		return;
 	if (node->type == WORD && node->value)
 	{
 		cmd = (t_cmd *)node->value;
@@ -339,10 +340,11 @@ void	execute_ast(t_node *node, t_shell *shell)
 	else if (node->type == PIPE)
 	{
 		pid_t pid1, pid2;
+		int status1, status2;
 		if (pipe(pipefd) == -1)
 		{
 			perror("pipe");
-			return ;
+			return;
 		}
 		pid1 = fork();
 		if (pid1 == 0)
@@ -352,14 +354,14 @@ void	execute_ast(t_node *node, t_shell *shell)
 			close(pipefd[1]);
 			execute_ast(node->left, shell);
 			free_shell(shell);
-			exit(0);
+			exit(shell->last_status);
 		}
 		else if (pid1 < 0)
 		{
 			perror("fork");
 			close(pipefd[0]);
 			close(pipefd[1]);
-			return ;
+			return;
 		}
 		pid2 = fork();
 		if (pid2 == 0)
@@ -369,7 +371,7 @@ void	execute_ast(t_node *node, t_shell *shell)
 			close(pipefd[0]);
 			execute_ast(node->right, shell);
 			free_shell(shell);
-			exit(0);
+			exit(shell->last_status);
 		}
 		else if (pid2 < 0)
 		{
@@ -377,13 +379,27 @@ void	execute_ast(t_node *node, t_shell *shell)
 			close(pipefd[0]);
 			close(pipefd[1]);
 			waitpid(pid1, NULL, 0);
-			return ;
+			return;
 		}
 		close(pipefd[0]);
 		close(pipefd[1]);
-		waitpid(pid1, NULL, 0);
-		waitpid(pid2, &status, 0);
-		shell->last_status = WEXITSTATUS(status);
+		waitpid(pid2, &status2, 0);
+		waitpid(pid1, &status1, 0);
+
+		if (WEXITSTATUS(status1) == 127)
+		{
+			t_cmd *cmd = (t_cmd *)node->left->value;
+			if (cmd && cmd->args && cmd->args[0])
+				exec_fail(cmd->args[0]);
+		}
+		if (WEXITSTATUS(status2) == 127)
+		{
+			t_cmd *cmd = (t_cmd *)node->right->value;
+			if (cmd && cmd->args && cmd->args[0])
+				exec_fail(cmd->args[0]);
+		}
+
+		shell->last_status = WEXITSTATUS(status2);
 	}
 	else if (node->type == AND)
 	{
