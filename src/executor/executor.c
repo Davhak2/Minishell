@@ -60,7 +60,8 @@ int	execute_builtin(t_cmd *cmd, t_shell *shell)
 	return (1);
 }
 
-int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
+int	handle_redirects(t_redirect *redirects, t_redirect_state *state,
+		t_shell *shell)
 {
 	t_redirect	*current;
 	int			fd;
@@ -122,20 +123,13 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 				return (-1);
 			}
 			state->has_pipe = 1;
-			tty_fd = open("/dev/tty", O_RDONLY);
-			if (tty_fd == -1)
-			{
-				perror("open /dev/tty");
-				close(state->pipefd[0]);
-				close(state->pipefd[1]);
-				return (-1);
-			}
 			setup_heredoc_signals();
 			g_received_signal = 0;
 			while (1)
 			{
 				if (g_received_signal == SIGINT)
 				{
+					write(1, "\n", 1);
 					close(state->pipefd[0]);
 					close(state->pipefd[1]);
 					restore_signals();
@@ -144,7 +138,7 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 				heredoc_line = readline("> ");
 				if (!heredoc_line)
 				{
-					write(STDERR_FILENO, "\n", 1);
+					dprintf(2,"minishell: warning: here-document at line %d delimited by end - of - file(wanted '%s')\n ", shell->heredoc_line,current->filename);
 					break ;
 				}
 				if (ft_strcmp(heredoc_line, current->filename) == 0)
@@ -156,7 +150,6 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 				write(state->pipefd[1], "\n", 1);
 				free(heredoc_line);
 			}
-			close(tty_fd);
 			close(state->pipefd[1]);
 			restore_signals();
 			if (dup2(state->pipefd[0], STDIN_FILENO) == -1)
@@ -241,7 +234,7 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 		stdin_fd = dup(0);
 		stdout_fd = dup(1);
 		redirect_mode = 1;
-		if (handle_redirects(cmd->redirects, &state) == -1)
+		if (handle_redirects(cmd->redirects, &state, shell) == -1)
 		{
 			dup2(stdin_fd, 0);
 			dup2(stdout_fd, 1);

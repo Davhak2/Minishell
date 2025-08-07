@@ -130,10 +130,12 @@ int	main(int argc, char **argv, char **envp)
 	shell->envp = &my_envp;
 	shell->last_status = 0;
 	init_signals();
+	shell->heredoc_line = 1;
 	while (1)
 	{
 		g_received_signal = 0;
 		input = readline("\001\033[1;32m\002🐚 ms: ➜\001\033[0m\002 ");
+		shell->heredoc_line++;
 		if (!input)
 		{
 			printf("exit\n");
@@ -148,6 +150,7 @@ int	main(int argc, char **argv, char **envp)
 											// example: ls &&
 		{
 			next = readline("> ");
+			shell->heredoc_line++;
 			if (!next)
 			{
 				free(input);

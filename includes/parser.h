@@ -68,6 +68,7 @@ typedef struct s_shell
 	t_token				*token;
 	char				***envp;
 	int					last_status;
+	int heredoc_line; // номер строки для heredoc warning
 }						t_shell;
 
 t_token					*tokenize(char *line);
