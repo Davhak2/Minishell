@@ -34,11 +34,11 @@ t_type	set_type(char op, bool mode)
 			type.type = RPAREN;
 			type.value = ft_strdup(")");
 		}
-		else if (op == '&') // ?????
-		{
-			type.type = WORD;
-			type.value = ft_strdup("&");
-		}
+		// else if (op == '&') // ?????
+		// {
+		// 	type.type = WORD;
+		// 	type.value = ft_strdup("&");
+		// }
 	}
 	else 
 	{

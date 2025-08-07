@@ -189,14 +189,12 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 			{
 				if (cmd->arg_types[i] != SINGLE_QUOTED)
 				{
-					// First expand variables
 					expanded = expand_word(cmd->args[i], envp, shell->last_status);
 					if (expanded)
 					{
 						free(cmd->args[i]);
 						cmd->args[i] = expanded;
 					}
-					// Then expand tilde
 					if (cmd->args[i] && cmd->args[i][0] == '~')
 					{
 						expanded = expand_tilde(cmd->args[i], envp);
@@ -215,14 +213,12 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 		{
 			if (redir->filename)
 			{
-				// First expand variables
 				expanded = expand_word(redir->filename, envp, shell->last_status);
 				if (expanded)
 				{
 					free(redir->filename);
 					redir->filename = expanded;
 				}
-				// Then expand tilde
 				if (redir->filename && redir->filename[0] == '~')
 				{
 					expanded = expand_tilde(redir->filename, envp);

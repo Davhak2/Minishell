@@ -12,8 +12,22 @@ void	sigint_handler(int signo)
 	g_received_signal = SIGINT;
 }
 
-void	sigint_heredoc_handler(int sig)
+#include <termios.h>
+
+void sigint_heredoc_handler(int sig)
 {
+	struct termios term;
+
 	(void)sig;
 	g_received_signal = SIGINT;
+	rl_replace_line("", 0);
+
+	tcgetattr(STDIN_FILENO, &term);
+	term.c_lflag &= ~(ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+
+	ioctl(STDIN_FILENO, TIOCSTI, "\n");
+
+	term.c_lflag |= ECHO;
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }

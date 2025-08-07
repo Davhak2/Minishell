@@ -127,18 +127,19 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state,
 			g_received_signal = 0;
 			while (1)
 			{
+				heredoc_line = readline("> ");
 				if (g_received_signal == SIGINT)
 				{
-					write(1, "\n", 1);
+					if (heredoc_line)
+						free(heredoc_line);
 					close(state->pipefd[0]);
 					close(state->pipefd[1]);
 					restore_signals();
 					return (-1);
 				}
-				heredoc_line = readline("> ");
 				if (!heredoc_line)
 				{
-					dprintf(2,"minishell: warning: here-document at line %d delimited by end - of - file(wanted '%s')\n ", shell->heredoc_line,current->filename);
+					dprintf(2,"minishell: warning: here-document at line %d delimited by end-of-file(wanted '%s')\n ", shell->heredoc_line,current->filename);
 					break ;
 				}
 				if (ft_strcmp(heredoc_line, current->filename) == 0)
