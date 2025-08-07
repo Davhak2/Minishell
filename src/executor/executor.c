@@ -219,7 +219,7 @@ char	*exec_path(t_cmd *cmd, char **envp)
 	return (NULL);
 }
 
-int	execute_command(t_cmd *cmd, t_shell *shell)
+int	execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a && echo $test , this should print a
 {
 	pid_t				pid;
 	char				*path;
@@ -268,7 +268,7 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 			close(stdin_fd);
 			close(stdout_fd);
 		}
-		return (127); // TODO: needs to handle the error
+		return (127); // TODO: needs to handle the error ??? manramasn
 	}
 	pid = fork();
 	if (!pid)

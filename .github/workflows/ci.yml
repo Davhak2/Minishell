@@ -1,0 +1,26 @@
+name: minishell CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y build-essential libreadline-dev
+
+    - name: Build
+      run: make
+
+    - name: Run tests
+      run: |
+        chmod +x .github/tests/test_minishell.sh
+        .github/tests/test_minishell.sh
