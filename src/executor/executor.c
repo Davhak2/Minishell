@@ -2,16 +2,20 @@
 #include "executor.h"
 #include "expander.h"
 #include "libft.h"
+#include "minishell.h"
 #include "parser.h"
+#include "signals.h"
 #include "utils.h"
 #include <fcntl.h>
+#include <readline/readline.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-int	exec_fail(char *str)
+void	exec_fail(char *str)
 {
-	printf("minishell: %s: command not found\n", str);
-	return (127);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(": command not found\n", 2);
 }
 
 int	is_builtin(char *cmd)
@@ -31,6 +35,8 @@ int	is_builtin(char *cmd)
 	if (ft_strcmp(cmd, "unset") == 0)
 		return (1);
 	if (ft_strcmp(cmd, "env") == 0)
+		return (1);
+	if (ft_strcmp(cmd, "unset") == 0)
 		return (1);
 	return (0);
 }
@@ -52,19 +58,21 @@ int	execute_builtin(t_cmd *cmd, t_shell *shell)
 	if (ft_strcmp(cmd->args[0], "unset") == 0)
 		return (ft_unset(cmd->args, shell));
 	if (ft_strcmp(cmd->args[0], "env") == 0)
-		return (ft_env(cmd->args,*(shell->envp)));
+		return (ft_env(cmd->args, *(shell->envp)));
 	return (1);
 }
 
-int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
+int	handle_redirects(t_redirect *redirects, t_redirect_state *state,
+		t_shell *shell)
 {
 	t_redirect	*current;
 	int			fd;
+	int			tty_fd;
 	char		buffer[1024];
-	char		line_buffer[1024];
+	char		line[1024];
 	int			line_pos;
 	ssize_t		bytes_read;
-	int			i;
+	char		*heredoc_line;
 
 	state->has_pipe = 0;
 	current = redirects;
@@ -117,39 +125,36 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state)
 				return (-1);
 			}
 			state->has_pipe = 1;
+			setup_heredoc_signals();
+			g_received_signal = 0;
 			while (1)
 			{
-				write(STDOUT_FILENO, "> ", 2);
-				line_pos = 0;
-				while (1)
+				heredoc_line = readline("> ");
+				if (g_received_signal == SIGINT)
 				{
-					bytes_read = read(STDIN_FILENO, buffer, 1);
-					if (bytes_read <= 0)
-					{
-						close(state->pipefd[0]);
-						close(state->pipefd[1]);
-						return (-1);
-					}
-					if (buffer[0] == '\n')
-						break ;
-					if (line_pos < 1023)
-					{
-						line_buffer[line_pos] = buffer[0];
-						line_pos++;
-					}
+					if (heredoc_line)
+						free(heredoc_line);
+					close(state->pipefd[0]);
+					close(state->pipefd[1]);
+					restore_signals();
+					return (-1);
 				}
-				line_buffer[line_pos] = '\0';
-				if (ft_strcmp(line_buffer, current->filename) == 0)
+				if (!heredoc_line)
+				{
+					dprintf(2,"minishell: warning: here-document at line %d delimited by end-of-file(wanted '%s')\n ", shell->heredoc_line,current->filename);
 					break ;
-				i = 0;
-				while (line_buffer[i])
-				{
-					write(state->pipefd[1], &line_buffer[i], 1);
-					i++;
 				}
+				if (ft_strcmp(heredoc_line, current->filename) == 0)
+				{
+					free(heredoc_line);
+					break ;
+				}
+				write(state->pipefd[1], heredoc_line, ft_strlen(heredoc_line));
 				write(state->pipefd[1], "\n", 1);
+				free(heredoc_line);
 			}
 			close(state->pipefd[1]);
+			restore_signals();
 			if (dup2(state->pipefd[0], STDIN_FILENO) == -1)
 			{
 				perror("dup2");
@@ -226,13 +231,13 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 
 	redirect_mode = 0;
 	if (!cmd || !cmd->cmd)
-		return (exec_fail("Invalid command"));
+		return (127);
 	if (cmd->redirects)
 	{
 		stdin_fd = dup(0);
 		stdout_fd = dup(1);
 		redirect_mode = 1;
-		if (handle_redirects(cmd->redirects, &state) == -1)
+		if (handle_redirects(cmd->redirects, &state, shell) == -1)
 		{
 			dup2(stdin_fd, 0);
 			dup2(stdout_fd, 1);
@@ -263,11 +268,13 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 			close(stdin_fd);
 			close(stdout_fd);
 		}
-		return (exec_fail(cmd->args[0]));
+		return (127); // TODO: needs to handle the error
 	}
 	pid = fork();
 	if (!pid)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		execve(path, cmd->args, *(shell->envp));
 		perror("execve");
 		free(path);
@@ -289,7 +296,23 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 	}
 	else
 	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
 		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status))
+		{
+			if (WTERMSIG(status) == SIGINT)
+				write(1, "\n", 1);
+			else if (WTERMSIG(status) == SIGQUIT)
+				write(1, "Quit (core dumped)\n", 19);
+			shell->last_status = 128 + WTERMSIG(status);
+		}
+		else
+		{
+			shell->last_status = WEXITSTATUS(status);
+		}
+		signal(SIGINT, sigint_handler);
+		signal(SIGQUIT, SIG_IGN);
 		free(path);
 	}
 	if (redirect_mode)
@@ -302,12 +325,11 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 	return (WEXITSTATUS(status));
 }
 
-void	execute_ast(t_node *node, int last_status, t_shell *shell)
+void	execute_ast(t_node *node, t_shell *shell)
 {
-	t_cmd		*cmd;
-	int			status;
-	int			pipefd[2];
-	extern int	g_last_status;
+	t_cmd	*cmd;
+	int		status;
+	int		pipefd[2];
 
 	if (!node)
 		return ;
@@ -315,12 +337,12 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 	{
 		cmd = (t_cmd *)node->value;
 		status = execute_command(cmd, shell);
-		g_last_status = status;
-		last_status = status;
+		shell->last_status = status;
 	}
 	else if (node->type == PIPE)
 	{
 		pid_t pid1, pid2;
+		int status1, status2;
 		if (pipe(pipefd) == -1)
 		{
 			perror("pipe");
@@ -329,13 +351,15 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 		pid1 = fork();
 		if (pid1 == 0)
 		{
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
 			dup2(pipefd[1], STDOUT_FILENO);
 			close(pipefd[0]);
 			close(pipefd[1]);
-			execute_ast(node->left, last_status, shell);
-			free_envp(*(shell->envp));
+			execute_ast(node->left, shell);
+
 			free_shell(shell);
-			exit(0);
+			exit(shell->last_status);
 		}
 		else if (pid1 < 0)
 		{
@@ -347,13 +371,15 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 		pid2 = fork();
 		if (pid2 == 0)
 		{
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
 			dup2(pipefd[0], STDIN_FILENO);
 			close(pipefd[1]);
 			close(pipefd[0]);
-			execute_ast(node->right, last_status, shell);
-			free_envp(*(shell->envp));
+			execute_ast(node->right, shell);
+
 			free_shell(shell);
-			exit(0);
+			exit(shell->last_status);
 		}
 		else if (pid2 < 0)
 		{
@@ -365,20 +391,36 @@ void	execute_ast(t_node *node, int last_status, t_shell *shell)
 		}
 		close(pipefd[0]);
 		close(pipefd[1]);
-		waitpid(pid1, NULL, 0);
-		waitpid(pid2, &status, 0);
-		last_status = WEXITSTATUS(status);
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+		waitpid(pid2, &status2, 0);
+		waitpid(pid1, &status1, 0);
+		signal(SIGINT, sigint_handler);
+		signal(SIGQUIT, SIG_IGN);
+		if (WEXITSTATUS(status1) == 127)
+		{
+			cmd = (t_cmd *)node->left->value;
+			if (cmd && cmd->args && cmd->args[0])
+				exec_fail(cmd->args[0]);
+		}
+		if (WEXITSTATUS(status2) == 127)
+		{
+			cmd = (t_cmd *)node->right->value;
+			if (cmd && cmd->args && cmd->args[0])
+				exec_fail(cmd->args[0]);
+		}
+		shell->last_status = WEXITSTATUS(status2);
 	}
 	else if (node->type == AND)
 	{
-		execute_ast(node->left, last_status, shell);
-		if (last_status == 0)
-			execute_ast(node->right, last_status, shell);
+		execute_ast(node->left, shell);
+		if (shell->last_status == 0)
+			execute_ast(node->right, shell);
 	}
 	else if (node->type == OR)
 	{
-		execute_ast(node->left, last_status, shell);
-		if (last_status != 0)
-			execute_ast(node->right, last_status, shell);
+		execute_ast(node->left, shell);
+		if (shell->last_status != 0)
+			execute_ast(node->right, shell);
 	}
 }

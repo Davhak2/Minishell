@@ -5,7 +5,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-typedef enum e_tokens
+typedef enum e_tokens // TODO: implement *
 {
 	WORD,             // CMD, arguments, filenames
 	REDIRECT_IN,      // <
@@ -67,6 +67,8 @@ typedef struct s_shell
 	t_redirect			*redir;
 	t_token				*token;
 	char				***envp;
+	int					last_status;
+	int heredoc_line; // номер строки для heredoc warning
 }						t_shell;
 
 t_token					*tokenize(char *line);

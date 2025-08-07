@@ -19,7 +19,6 @@ char	*path_join_fallback(char *base, char *rel)
 	return (result);
 }
 
-
 int	ft_cd(char **args, t_shell *shell)
 {
 	char	*pwd;

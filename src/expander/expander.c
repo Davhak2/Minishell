@@ -1,5 +1,6 @@
 #include "expander.h"
 #include "libft.h"
+#include "parser.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -18,6 +19,69 @@ static char	*expand_var(const char *str, char **envp, int last_status)
 	if (!buf)
 		buf = ft_strdup("");
 	return (buf);
+}
+
+static char	*expand_tilde(char *arg, char **envp)
+{
+	char	*home;
+	char	*expanded;
+	char	*user;
+	char	*default_home;
+	char	*pwd_value;
+
+	if (!arg || *arg != '~')
+		return (ft_strdup(arg));
+	if (*(arg + 1) == '+' && (*(arg + 2) == '\0' || *(arg + 2) == '/'))
+	{
+		pwd_value = get_env_value("PWD", envp);
+		if (!pwd_value)
+			return (ft_strdup(arg));
+
+		if (*(arg + 2) == '\0')
+			expanded = ft_strdup(pwd_value);
+		else
+			expanded = ft_strjoin(pwd_value, arg + 2);
+		free(pwd_value);
+		return (expanded);
+	}
+	if (*(arg + 1) == '-' && (*(arg + 2) == '\0' || *(arg + 2) == '/'))
+	{
+		pwd_value = get_env_value("OLDPWD", envp);
+		if (!pwd_value)
+			return (ft_strdup(arg));
+
+		if (*(arg + 2) == '\0')
+			expanded = ft_strdup(pwd_value);
+		else
+			expanded = ft_strjoin(pwd_value, arg + 2);
+		free(pwd_value);
+		return (expanded);
+	}
+	if (*(arg + 1) == '\0' || *(arg + 1) == '/')
+	{
+		home = get_env_value("HOME", envp);
+		if (!home)
+		{
+			user = get_env_value("USER", envp);
+			if (user)
+			{
+				default_home = ft_strjoin("/home/", user);
+				free(user);
+				if (default_home)
+					home = default_home;
+			}
+		}
+		if (!home)
+			return (ft_strdup(arg));
+
+		if (*(arg + 1) == '\0')
+			expanded = ft_strdup(home);
+		else
+			expanded = ft_strjoin(home, arg + 1);
+		free(home);
+		return (expanded);
+	}
+	return (ft_strdup(arg));
 }
 
 static char	*expand_word(const char *word, char **envp, int last_status)
@@ -106,7 +170,7 @@ char	*get_env_value(const char *name, char **envp)
 	return (NULL);
 }
 
-void	expand_ast(t_node *node, char **envp, int last_status)
+void	expand_ast(t_node *node, char **envp, t_shell *shell)
 {
 	t_cmd		*cmd;
 	int			i;
@@ -125,11 +189,20 @@ void	expand_ast(t_node *node, char **envp, int last_status)
 			{
 				if (cmd->arg_types[i] != SINGLE_QUOTED)
 				{
-					expanded = expand_word(cmd->args[i], envp, last_status);
+					expanded = expand_word(cmd->args[i], envp, shell->last_status);
 					if (expanded)
 					{
 						free(cmd->args[i]);
 						cmd->args[i] = expanded;
+					}
+					if (cmd->args[i] && cmd->args[i][0] == '~')
+					{
+						expanded = expand_tilde(cmd->args[i], envp);
+						if (expanded)
+						{
+							free(cmd->args[i]);
+							cmd->args[i] = expanded;
+						}
 					}
 				}
 				i++;
@@ -140,18 +213,27 @@ void	expand_ast(t_node *node, char **envp, int last_status)
 		{
 			if (redir->filename)
 			{
-				expanded = expand_word(redir->filename, envp, last_status);
+				expanded = expand_word(redir->filename, envp, shell->last_status);
 				if (expanded)
 				{
 					free(redir->filename);
 					redir->filename = expanded;
+				}
+				if (redir->filename && redir->filename[0] == '~')
+				{
+					expanded = expand_tilde(redir->filename, envp);
+					if (expanded)
+					{
+						free(redir->filename);
+						redir->filename = expanded;
+					}
 				}
 			}
 			redir = redir->next;
 		}
 	}
 	if (node->left)
-		expand_ast(node->left, envp, last_status);
+		expand_ast(node->left, envp, shell);
 	if (node->right)
-		expand_ast(node->right, envp, last_status);
+		expand_ast(node->right, envp, shell);
 }
