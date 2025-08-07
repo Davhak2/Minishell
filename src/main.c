@@ -133,17 +133,19 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		g_received_signal = 0;
-		input = readline("\001\033[1;32m\002 🐚 ms: ➜\001\033[0m\002 ");
+		input = readline("\001\033[1;32m\002🐚 ms: ➜\001\033[0m\002 ");
 		if (!input)
 		{
 			printf("exit\n");
 			break ;
 		}
-		if (g_received_signal == SIGINT)
+		if (input[0] == '\0')
 		{
+			free(input);
 			continue ;
 		}
-		while (has_unclosed_quote(input)) // TODO: add needs continuation, example: ls &&
+		while (has_unclosed_quote(input)) // TODO: add needs continuation,
+											// example: ls &&
 		{
 			next = readline("> ");
 			if (!next)
