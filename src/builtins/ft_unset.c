@@ -1,6 +1,7 @@
 #include "builtins.h"
 #include "libft.h"
 #include "utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,12 +13,14 @@ char	**remove_env_var(char **envp, int index)
 	int		j;
 
 	count = count_env_vars(envp);
+
 	new_envp = malloc(sizeof(char *) * count);
 	if (!new_envp)
 		return (NULL);
 	i = 0;
 	j = 0;
-	while (envp[i])
+	
+  while (envp[i])
 	{
 		if (i != index)
 		{
@@ -48,6 +51,7 @@ int	ft_unset(char **args, t_shell *shell)
 	if (!args[1])
 		return (0);
 	i = 1;
+
 	while (args[i])
 	{
 		if (!is_valid_identifier(args[i]))

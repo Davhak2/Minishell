@@ -36,7 +36,7 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)builtins/ft_export.c \
 					$(SRC_DIR)utils/builtin_utils.c \
 					$(SRC_DIR)builtins/ft_env.c \
-					$(SRC_DIR)builtins/ft_unset.c 
+					$(SRC_DIR)builtins/ft_unset.c
 
 OBJ_DIR					=	obj
 OBJ						=	$(SRC:%.c=$(OBJ_DIR)/%.o)

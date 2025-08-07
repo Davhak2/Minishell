@@ -32,6 +32,8 @@ int	is_builtin(char *cmd)
 		return (1);
 	if (ft_strcmp(cmd, "export") == 0)
 		return (1);
+	if (ft_strcmp(cmd, "unset") == 0)
+		return (1);
 	if (ft_strcmp(cmd, "env") == 0)
 		return (1);
 	if (ft_strcmp(cmd, "unset") == 0)
@@ -276,6 +278,7 @@ int	execute_command(t_cmd *cmd, t_shell *shell)
 		execve(path, cmd->args, *(shell->envp));
 		perror("execve");
 		free(path);
+		free_envp(*(shell->envp));
 		exit(1);
 	}
 	else if (pid < 0)
@@ -354,6 +357,7 @@ void	execute_ast(t_node *node, t_shell *shell)
 			close(pipefd[0]);
 			close(pipefd[1]);
 			execute_ast(node->left, shell);
+
 			free_shell(shell);
 			exit(shell->last_status);
 		}
@@ -373,6 +377,7 @@ void	execute_ast(t_node *node, t_shell *shell)
 			close(pipefd[1]);
 			close(pipefd[0]);
 			execute_ast(node->right, shell);
+
 			free_shell(shell);
 			exit(shell->last_status);
 		}

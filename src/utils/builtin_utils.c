@@ -1,5 +1,6 @@
 #include "libft.h"
 #include "utils.h"
+#include <stdlib.h>
 
 int	find_env_var(char **envp, char *var_name)
 {
@@ -89,7 +90,6 @@ void	free_envp(char **envp)
 	i = 0;
 	while (envp[i])
 		free(envp[i++]);
-
 	free(envp);
 }
 

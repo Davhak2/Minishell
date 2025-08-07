@@ -178,6 +178,7 @@ int	main(int argc, char **argv, char **envp)
 				if (tokens)
 					free_token_list(tokens);
 				shell->token = NULL; // Prevent double free
+
 				free(input);
 				continue ;
 			}
