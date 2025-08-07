@@ -2,9 +2,9 @@ name: minishell CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ wildcard ]
   pull_request:
-    branches: [ main ]
+    branches: [ wildcard ]
 
 jobs:
   build-and-test:
