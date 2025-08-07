@@ -13,5 +13,7 @@ void free_shell(t_shell *shell)
 		free_token_list(shell->token);
 	if (shell->node)
 		free_ast(shell->node);
+	if (shell->envp && *(shell->envp))
+		free_envp(*(shell->envp));
 	free(shell);
 }
