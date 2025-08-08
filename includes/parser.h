@@ -5,7 +5,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-typedef enum e_tokens // TODO: implement *
+typedef enum e_tokens
 {
 	WORD,             // CMD, arguments, filenames
 	REDIRECT_IN,      // <
@@ -19,6 +19,7 @@ typedef enum e_tokens // TODO: implement *
 	RPAREN,           // )
 	EOF_,             // EOF
 	SINGLE_QUOTED,    // for expander
+	DOUBLE_QUOTED,    // for expander
 
 	/* future - > VARIABLE, EXIT_STATUS, S_QUOTE, D_QUOTE,
 		WHITESPACE, NEWLINE_,

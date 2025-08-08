@@ -186,7 +186,6 @@ int	main(int argc, char **argv, char **envp)
 			}
 			// printf("\n🌳 \033[1;35mAST:\033[0m\n");
 			// print_ast(ast, 0);
-			expand_ast(ast, *(shell->envp), shell);
 			execute_ast(ast, shell);
 			// printf("\n\n🌳 \033[1;35mAST after expand:\033[0m\n");
 			// print_ast(ast, 0);

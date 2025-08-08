@@ -337,6 +337,15 @@ int execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a &&
 	return (WEXITSTATUS(status));
 }
 
+static void here_msg(int line, char *s)
+{
+	ft_putstr_fd("minishell: warning: here-document at line ", 2);
+	ft_putnbr_fd(line, 2);
+	ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
+	ft_putstr_fd(s, 2);
+	ft_putstr_fd("')\n", 2);
+}
+
 static void do_child_process(char *delimiter, char *filename, t_shell *shell, int pipefd[2])
 {
 	char *heredoc_line;
@@ -374,7 +383,7 @@ static void do_child_process(char *delimiter, char *filename, t_shell *shell, in
 		heredoc_line = readline("> ");
 		if (!heredoc_line)
 		{
-			dprintf(2, "minishell: warning: here-document at line %d delimited by end-of-file(wanted '%s')\n", shell->heredoc_line, delimiter);
+			here_msg(shell->heredoc_line, delimiter);
 			break;
 		}
 		if (ft_strcmp(heredoc_line, delimiter) == 0)
@@ -440,6 +449,7 @@ void execute_ast(t_node *node, t_shell *shell)
 	if (node->type == WORD && node->value)
 	{
 		cmd = (t_cmd *)node->value;
+		expand_ast(node, *(shell->envp), shell);
 		status = execute_command(cmd, shell);
 		shell->last_status = status;
 	}
