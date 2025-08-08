@@ -25,11 +25,13 @@ int	ft_cd(char **args, t_shell *shell)
 	char	*oldpwd;
 	char	*cwd;
 
+	if (args[1] && args[2])
+		return (ft_putstr_fd("minshell: cd: too many arguments\n", 2), 1);
 	if (!args[1] || !ft_strcmp(args[1], "~"))
 	{
 		pwd = get_env_value("HOME", *shell->envp);
 		if (!pwd)
-			return (ft_putstr_fd("cd: HOME not set\n", 2), 1);
+			return (ft_putstr_fd("minshell: cd: HOME not set\n", 2), 1);
 		if (chdir(pwd) == -1)
 			return (free(pwd), perror("cd"), 1);
 		free(pwd);
@@ -48,7 +50,7 @@ int	ft_cd(char **args, t_shell *shell)
 	else
 	{
 		if (chdir(args[1]) == -1)
-			return (perror("cd"), 1);
+			return (ft_putstr_fd("minishell: ", 2), perror("cd"), 1);
 	}
 
 	cwd = getcwd(NULL, 0);

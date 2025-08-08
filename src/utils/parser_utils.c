@@ -9,6 +9,8 @@ void	free_redirects(t_redirect *redir)
 		tmp = redir->next;
 		if (redir->filename)
 			free(redir->filename);
+		if (redir->heredoc_filename)
+			free(redir->heredoc_filename);
 		free(redir);
 		redir = tmp;
 	}

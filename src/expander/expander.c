@@ -88,22 +88,85 @@ static char *expand_tilde(char *arg, char **envp)
 	return (ft_strdup(arg));
 }
 
+static size_t calculate_expanded_size(const char *word, char **envp, int last_status)
+{
+	size_t i;
+	size_t total_size;
+	size_t var_start;
+	char *val;
+	size_t var_len;
+	char *var_name;
+
+	i = 0;
+	total_size = 0;
+	while (word[i])
+	{
+		if (word[i] == '$')
+		{
+			i++;
+			var_start = i;
+			if (word[i] == '?')
+			{
+				val = expand_var("?", envp, last_status);
+				if (val)
+				{
+					total_size += ft_strlen(val);
+					free(val);
+				}
+				i++;
+			}
+			else
+			{
+				while (word[i] && (ft_isalnum(word[i]) || word[i] == '_'))
+					i++;
+				var_len = i - var_start;
+				if (var_len > 0)
+				{
+					var_name = malloc(var_len + 1);
+					if (var_name)
+					{
+						ft_memcpy(var_name, word + var_start, var_len);
+						var_name[var_len] = '\0';
+						val = expand_var(var_name, envp, last_status);
+						if (val)
+						{
+							total_size += ft_strlen(val);
+							free(val);
+						}
+						free(var_name);
+					}
+				}
+				else
+				{
+					total_size += 1; // for the '$' character
+				}
+			}
+		}
+		else
+		{
+			total_size += 1;
+			i++;
+		}
+	}
+	return (total_size);
+}
+
 static char *expand_word(const char *word, char **envp, int last_status)
 {
 	char *result;
 	size_t i;
 	size_t j;
-	size_t len;
 	size_t var_start;
 	char *val;
 	size_t vlen;
 	size_t var_len;
 	char *var_name;
+	size_t result_size;
 
 	i = 0;
 	j = 0;
-	len = ft_strlen(word);
-	result = malloc(len * 2 + 1);
+	result_size = calculate_expanded_size(word, envp, last_status);
+	result = malloc(result_size + 1);
 	if (!result)
 		return (NULL);
 	while (word[i])
@@ -115,10 +178,13 @@ static char *expand_word(const char *word, char **envp, int last_status)
 			if (word[i] == '?')
 			{
 				val = expand_var("?", envp, last_status);
-				vlen = ft_strlen(val);
-				ft_memcpy(result + j, val, vlen);
-				j += vlen;
-				free(val);
+				if (val)
+				{
+					vlen = ft_strlen(val);
+					ft_memcpy(result + j, val, vlen);
+					j += vlen;
+					free(val);
+				}
 				i++;
 			}
 			else
@@ -137,10 +203,13 @@ static char *expand_word(const char *word, char **envp, int last_status)
 					ft_memcpy(var_name, word + var_start, var_len);
 					var_name[var_len] = '\0';
 					val = expand_var(var_name, envp, last_status);
-					vlen = ft_strlen(val);
-					ft_memcpy(result + j, val, vlen);
-					j += vlen;
-					free(val);
+					if (val)
+					{
+						vlen = ft_strlen(val);
+						ft_memcpy(result + j, val, vlen);
+						j += vlen;
+						free(val);
+					}
 					free(var_name);
 				}
 				else
