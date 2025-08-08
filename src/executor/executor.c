@@ -445,6 +445,7 @@ void execute_ast(t_node *node, t_shell *shell)
 	if (node->type == WORD && node->value)
 	{
 		cmd = (t_cmd *)node->value;
+		expand_ast(node, *(shell->envp), shell);
 		status = execute_command(cmd, shell);
 		shell->last_status = status;
 	}
