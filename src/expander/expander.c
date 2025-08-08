@@ -230,7 +230,7 @@ static char **wildcard_expand(const char *pattern)
 				free(result);
 				result = tmp;
 			}
-			result[count++] = strdup(entry->d_name);
+			result[count++] = ft_strdup(entry->d_name);
 		}
 	}
 	closedir(dir);

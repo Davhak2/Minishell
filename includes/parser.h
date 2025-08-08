@@ -5,7 +5,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-typedef enum e_tokens // TODO: implement *
+typedef enum e_tokens
 {
 	WORD,             // CMD, arguments, filenames
 	REDIRECT_IN,      // <
