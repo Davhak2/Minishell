@@ -16,11 +16,11 @@ t_node	*simple_command(t_token **list)
 	argc = 0;
 	cur = *list;
 	redir_head = NULL;
-	while (cur && (cur->type == WORD || cur->type == SINGLE_QUOTED
+	while (cur && (cur->type == WORD || cur->type == SINGLE_QUOTED || cur->type == DOUBLE_QUOTED
 			|| cur->type == REDIRECT_IN || cur->type == REDIRECT_OUT
 			|| cur->type == REDIRECT_HEREDOC || cur->type == REDIRECT_APPEND))
 	{
-		if (cur->type == WORD || cur->type == SINGLE_QUOTED)
+		if (cur->type == WORD || cur->type == SINGLE_QUOTED || cur->type == DOUBLE_QUOTED)
 			argc++;
 		else
 		{
@@ -32,7 +32,7 @@ t_node	*simple_command(t_token **list)
 			}
 			redir->type = cur->type;
 			cur = cur->next;
-			if (!cur || (cur->type != WORD && cur->type != SINGLE_QUOTED))
+			if (!cur || (cur->type != WORD && cur->type != SINGLE_QUOTED && cur->type != DOUBLE_QUOTED))
 			{
 				free_redirects(redir_head);
 				return (NULL);
@@ -54,11 +54,11 @@ t_node	*simple_command(t_token **list)
 	}
 	cur = *list;
 	i = 0;
-	while (cur && (cur->type == WORD || cur->type == SINGLE_QUOTED
+	while (cur && (cur->type == WORD || cur->type == SINGLE_QUOTED || cur->type == DOUBLE_QUOTED
 			|| cur->type == REDIRECT_IN || cur->type == REDIRECT_OUT
 			|| cur->type == REDIRECT_HEREDOC || cur->type == REDIRECT_APPEND))
 	{
-		if (cur->type == WORD || cur->type == SINGLE_QUOTED)
+		if (cur->type == WORD || cur->type == SINGLE_QUOTED || cur->type == DOUBLE_QUOTED)
 		{
 			argv[i] = ft_strdup(cur->value);
 			arg_types[i] = cur->type;

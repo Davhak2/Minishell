@@ -8,11 +8,11 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-static char	*expand_word(const char *word, char **envp, int last_status);
+static char *expand_word(const char *word, char **envp, int last_status);
 
-static char	*expand_var(const char *str, char **envp, int last_status)
+static char *expand_var(const char *str, char **envp, int last_status)
 {
-	char	*buf;
+	char *buf;
 
 	if (*str == '?' && *(str + 1) == '\0')
 	{
@@ -25,13 +25,13 @@ static char	*expand_var(const char *str, char **envp, int last_status)
 	return (buf);
 }
 
-static char	*expand_tilde(char *arg, char **envp)
+static char *expand_tilde(char *arg, char **envp)
 {
-	char	*home;
-	char	*expanded;
-	char	*user;
-	char	*default_home;
-	char	*pwd_value;
+	char *home;
+	char *expanded;
+	char *user;
+	char *default_home;
+	char *pwd_value;
 
 	if (!arg || *arg != '~')
 		return (ft_strdup(arg));
@@ -88,17 +88,17 @@ static char	*expand_tilde(char *arg, char **envp)
 	return (ft_strdup(arg));
 }
 
-static char	*expand_word(const char *word, char **envp, int last_status)
+static char *expand_word(const char *word, char **envp, int last_status)
 {
-	char	*result;
-	size_t	i;
-	size_t	j;
-	size_t	len;
-	size_t	var_start;
-	char	*val;
-	size_t	vlen;
-	size_t	var_len;
-	char	*var_name;
+	char *result;
+	size_t i;
+	size_t j;
+	size_t len;
+	size_t var_start;
+	char *val;
+	size_t vlen;
+	size_t var_len;
+	char *var_name;
 
 	i = 0;
 	j = 0;
@@ -160,78 +160,93 @@ static char	*expand_word(const char *word, char **envp, int last_status)
 
 static int wildcard_match(const char *pattern, const char *str)
 {
-    while (*pattern && *str) {
-        if (*pattern == '*') {
-            pattern++;
-            if (!*pattern)
-                return 1;
-            while (*str) {
-                if (wildcard_match(pattern, str))
-                    return 1;
-                str++;
-            }
-            return 0;
-        } else if (*pattern == *str) {
-            pattern++;
-            str++;
-        } else {
-            return 0;
-        }
-    }
-    if (*pattern == '*')
-        ++pattern;
-    return !*pattern && !*str;
+	while (*pattern && *str)
+	{
+		if (*pattern == '*')
+		{
+			pattern++;
+			if (!*pattern)
+				return 1;
+			while (*str)
+			{
+				if (wildcard_match(pattern, str))
+					return 1;
+				str++;
+			}
+			return 0;
+		}
+		else if (*pattern == *str)
+		{
+			pattern++;
+			str++;
+		}
+		else
+			return 0;
+	}
+	if (*pattern == '*')
+		++pattern;
+	return (!*pattern && !*str);
 }
 
 static char **wildcard_expand(const char *pattern)
 {
-    DIR *dir;
-    struct dirent *entry;
-    char **result = NULL;
-    int count = 0;
-    int cap = 8;
-    int i;
-    struct stat st;
+	DIR *dir;
+	struct dirent *entry;
+	char **result = NULL;
+	int count = 0;
+	int cap = 8;
+	int i;
+	struct stat st;
 
-    dir = opendir(".");
-    if (!dir)
-        return NULL;
-    result = malloc(sizeof(char*) * cap);
-    if (!result) {
-        closedir(dir);
-        return NULL;
-    }
-    while ((entry = readdir(dir))) {
-        if (entry->d_name[0] == '.')
-            continue;
-        if (wildcard_match(pattern, entry->d_name)) {
-            if (count + 2 > cap) {
-                cap *= 2;
-                char **tmp = realloc(result, sizeof(char*) * cap);
-                if (!tmp) {
-                    for (i = 0; i < count; ++i) free(result[i]);
-                    free(result);
-                    closedir(dir);
-                    return NULL;
-                }
-                result = tmp;
-            }
-            result[count++] = strdup(entry->d_name);
-        }
-    }
-    closedir(dir);
-    if (count == 0) {
-        free(result);
-        return NULL;
-    }
-    result[count] = NULL;
-    return result;
+	dir = opendir(".");
+	if (!dir)
+		return NULL;
+	result = malloc(sizeof(char *) * cap);
+	if (!result)
+	{
+		closedir(dir);
+		return NULL;
+	}
+	while ((entry = readdir(dir)))
+	{
+		if (entry->d_name[0] == '.')
+			continue;
+		if (wildcard_match(pattern, entry->d_name))
+		{
+			if (count + 2 > cap)
+			{
+				cap *= 2;
+				char **tmp = malloc(sizeof(char *) * cap);
+				if (!tmp)
+				{
+					for (i = 0; i < count; ++i)
+						free(result[i]);
+					free(result);
+					closedir(dir);
+					return NULL;
+				}
+				for (i = 0; i < count; i++)
+					tmp[i] = result[i];
+				free(result);
+				result = tmp;
+			}
+			result[count++] = strdup(entry->d_name);
+		}
+	}
+	closedir(dir);
+	if (count == 0)
+	{
+		free(result);
+		return NULL;
+	}
+	result[count] = NULL;
+	return result;
 }
 
-char	*get_env_value(const char *name, char **envp)
+char *get_env_value(const char *name, char **envp)
 {
-	size_t	name_len;
-	int		i;
+	size_t name_len;
+	int i;
 
 	name_len = ft_strlen(name);
 	i = 0;
@@ -244,19 +259,19 @@ char	*get_env_value(const char *name, char **envp)
 	return (NULL);
 }
 
-void	expand_ast(t_node *node, char **envp, t_shell *shell)
+void expand_ast(t_node *node, char **envp, t_shell *shell)
 {
-	t_cmd		*cmd;
-	int			i, j, k;
-	char		*expanded;
-	t_redirect	*redir;
-	char      **wildcards;
-	int         new_argc;
-	char      **new_args;
-	t_tokens   *new_types;
+	t_cmd *cmd;
+	int i, j, k;
+	char *expanded;
+	t_redirect *redir;
+	char **wildcards;
+	int new_argc;
+	char **new_args;
+	t_tokens *new_types;
 
 	if (!node)
-		return ;
+		return;
 	if (node->type == WORD && node->value)
 	{
 		cmd = (t_cmd *)node->value;
@@ -285,31 +300,43 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 				}
 				i++;
 			}
+			// Wildcard expansion - only for unquoted arguments
 			new_argc = 0;
-			for (i = 0; cmd->args[i]; ++i) {
-				if (cmd->arg_types[i] != SINGLE_QUOTED && strchr(cmd->args[i], '*')) {
+			for (i = 0; cmd->args[i]; ++i)
+			{
+				if (cmd->arg_types[i] == WORD && strchr(cmd->args[i], '*'))
+				{
 					wildcards = wildcard_expand(cmd->args[i]);
-					if (wildcards) {
+					if (wildcards)
+					{
 						for (j = 0; wildcards[j]; ++j)
 							new_argc++;
 						for (j = 0; wildcards[j]; ++j)
 							free(wildcards[j]);
 						free(wildcards);
-					} else {
+					}
+					else
+					{
 						new_argc++;
 					}
-				} else {
+				}
+				else
+				{
 					new_argc++;
 				}
 			}
-			new_args = malloc(sizeof(char*) * (new_argc + 1));
+			new_args = malloc(sizeof(char *) * (new_argc + 1));
 			new_types = malloc(sizeof(t_tokens) * (new_argc + 1));
 			k = 0;
-			for (i = 0; cmd->args[i]; ++i) {
-				if (cmd->arg_types[i] != SINGLE_QUOTED && strchr(cmd->args[i], '*')) {
+			for (i = 0; cmd->args[i]; ++i)
+			{
+				if (cmd->arg_types[i] == WORD && strchr(cmd->args[i], '*'))
+				{
 					wildcards = wildcard_expand(cmd->args[i]);
-					if (wildcards) {
-						for (j = 0; wildcards[j]; ++j) {
+					if (wildcards)
+					{
+						for (j = 0; wildcards[j]; ++j)
+						{
 							new_args[k] = strdup(wildcards[j]);
 							new_types[k] = WORD;
 							k++;
@@ -318,12 +345,16 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 							free(wildcards[j]);
 						free(wildcards);
 						free(cmd->args[i]);
-					} else {
+					}
+					else
+					{
 						new_args[k] = cmd->args[i];
 						new_types[k] = cmd->arg_types[i];
 						k++;
 					}
-				} else {
+				}
+				else
+				{
 					new_args[k] = cmd->args[i];
 					new_types[k] = cmd->arg_types[i];
 					k++;
