@@ -171,6 +171,18 @@ int	main(int argc, char **argv, char **envp)
 			tokens = tokenize(input);
 			shell->token = tokens;
 			// print_tokens(tokens);
+
+			// Validate syntax before parsing
+			if (validate_syntax(tokens))
+			{
+				if (tokens)
+					free_token_list(tokens);
+				shell->token = NULL;
+				shell->last_status = 2;
+				free(input);
+				continue ;
+			}
+
 			tokens_copy = tokens;
 			ast = parse(&tokens_copy);
 			shell->node = ast;

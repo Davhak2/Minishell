@@ -75,6 +75,7 @@ typedef struct s_shell
 }						t_shell;
 
 t_token					*tokenize(char *line);
+int						validate_syntax(t_token *tokens);
 t_node					*parse_or(t_token **list);
 t_node					*parse_and(t_token **list);
 t_node					*parse_pipe(t_token **list);

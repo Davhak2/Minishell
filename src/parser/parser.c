@@ -1,6 +1,47 @@
 #include "libft.h"
 #include "parser.h"
 
+int	validate_syntax(t_token *tokens)
+{
+	t_token	*curr;
+	t_token	*prev;
+
+	if (!tokens)
+		return (0);
+	curr = tokens;
+	prev = NULL;
+
+	if (curr->type == PIPE || curr->type == AND || curr->type == OR)
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+		ft_putstr_fd(curr->value, 2);
+		ft_putstr_fd("'\n", 2);
+		return (1);
+	}
+
+	while (curr)
+	{
+		if ((curr->type == PIPE || curr->type == AND || curr->type == OR) &&
+			prev && (prev->type == PIPE || prev->type == AND || prev->type == OR))
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+			ft_putstr_fd(curr->value, 2);
+			ft_putstr_fd("'\n", 2);
+			return (1);
+		}
+
+		if ((curr->type == PIPE || curr->type == AND || curr->type == OR) && !curr->next) // TODO: need to continue this....
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token `es hly pti jogenq senc enq toxum te che'\n", 2);
+			return (1);
+		}
+
+		prev = curr;
+		curr = curr->next;
+	}
+	return (0);
+}
+
 t_node	*simple_command(t_token **list)
 {
 	int			argc;
