@@ -16,18 +16,15 @@ void	sigint_handler(int signo)
 
 void sigint_heredoc_handler(int sig)
 {
-	struct termios term;
-
 	(void)sig;
 	g_received_signal = SIGINT;
+
+	// Write newline to move cursor to next line
+	write(STDOUT_FILENO, "\n", 1);
+
+	// Clear the line and force readline to return
 	rl_replace_line("", 0);
-
-	tcgetattr(STDIN_FILENO, &term);
-	term.c_lflag &= ~(ECHO);
-	tcsetattr(STDIN_FILENO, TCSANOW, &term);
-
-	ioctl(STDIN_FILENO, TIOCSTI, "\n");
-
-	term.c_lflag |= ECHO;
-	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	rl_point = 0;
+	rl_end = 0;
+	rl_done = 1;
 }

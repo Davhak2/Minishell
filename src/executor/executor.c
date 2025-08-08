@@ -11,6 +11,10 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+// Forward declarations for heredoc functions
+static void	do_child_process(char *delimiter, char *filename, t_shell *shell);
+static int	handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell);
+
 void	exec_fail(char *str)
 {
 	ft_putstr_fd("minishell: ", 2);
@@ -119,50 +123,60 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state,
 		}
 		else if (current->type == REDIRECT_HEREDOC)
 		{
-			if (pipe(state->pipefd) == -1)
+			t_redirect *next_redirect;
+			int is_last_heredoc;
+			char temp_filename[256];
+			int temp_fd;
+			int heredoc_result;
+
+			// Check if this is the last heredoc in the chain
+			is_last_heredoc = 1;
+			next_redirect = current->next;
+			while (next_redirect)
 			{
-				perror("pipe");
+				if (next_redirect->type == REDIRECT_HEREDOC)
+				{
+					is_last_heredoc = 0;
+					break;
+				}
+				next_redirect = next_redirect->next;
+			}
+
+			// Create temporary file for heredoc content
+			snprintf(temp_filename, sizeof(temp_filename), "/tmp/heredoc_%d_%p", getpid(), (void*)current);
+
+			// Use forked process to handle heredoc input
+			heredoc_result = handle_heredoc_fork(current->filename, temp_filename, shell);
+
+			// Check if heredoc was interrupted
+			if (heredoc_result != 0)
+			{
+				unlink(temp_filename);  // Clean up temp file
 				return (-1);
 			}
-			state->has_pipe = 1;
-			setup_heredoc_signals();
-			g_received_signal = 0;
-			while (1)
+
+			// Only redirect input for the last heredoc
+			if (is_last_heredoc)
 			{
-				heredoc_line = readline("> ");
-				if (g_received_signal == SIGINT)
+				temp_fd = open(temp_filename, O_RDONLY);
+				if (temp_fd == -1)
 				{
-					if (heredoc_line)
-						free(heredoc_line);
-					close(state->pipefd[0]);
-					close(state->pipefd[1]);
-					restore_signals();
+					perror("open temp heredoc file");
+					unlink(temp_filename);
 					return (-1);
 				}
-				if (!heredoc_line)
+				if (dup2(temp_fd, STDIN_FILENO) == -1)
 				{
-					dprintf(2,"minishell: warning: here-document at line %d delimited by end-of-file(wanted '%s')\n ", shell->heredoc_line,current->filename);
-					break ;
+					perror("dup2");
+					close(temp_fd);
+					unlink(temp_filename);
+					return (-1);
 				}
-				if (ft_strcmp(heredoc_line, current->filename) == 0)
-				{
-					free(heredoc_line);
-					break ;
-				}
-				write(state->pipefd[1], heredoc_line, ft_strlen(heredoc_line));
-				write(state->pipefd[1], "\n", 1);
-				free(heredoc_line);
+				close(temp_fd);
 			}
-			close(state->pipefd[1]);
-			restore_signals();
-			if (dup2(state->pipefd[0], STDIN_FILENO) == -1)
-			{
-				perror("dup2");
-				close(state->pipefd[0]);
-				return (-1);
-			}
-			close(state->pipefd[0]);
-			state->has_pipe = 0;
+
+			// Clean up temporary file
+			unlink(temp_filename);
 		}
 		current = current->next;
 	}
@@ -323,6 +337,69 @@ int	execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a &&
 		close(stdout_fd);
 	}
 	return (WEXITSTATUS(status));
+}
+
+static void	do_child_process(char *delimiter, char *filename, t_shell *shell)
+{
+	char	*heredoc_line;
+	int		fd;
+
+	(void)filename;
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+
+	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+	{
+		perror("open");
+		exit(1);
+	}
+
+	while (1)
+	{
+		heredoc_line = readline("> ");
+		if (!heredoc_line)
+		{
+			dprintf(2, "minishell: warning: here-document at line %d delimited by end-of-file(wanted '%s')\n", shell->heredoc_line, delimiter);
+			break;
+		}
+		if (ft_strcmp(heredoc_line, delimiter) == 0)
+		{
+			free(heredoc_line);
+			break;
+		}
+		write(fd, heredoc_line, ft_strlen(heredoc_line));
+		write(fd, "\n", 1);
+		free(heredoc_line);
+	}
+	close(fd);
+	exit(0);
+}
+
+static int	handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell)
+{
+	pid_t	process_id;
+	int		status;
+
+	setup_signals_parent_exec();
+	process_id = fork();
+	if (process_id == -1)
+		return (EXIT_FAILURE);
+	if (process_id == 0)
+		do_child_process(delimiter, filename, shell);
+	else
+	{
+		waitpid(process_id, &status, 0);
+		setup_signals();
+		if (WIFSIGNALED(status))
+		{
+			g_received_signal = WTERMSIG(status);
+			return (WTERMSIG(status) + 128);
+		}
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
+	}
+	return (EXIT_FAILURE);
 }
 
 void	execute_ast(t_node *node, t_shell *shell)
