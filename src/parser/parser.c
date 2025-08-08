@@ -71,11 +71,10 @@ t_node	*simple_command(t_token **list)
 		cur = cur->next;
 	}
 	argv[i] = NULL;
-	if (argc == 0)
+	if (argc == 0 && !redir_head)
 	{
 		free(argv);
 		free(arg_types);
-		free_redirects(redir_head);
 		return (NULL);
 	}
 	cmd = malloc(sizeof(t_cmd));
@@ -89,7 +88,10 @@ t_node	*simple_command(t_token **list)
 		free_redirects(redir_head);
 		return (NULL);
 	}
-	cmd->cmd = argv[0];
+	if (argc > 0)
+		cmd->cmd = argv[0];
+	else
+		cmd->cmd = NULL;
 	cmd->args = argv;
 	cmd->arg_types = arg_types;
 	cmd->redirects = redir_head;

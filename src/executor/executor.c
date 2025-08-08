@@ -12,43 +12,22 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static void	do_child_process(char *delimiter, char *filename, t_shell *shell);
-static int	handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell);
+static void	do_child_process(char *delimiter, char *filename, t_shell *shell, int pipefd[2]);
+static int	handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell, int pipefd[2]);
 
-// Global file descriptors for cleanup (simple solution)
-int g_stdin_backup = -1;
-int g_stdout_backup = -1;
-
-// Cleanup function called on exit
-void cleanup_fds(void)
-{
-	if (g_stdin_backup >= 0)
-	{
-		close(g_stdin_backup);
-		g_stdin_backup = -1;
-	}
-	if (g_stdout_backup >= 0)
-	{
-		close(g_stdout_backup);
-		g_stdout_backup = -1;
-	}
-}
-
-static void	restore_fds(int stdin_fd, int stdout_fd)
+static void	restore_fds(int stdin_fd, int stdout_fd, t_shell *shell)
 {
 	if (stdin_fd >= 0)
 	{
 		dup2(stdin_fd, 0);
 		close(stdin_fd);
-		if (g_stdin_backup == stdin_fd)
-			g_stdin_backup = -1;
+		shell->stdin_backup = -1;
 	}
 	if (stdout_fd >= 0)
 	{
 		dup2(stdout_fd, 1);
 		close(stdout_fd);
-		if (g_stdout_backup == stdout_fd)
-			g_stdout_backup = -1;
+		shell->stdout_backup = -1;
 	}
 }
 
@@ -177,7 +156,7 @@ int handle_redirects(t_redirect *redirects, t_redirect_state *state,
 				next_redirect = next_redirect->next;
 			}
 
-			heredoc_result = handle_heredoc_fork(current->filename, "/tmp/minishell_heredoc", shell);
+			heredoc_result = handle_heredoc_fork(current->filename, "/tmp/minishell_heredoc", shell, NULL);
 			if (heredoc_result != 0)
 			{
 				unlink("/tmp/minishell_heredoc");
@@ -271,38 +250,38 @@ int execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a &&
 	t_redirect_state state;
 
 	redirect_mode = 0;
-	if (!cmd || !cmd->cmd)
+	if (!cmd)
 		return (127);
+
+	// Handle redirects even if there's no command (e.g., just "<< eof")
 	if (cmd->redirects)
 	{
 		stdin_fd = dup(0);
 		stdout_fd = dup(1);
-		// Store globally for cleanup on exit
-		g_stdin_backup = stdin_fd;
-		g_stdout_backup = stdout_fd;
-		// Register cleanup function on first use
-		static int cleanup_registered = 0;
-		if (!cleanup_registered)
-		{
-			atexit(cleanup_fds);
-			cleanup_registered = 1;
-		}
+		shell->stdin_backup = stdin_fd;
+		shell->stdout_backup = stdout_fd;
 		redirect_mode = 1;
 		status = handle_redirects(cmd->redirects, &state, shell);
 		if (status != 0)
 		{
-			restore_fds(stdin_fd, stdout_fd);
-			g_stdin_backup = -1;
-			g_stdout_backup = -1;
+			restore_fds(stdin_fd, stdout_fd, shell);
 			// Return the actual status from handle_redirects (e.g., 130 for SIGINT)
 			return (status > 0 ? status : 1);
 		}
+	}
+
+	// If there's no actual command, just clean up redirects and return success
+	if (!cmd->cmd || !cmd->args || !cmd->args[0])
+	{
+		if (redirect_mode)
+			restore_fds(stdin_fd, stdout_fd, shell);
+		return (0);
 	}
 	if (is_builtin(cmd->args[0]))
 	{
 		status = execute_builtin(cmd, shell);
 		if (redirect_mode)
-			restore_fds(stdin_fd, stdout_fd);
+			restore_fds(stdin_fd, stdout_fd, shell);
 		return (status);
 	}
 	path = exec_path(cmd, *(shell->envp));
@@ -310,7 +289,7 @@ int execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a &&
 	{
 		exec_fail(cmd->args[0]);
 		if (redirect_mode)
-			restore_fds(stdin_fd, stdout_fd);
+			restore_fds(stdin_fd, stdout_fd, shell);
 		return (127); // TODO: needs to handle the error ??? manramasn
 	}
 	pid = fork();
@@ -329,7 +308,7 @@ int execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a &&
 		perror("fork");
 		free(path);
 		if (redirect_mode)
-			restore_fds(stdin_fd, stdout_fd);
+			restore_fds(stdin_fd, stdout_fd, shell);
 		return (-1);
 	}
 	else
@@ -354,17 +333,33 @@ int execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a &&
 		free(path);
 	}
 	if (redirect_mode)
-		restore_fds(stdin_fd, stdout_fd);
+		restore_fds(stdin_fd, stdout_fd, shell);
 	return (WEXITSTATUS(status));
 }
 
-static void do_child_process(char *delimiter, char *filename, t_shell *shell)
+static void do_child_process(char *delimiter, char *filename, t_shell *shell, int pipefd[2])
 {
 	char *heredoc_line;
 	int fd;
 
-	signal(SIGINT, SIG_DFL);  // Allow Ctrl+C to interrupt heredoc
-	signal(SIGQUIT, SIG_IGN); // Ignore Ctrl+\ during heredoc (like bash)
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
+
+	if (pipefd && pipefd[0] >= 0)
+		close(pipefd[0]);
+	if (pipefd && pipefd[1] >= 0)
+		close(pipefd[1]);
+
+	if (shell->stdin_backup >= 0)
+	{
+		close(shell->stdin_backup);
+		shell->stdin_backup = -1;
+	}
+	if (shell->stdout_backup >= 0)
+	{
+		close(shell->stdout_backup);
+		shell->stdout_backup = -1;
+	}
 
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
@@ -396,7 +391,7 @@ static void do_child_process(char *delimiter, char *filename, t_shell *shell)
 	exit(0);
 }
 
-static int handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell)
+static int handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell, int pipefd[2])
 {
 	pid_t process_id;
 	int status;
@@ -406,7 +401,7 @@ static int handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell)
 	if (process_id == -1)
 		return (EXIT_FAILURE);
 	if (process_id == 0)
-		do_child_process(delimiter, filename, shell);
+		do_child_process(delimiter, filename, shell, pipefd);
 	else
 	{
 		waitpid(process_id, &status, 0);
@@ -452,23 +447,113 @@ void execute_ast(t_node *node, t_shell *shell)
 	{
 		pid_t pid1, pid2;
 		int status1, status2;
+		t_cmd *left_cmd, *right_cmd;
+		int heredoc_status = 0;
+
 		if (pipe(pipefd) == -1)
 		{
 			perror("pipe");
 			return;
 		}
+		if (node->left && node->left->type == WORD && node->left->value)
+		{
+			left_cmd = (t_cmd *)node->left->value;
+			if (left_cmd->redirects)
+			{
+				t_redirect *current = left_cmd->redirects;
+				t_redirect *last_heredoc = NULL;
+				while (current)
+				{
+					if (current->type == REDIRECT_HEREDOC)
+						last_heredoc = current;
+					current = current->next;
+				}
+				if (last_heredoc)
+				{
+					heredoc_status = handle_heredoc_fork(last_heredoc->filename, "/tmp/minishell_heredoc", shell, pipefd);
+					if (heredoc_status != 0)
+					{
+						unlink("/tmp/minishell_heredoc");
+						close(pipefd[0]);
+						close(pipefd[1]);
+						shell->last_status = heredoc_status;
+						return;
+					}
+				}
+			}
+		}
+
 		pid1 = fork();
 		if (pid1 == 0)
 		{
 			int exit_status;
+			int temp_fd;
+			shell->stdin_backup = -1;
+			shell->stdout_backup = -1;
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
 			dup2(pipefd[1], STDOUT_FILENO);
 			close(pipefd[0]);
 			close(pipefd[1]);
-			execute_ast(node->left, shell);
+			if (node->left && node->left->type == WORD && node->left->value)
+			{
+				left_cmd = (t_cmd *)node->left->value;
+				if (left_cmd->redirects)
+				{
+					t_redirect *current = left_cmd->redirects;
+					int has_heredoc = 0;
+					while (current)
+					{
+						if (current->type == REDIRECT_HEREDOC)
+						{
+							temp_fd = open("/tmp/minishell_heredoc", O_RDONLY);
+							if (temp_fd != -1)
+							{
+								dup2(temp_fd, STDIN_FILENO);
+								close(temp_fd);
+								has_heredoc = 1;
+							}
+							break;
+						}
+						current = current->next;
+					}
+					if (has_heredoc)
+					{
+						if (shell->stdin_backup >= 0)
+						{
+							close(shell->stdin_backup);
+							shell->stdin_backup = -1;
+						}
+						if (shell->stdout_backup >= 0)
+						{
+							close(shell->stdout_backup);
+							shell->stdout_backup = -1;
+						}
 
+						if (is_builtin(left_cmd->args[0]))
+						{
+							exit_status = execute_builtin(left_cmd, shell);
+						}
+						else
+						{
+							char *path = exec_path(left_cmd, *(shell->envp));
+							if (path)
+							{
+								execve(path, left_cmd->args, *(shell->envp));
+								free(path);
+							}
+							exit_status = 127;
+						}
+						unlink("/tmp/minishell_heredoc");
+						free_shell(shell);
+						exit(exit_status);
+					}
+				}
+			}
+
+			execute_ast(node->left, shell);
 			exit_status = shell->last_status;
+			unlink("/tmp/minishell_heredoc");
 			free_shell(shell);
 			exit(exit_status);
 		}
@@ -477,12 +562,16 @@ void execute_ast(t_node *node, t_shell *shell)
 			perror("fork");
 			close(pipefd[0]);
 			close(pipefd[1]);
+			unlink("/tmp/minishell_heredoc");
 			return;
 		}
+
 		pid2 = fork();
 		if (pid2 == 0)
 		{
 			int exit_status;
+			shell->stdin_backup = -1;
+			shell->stdout_backup = -1;
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
 			dup2(pipefd[0], STDIN_FILENO);
@@ -491,6 +580,7 @@ void execute_ast(t_node *node, t_shell *shell)
 			execute_ast(node->right, shell);
 
 			exit_status = shell->last_status;
+			unlink("/tmp/minishell_heredoc");
 			free_shell(shell);
 			exit(exit_status);
 		}
@@ -499,17 +589,74 @@ void execute_ast(t_node *node, t_shell *shell)
 			perror("fork");
 			close(pipefd[0]);
 			close(pipefd[1]);
+			kill(pid1, SIGTERM);
 			waitpid(pid1, NULL, 0);
 			return;
 		}
 		close(pipefd[0]);
 		close(pipefd[1]);
+
+		int		pid1_done;
+		int		pid2_done;
+		int		wait_status;
+		pid_t	wait_pid;
+
+		pid1_done = 0;
+		pid2_done = 0;
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
-		waitpid(pid2, &status2, 0);
-		waitpid(pid1, &status1, 0);
+		while (!pid1_done || !pid2_done)
+		{
+			wait_pid = waitpid(-1, &wait_status, 0);
+			if (wait_pid == pid1)
+			{
+				status1 = wait_status;
+				pid1_done = 1;
+			}
+			else if (wait_pid == pid2)
+			{
+				status2 = wait_status;
+				pid2_done = 1;
+			}
+			else if (wait_pid == -1)
+			{
+				perror("waitpid");
+				break;
+			}
+		}
+
+		if (!pid1_done)
+		{
+			kill(pid1, SIGTERM);
+			waitpid(pid1, &status1, 0);
+		}
+		if (!pid2_done)
+		{
+			kill(pid2, SIGTERM);
+			waitpid(pid2, &status2, 0);
+		}
 		signal(SIGINT, sigint_handler);
 		signal(SIGQUIT, SIG_IGN);
+		if (WIFSIGNALED(status1) || WIFSIGNALED(status2))
+		{
+			if (WIFSIGNALED(status1))
+			{
+				if (WTERMSIG(status1) == SIGINT)
+					write(1, "\n", 1);
+				shell->last_status = 128 + WTERMSIG(status1);
+			}
+			else if (WIFSIGNALED(status2))
+			{
+				if (WTERMSIG(status2) == SIGINT)
+					write(1, "\n", 1);
+				shell->last_status = 128 + WTERMSIG(status2);
+			}
+		}
+		else
+			shell->last_status = WEXITSTATUS(status2);
+
+		unlink("/tmp/minishell_heredoc");
+
 		if (WEXITSTATUS(status1) == 127)
 		{
 			cmd = (t_cmd *)node->left->value;
@@ -522,7 +669,6 @@ void execute_ast(t_node *node, t_shell *shell)
 			if (cmd && cmd->args && cmd->args[0])
 				exec_fail(cmd->args[0]);
 		}
-		shell->last_status = WEXITSTATUS(status2);
 	}
 	else if (node->type == AND)
 	{

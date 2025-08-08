@@ -130,6 +130,8 @@ int	main(int argc, char **argv, char **envp)
 	shell->envp = &my_envp;
 	shell->last_status = 0;
 	shell->heredoc_line = 1;
+	shell->stdin_backup = -1;
+	shell->stdout_backup = -1;
 	init_signals();
 	while (1)
 	{
