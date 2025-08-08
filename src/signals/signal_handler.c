@@ -17,14 +17,7 @@ void	sigint_handler(int signo)
 void sigint_heredoc_handler(int sig)
 {
 	(void)sig;
+	// This signal handler is not used with the fork approach
+	// The child process uses SIG_DFL for proper signal handling
 	g_received_signal = SIGINT;
-
-	// Write newline to move cursor to next line
-	write(STDOUT_FILENO, "\n", 1);
-
-	// Clear the line and force readline to return
-	rl_replace_line("", 0);
-	rl_point = 0;
-	rl_end = 0;
-	rl_done = 1;
 }

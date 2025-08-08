@@ -129,8 +129,8 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	shell->envp = &my_envp;
 	shell->last_status = 0;
-	init_signals();
 	shell->heredoc_line = 1;
+	init_signals();
 	while (1)
 	{
 		g_received_signal = 0;
@@ -141,7 +141,7 @@ int	main(int argc, char **argv, char **envp)
 			printf("exit\n");
 			break ;
 		}
-		if (input[0] == '\0')
+		if (*input == '\0')
 		{
 			free(input);
 			continue ;
