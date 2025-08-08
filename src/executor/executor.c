@@ -358,13 +358,22 @@ int execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a &&
 	return (WEXITSTATUS(status));
 }
 
+static void here_msg(int line, char *s)
+{
+	ft_putstr_fd("minishell: warning: here-document at line ", 2);
+	ft_putnbr_fd(line, 2);
+	ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
+	ft_putstr_fd(s, 2);
+	ft_putstr_fd("')\n", 2);
+}
+
 static void do_child_process(char *delimiter, char *filename, t_shell *shell)
 {
 	char *heredoc_line;
 	int fd;
 
-	signal(SIGINT, SIG_DFL);  // Allow Ctrl+C to interrupt heredoc
-	signal(SIGQUIT, SIG_IGN); // Ignore Ctrl+\ during heredoc (like bash)
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
 
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
@@ -379,7 +388,7 @@ static void do_child_process(char *delimiter, char *filename, t_shell *shell)
 		heredoc_line = readline("> ");
 		if (!heredoc_line)
 		{
-			dprintf(2, "minishell: warning: here-document at line %d delimited by end-of-file(wanted '%s')\n", shell->heredoc_line, delimiter);
+			here_msg(shell->heredoc_line, delimiter);
 			break;
 		}
 		if (ft_strcmp(heredoc_line, delimiter) == 0)
