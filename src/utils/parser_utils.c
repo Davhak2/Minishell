@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "libft.h"
+#include <unistd.h>
 
 void	free_redirects(t_redirect *redir)
 {
@@ -10,7 +11,9 @@ void	free_redirects(t_redirect *redir)
 		if (redir->filename)
 			free(redir->filename);
 		if (redir->heredoc_filename)
+		{
 			free(redir->heredoc_filename);
+		}
 		free(redir);
 		redir = tmp;
 	}
