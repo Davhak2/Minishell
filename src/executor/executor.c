@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -349,7 +350,9 @@ static void	do_child_process(char *delimiter, char *filename, t_shell *shell,
 	char	*heredoc_line;
 	int		fd;
 
-	signal(SIGINT, SIG_DFL);
+	rl_catch_signals = 0;
+	g_received_signal = 0;
+	signal(SIGINT, sigint_heredoc_handler);
 	signal(SIGQUIT, SIG_IGN);
 	if (pipefd && pipefd[0] >= 0)
 		close(pipefd[0]);
@@ -375,6 +378,14 @@ static void	do_child_process(char *delimiter, char *filename, t_shell *shell,
 	while (1)
 	{
 		heredoc_line = readline("> ");
+		if (g_received_signal == SIGINT)
+		{
+			// write(STDOUT_FILENO, "\n", 1);
+			close(fd);
+			unlink(filename);
+			free_shell(shell);
+			exit(130);
+		}
 		if (!heredoc_line)
 		{
 			here_msg(shell->heredoc_line, delimiter);
@@ -399,6 +410,7 @@ static int	handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell,
 {
 	pid_t	process_id;
 	int		status;
+	char	nl;
 
 	setup_signals_parent_exec();
 	process_id = fork();
@@ -426,6 +438,13 @@ static int	handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell,
 			}
 			g_received_signal = WTERMSIG(status);
 			return (WTERMSIG(status) + 128);
+		}
+		if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+		{
+			g_received_signal = SIGINT;
+			// nl = '\n';
+			// ioctl(STDIN_FILENO, TIOCSTI, &nl);
+			return (130);
 		}
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
@@ -527,7 +546,6 @@ void	execute_ast(t_node *node, t_shell *shell)
 			signal(SIGQUIT, SIG_DFL);
 			if (right_has_heredoc)
 			{
-				// If right side has heredoc, discard left output
 				dev_null = open("/dev/null", O_WRONLY);
 				if (dev_null != -1)
 				{
@@ -616,7 +634,6 @@ void	execute_ast(t_node *node, t_shell *shell)
 			shell->stdout_backup = -1;
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
-			// Only redirect stdin from pipe if right side doesn't have heredoc
 			if (!right_has_heredoc)
 			{
 				dup2(pipefd[0], STDIN_FILENO);

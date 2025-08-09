@@ -24,13 +24,12 @@ char	*process_quotes(char **ptr, t_tokens *quote_type)
 	result = ft_strdup("");
 	if (!result)
 		return (NULL);
-	*quote_type = WORD; // default to unquoted
+	*quote_type = WORD;
 	while (**ptr)
 	{
 		if (is_quote(**ptr))
 		{
 			quote = **ptr;
-			// Set the quote type based on the first quote encountered
 			if (*quote_type == WORD)
 			{
 				if (quote == '\'')
@@ -87,15 +86,15 @@ char	*process_quotes(char **ptr, t_tokens *quote_type)
 
 t_token	*tokenize(char *line)
 {
-	t_token	*list;
-	char	*ptr;
-	t_type	type;
-	char	*start;
-	int		len;
-	char	*word;
-	char	quote;
-	char	*processed;
-	t_tokens quote_type;
+	t_token		*list;
+	char		*ptr;
+	t_type		type;
+	char		*start;
+	int			len;
+	char		*word;
+	char		quote;
+	char		*processed;
+	t_tokens	quote_type;
 
 	list = NULL;
 	ptr = line;
