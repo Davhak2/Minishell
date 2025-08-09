@@ -8,12 +8,14 @@
 #include "utils.h"
 #include <fcntl.h>
 #include <readline/readline.h>
+#include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <stdlib.h>
 
-static void	do_child_process(char *delimiter, char *filename, t_shell *shell, int pipefd[2]);
-static int	handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell, int pipefd[2]);
+static void	do_child_process(char *delimiter, char *filename, t_shell *shell,
+				int pipefd[2]);
+static int	handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell,
+				int pipefd[2]);
 
 static void	restore_fds(int stdin_fd, int stdout_fd, t_shell *shell)
 {
@@ -31,14 +33,14 @@ static void	restore_fds(int stdin_fd, int stdout_fd, t_shell *shell)
 	}
 }
 
-void exec_fail(char *str)
+void	exec_fail(char *str)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(str, 2);
 	ft_putstr_fd(": command not found\n", 2);
 }
 
-int is_builtin(char *cmd)
+int	is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
@@ -56,12 +58,10 @@ int is_builtin(char *cmd)
 		return (1);
 	if (ft_strcmp(cmd, "env") == 0)
 		return (1);
-	if (ft_strcmp(cmd, "unset") == 0)
-		return (1);
 	return (0);
 }
 
-int execute_builtin(t_cmd *cmd, t_shell *shell)
+int	execute_builtin(t_cmd *cmd, t_shell *shell)
 {
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
@@ -82,17 +82,21 @@ int execute_builtin(t_cmd *cmd, t_shell *shell)
 	return (1);
 }
 
-int handle_redirects(t_redirect *redirects, t_redirect_state *state,
-					 t_shell *shell)
+int	handle_redirects(t_redirect *redirects, t_redirect_state *state,
+		t_shell *shell)
 {
-	t_redirect *current;
-	int fd;
-	int tty_fd;
-	char buffer[1024];
-	char line[1024];
-	int line_pos;
-	ssize_t bytes_read;
-	char *heredoc_line;
+	t_redirect	*current;
+	int			fd;
+	int			tty_fd;
+	char		buffer[1024];
+	char		line[1024];
+	int			line_pos;
+	ssize_t		bytes_read;
+	char		*heredoc_line;
+	t_redirect	*next_redirect;
+	int			is_last_heredoc;
+	int			temp_fd;
+	int			heredoc_result;
 
 	state->has_pipe = 0;
 	current = redirects;
@@ -124,7 +128,8 @@ int handle_redirects(t_redirect *redirects, t_redirect_state *state,
 			}
 			close(fd);
 		}
-		else if (current->type == REDIRECT_IN) // TODO: grep hi <./test_files/infile_big <./test_files/infile-i vaxt segfault ka ete karas aravoty debug ara jogi inchic a u tenc eli redirectionnerum manr munr caseer kan
+		else if (current->type == REDIRECT_IN)
+		// TODO: grep hi <./test_files/infile_big <./test_files/infile-i vaxt segfault ka ete karas aravoty debug ara jogi inchic a u tenc eli redirectionnerum manr munr caseer kan
 		{
 			fd = open(current->filename, O_RDONLY);
 			if (fd == -1)
@@ -139,11 +144,6 @@ int handle_redirects(t_redirect *redirects, t_redirect_state *state,
 		}
 		else if (current->type == REDIRECT_HEREDOC)
 		{
-			t_redirect	*next_redirect;
-			int			is_last_heredoc;
-			int			temp_fd;
-			int			heredoc_result;
-
 			is_last_heredoc = 1;
 			next_redirect = current->next;
 			while (next_redirect)
@@ -151,18 +151,17 @@ int handle_redirects(t_redirect *redirects, t_redirect_state *state,
 				if (next_redirect->type == REDIRECT_HEREDOC)
 				{
 					is_last_heredoc = 0;
-					break;
+					break ;
 				}
 				next_redirect = next_redirect->next;
 			}
-
-			heredoc_result = handle_heredoc_fork(current->filename, "/tmp/minishell_heredoc", shell, NULL);
+			heredoc_result = handle_heredoc_fork(current->filename,
+					"/tmp/minishell_heredoc", shell, NULL);
 			if (heredoc_result != 0)
 			{
 				unlink("/tmp/minishell_heredoc");
 				return (heredoc_result);
 			}
-
 			if (is_last_heredoc)
 			{
 				temp_fd = open("/tmp/minishell_heredoc", O_RDONLY);
@@ -183,19 +182,18 @@ int handle_redirects(t_redirect *redirects, t_redirect_state *state,
 			}
 			unlink("/tmp/minishell_heredoc");
 		}
-
 		current = current->next;
 	}
 	return (0);
 }
 
-char *exec_path(t_cmd *cmd, char **envp)
+char	*exec_path(t_cmd *cmd, char **envp)
 {
-	char *env_path;
-	char **dirs;
-	char *part;
-	char *full_path;
-	int i;
+	char	*env_path;
+	char	**dirs;
+	char	*part;
+	char	*full_path;
+	int		i;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (NULL);
@@ -239,7 +237,9 @@ char *exec_path(t_cmd *cmd, char **envp)
 	return (NULL);
 }
 
-int execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a && echo $test , this should print a
+int	execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a
+												// && echo $test ,
+												//	this should print a
 {
 	pid_t pid;
 	char *path;
@@ -334,7 +334,7 @@ int execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a &&
 	return (WEXITSTATUS(status));
 }
 
-static void here_msg(int line, char *s)
+static void	here_msg(int line, char *s)
 {
 	ft_putstr_fd("minishell: warning: here-document at line ", 2);
 	ft_putnbr_fd(line, 2);
@@ -343,19 +343,18 @@ static void here_msg(int line, char *s)
 	ft_putstr_fd("')\n", 2);
 }
 
-static void do_child_process(char *delimiter, char *filename, t_shell *shell, int pipefd[2])
+static void	do_child_process(char *delimiter, char *filename, t_shell *shell,
+		int pipefd[2])
 {
-	char *heredoc_line;
-	int fd;
+	char	*heredoc_line;
+	int		fd;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
-
 	if (pipefd && pipefd[0] >= 0)
 		close(pipefd[0]);
 	if (pipefd && pipefd[1] >= 0)
 		close(pipefd[1]);
-
 	if (shell->stdin_backup >= 0)
 	{
 		close(shell->stdin_backup);
@@ -366,7 +365,6 @@ static void do_child_process(char *delimiter, char *filename, t_shell *shell, in
 		close(shell->stdout_backup);
 		shell->stdout_backup = -1;
 	}
-
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
@@ -374,19 +372,18 @@ static void do_child_process(char *delimiter, char *filename, t_shell *shell, in
 		free_shell(shell);
 		exit(1);
 	}
-
 	while (1)
 	{
 		heredoc_line = readline("> ");
 		if (!heredoc_line)
 		{
 			here_msg(shell->heredoc_line, delimiter);
-			break;
+			break ;
 		}
 		if (ft_strcmp(heredoc_line, delimiter) == 0)
 		{
 			free(heredoc_line);
-			break;
+			break ;
 		}
 		write(fd, heredoc_line, ft_strlen(heredoc_line));
 		write(fd, "\n", 1);
@@ -397,10 +394,11 @@ static void do_child_process(char *delimiter, char *filename, t_shell *shell, in
 	exit(0);
 }
 
-static int handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell, int pipefd[2])
+static int	handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell,
+		int pipefd[2])
 {
-	pid_t process_id;
-	int status;
+	pid_t	process_id;
+	int		status;
 
 	setup_signals_parent_exec();
 	process_id = fork();
@@ -435,14 +433,27 @@ static int handle_heredoc_fork(char *delimiter, char *filename, t_shell *shell, 
 	return (EXIT_FAILURE);
 }
 
-void execute_ast(t_node *node, t_shell *shell)
+void	execute_ast(t_node *node, t_shell *shell)
 {
-	t_cmd *cmd;
-	int status;
-	int pipefd[2];
+	t_cmd		*cmd;
+	int			status;
+	int			pipefd[2];
+	int			heredoc_status;
+	int			right_has_heredoc;
+	t_redirect	*current;
+	t_redirect	*last_heredoc;
+	int			exit_status;
+	int			temp_fd;
+	int			dev_null;
+	int			has_heredoc;
+	char		*path;
+	int			pid1_done;
+	int			pid2_done;
+	int			wait_status;
+	pid_t		wait_pid;
 
 	if (!node)
-		return;
+		return ;
 	if (node->type == WORD && node->value)
 	{
 		cmd = (t_cmd *)node->value;
@@ -455,38 +466,37 @@ void execute_ast(t_node *node, t_shell *shell)
 		pid_t pid1, pid2;
 		int status1, status2;
 		t_cmd *left_cmd, *right_cmd;
-		int heredoc_status = 0;
-		int right_has_heredoc = 0;
+		heredoc_status = 0;
+		right_has_heredoc = 0;
 		if (node->right && node->right->type == WORD && node->right->value)
 		{
 			right_cmd = (t_cmd *)node->right->value;
 			if (right_cmd->redirects)
 			{
-				t_redirect *current = right_cmd->redirects;
+				current = right_cmd->redirects;
 				while (current)
 				{
 					if (current->type == REDIRECT_HEREDOC)
 					{
 						right_has_heredoc = 1;
-						break;
+						break ;
 					}
 					current = current->next;
 				}
 			}
 		}
-
 		if (pipe(pipefd) == -1)
 		{
 			perror("pipe");
-			return;
+			return ;
 		}
 		if (node->left && node->left->type == WORD && node->left->value)
 		{
 			left_cmd = (t_cmd *)node->left->value;
 			if (left_cmd->redirects)
 			{
-				t_redirect *current = left_cmd->redirects;
-				t_redirect *last_heredoc = NULL;
+				current = left_cmd->redirects;
+				last_heredoc = NULL;
 				while (current)
 				{
 					if (current->type == REDIRECT_HEREDOC)
@@ -495,33 +505,30 @@ void execute_ast(t_node *node, t_shell *shell)
 				}
 				if (last_heredoc)
 				{
-					heredoc_status = handle_heredoc_fork(last_heredoc->filename, "/tmp/minishell_heredoc", shell, pipefd);
+					heredoc_status = handle_heredoc_fork(last_heredoc->filename,
+							"/tmp/minishell_heredoc", shell, pipefd);
 					if (heredoc_status != 0)
 					{
 						unlink("/tmp/minishell_heredoc");
 						close(pipefd[0]);
 						close(pipefd[1]);
 						shell->last_status = heredoc_status;
-						return;
+						return ;
 					}
 				}
 			}
 		}
-
 		pid1 = fork();
 		if (pid1 == 0)
 		{
-			int exit_status;
-			int temp_fd;
 			shell->stdin_backup = -1;
 			shell->stdout_backup = -1;
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
-
 			if (right_has_heredoc)
 			{
 				// If right side has heredoc, discard left output
-				int dev_null = open("/dev/null", O_WRONLY);
+				dev_null = open("/dev/null", O_WRONLY);
 				if (dev_null != -1)
 				{
 					dup2(dev_null, STDOUT_FILENO);
@@ -539,8 +546,8 @@ void execute_ast(t_node *node, t_shell *shell)
 				left_cmd = (t_cmd *)node->left->value;
 				if (left_cmd->redirects)
 				{
-					t_redirect *current = left_cmd->redirects;
-					int has_heredoc = 0;
+					current = left_cmd->redirects;
+					has_heredoc = 0;
 					while (current)
 					{
 						if (current->type == REDIRECT_HEREDOC)
@@ -552,7 +559,7 @@ void execute_ast(t_node *node, t_shell *shell)
 								close(temp_fd);
 								has_heredoc = 1;
 							}
-							break;
+							break ;
 						}
 						current = current->next;
 					}
@@ -568,14 +575,13 @@ void execute_ast(t_node *node, t_shell *shell)
 							close(shell->stdout_backup);
 							shell->stdout_backup = -1;
 						}
-
 						if (is_builtin(left_cmd->args[0]))
 						{
 							exit_status = execute_builtin(left_cmd, shell);
 						}
 						else
 						{
-							char *path = exec_path(left_cmd, *(shell->envp));
+							path = exec_path(left_cmd, *(shell->envp));
 							if (path)
 							{
 								execve(path, left_cmd->args, *(shell->envp));
@@ -589,7 +595,6 @@ void execute_ast(t_node *node, t_shell *shell)
 					}
 				}
 			}
-
 			execute_ast(node->left, shell);
 			exit_status = shell->last_status;
 			unlink("/tmp/minishell_heredoc");
@@ -602,18 +607,15 @@ void execute_ast(t_node *node, t_shell *shell)
 			close(pipefd[0]);
 			close(pipefd[1]);
 			unlink("/tmp/minishell_heredoc");
-			return;
+			return ;
 		}
-
 		pid2 = fork();
 		if (pid2 == 0)
 		{
-			int exit_status;
 			shell->stdin_backup = -1;
 			shell->stdout_backup = -1;
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
-
 			// Only redirect stdin from pipe if right side doesn't have heredoc
 			if (!right_has_heredoc)
 			{
@@ -622,7 +624,6 @@ void execute_ast(t_node *node, t_shell *shell)
 			close(pipefd[1]);
 			close(pipefd[0]);
 			execute_ast(node->right, shell);
-
 			exit_status = shell->last_status;
 			unlink("/tmp/minishell_heredoc");
 			free_shell(shell);
@@ -635,16 +636,10 @@ void execute_ast(t_node *node, t_shell *shell)
 			close(pipefd[1]);
 			kill(pid1, SIGTERM);
 			waitpid(pid1, NULL, 0);
-			return;
+			return ;
 		}
 		close(pipefd[0]);
 		close(pipefd[1]);
-
-		int		pid1_done;
-		int		pid2_done;
-		int		wait_status;
-		pid_t	wait_pid;
-
 		pid1_done = 0;
 		pid2_done = 0;
 		signal(SIGINT, SIG_IGN);
@@ -665,10 +660,9 @@ void execute_ast(t_node *node, t_shell *shell)
 			else if (wait_pid == -1)
 			{
 				perror("waitpid");
-				break;
+				break ;
 			}
 		}
-
 		if (!pid1_done)
 		{
 			kill(pid1, SIGTERM);
@@ -698,9 +692,7 @@ void execute_ast(t_node *node, t_shell *shell)
 		}
 		else
 			shell->last_status = WEXITSTATUS(status2);
-
 		unlink("/tmp/minishell_heredoc");
-
 		if (WEXITSTATUS(status1) == 127)
 		{
 			cmd = (t_cmd *)node->left->value;

@@ -64,6 +64,6 @@ fclean:					clean
 re:						fclean all
 
 valgrind:
-						valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=ignore_readline.supp ./minishell
+						valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=ignore_readline.supp ./minishell
 
 .PHONY:					all clean fclean re libft
