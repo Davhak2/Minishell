@@ -191,10 +191,13 @@ int	ft_export(char **args, t_shell *shell)
 		}
 		if (!is_valid_identifier(var_name))
 		{
-			printf("bash: export: `%s': not a valid identifier\n", var_name);
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(var_name, 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
 			free(var_name);
-			i++;
-			continue ;
+			return (1);
+			// i++;
+			// continue ;
 		}
 		equals_pos = ft_strchr(args[i], '=');
 		if (equals_pos)
