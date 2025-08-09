@@ -13,7 +13,7 @@ void	sigint_handler(int signo)
 	g_received_signal = SIGINT;
 }
 
-void	sigint_heredoc_handler(int sig) // TODO: fix here-doc CTRL+C
+void	sigint_heredoc_handler(int sig) // TODO: fix here-doc CTRL + C
 {
 	(void)sig;
 	g_received_signal = SIGINT;

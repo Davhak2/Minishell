@@ -85,7 +85,7 @@ int	execute_builtin(t_cmd *cmd, t_shell *shell)
 
 int	handle_redirects(t_redirect *redirects, t_redirect_state *state,
 		t_shell *shell)
-// TODO: fix here-doc redirection,"cat << end > a.txt"
+// TODO: fix here-doc redirection,"cat << end > a.txt "
 {
 	t_redirect *current;
 	int fd;
@@ -131,7 +131,7 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state,
 			close(fd);
 		}
 		else if (current->type == REDIRECT_IN)
-		// TODO: grep hi <./test_files/infile_big <./test_files/infile segfault ?????
+		// TODO: grep hi <./test_files/infile_big <./test_files/infile segfault ????
 		{
 			fd = open(current->filename, O_RDONLY);
 			if (fd == -1)
