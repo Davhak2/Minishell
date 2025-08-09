@@ -378,6 +378,7 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 				if (cmd->arg_types[i] == WORD && strchr(cmd->args[i], '*'))
 				{
 					wildcards = wildcard_expand(cmd->args[i]);
+					// TODO: fix wildcard with hidden files,example: "echo .*c"
 					if (wildcards)
 					{
 						for (j = 0; wildcards[j]; ++j)

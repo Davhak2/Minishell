@@ -29,7 +29,7 @@ int	validate_syntax(t_token *tokens)
 			return (1);
 		}
 		if ((curr->type == PIPE || curr->type == AND || curr->type == OR)
-			&& !curr->next) // TODO: need to continue this....
+			&& !curr->next) // TODO: make decision about handling "ls &&"
 		{
 			ft_putstr_fd("minishell: syntax error near unexpected token `es hly pti jogenq senc enq toxum te che'\n",
 				2);

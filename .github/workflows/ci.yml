@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: TODO to Issue
+      uses: alstr/todo-to-issue-action@v5.1.13
+
     - name: Checkout code
       uses: actions/checkout@v3
 

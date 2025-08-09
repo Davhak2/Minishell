@@ -85,19 +85,20 @@ int	execute_builtin(t_cmd *cmd, t_shell *shell)
 
 int	handle_redirects(t_redirect *redirects, t_redirect_state *state,
 		t_shell *shell)
+// TODO: fix here-doc redirection,"cat << end > a.txt"
 {
-	t_redirect	*current;
-	int			fd;
-	int			tty_fd;
-	char		buffer[1024];
-	char		line[1024];
-	int			line_pos;
-	ssize_t		bytes_read;
-	char		*heredoc_line;
-	t_redirect	*next_redirect;
-	int			is_last_heredoc;
-	int			temp_fd;
-	int			heredoc_result;
+	t_redirect *current;
+	int fd;
+	int tty_fd;
+	char buffer[1024];
+	char line[1024];
+	int line_pos;
+	ssize_t bytes_read;
+	char *heredoc_line;
+	t_redirect *next_redirect;
+	int is_last_heredoc;
+	int temp_fd;
+	int heredoc_result;
 
 	state->has_pipe = 0;
 	current = redirects;
@@ -130,7 +131,7 @@ int	handle_redirects(t_redirect *redirects, t_redirect_state *state,
 			close(fd);
 		}
 		else if (current->type == REDIRECT_IN)
-		// TODO: grep hi <./test_files/infile_big <./test_files/infile-i vaxt segfault ka ete karas aravoty debug ara jogi inchic a u tenc eli redirectionnerum manr munr caseer kan
+		// TODO: grep hi <./test_files/infile_big <./test_files/infile segfault ?????
 		{
 			fd = open(current->filename, O_RDONLY);
 			if (fd == -1)
@@ -238,22 +239,21 @@ char	*exec_path(t_cmd *cmd, char **envp)
 	return (NULL);
 }
 
-int	execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a
-												// && echo $test ,
-												//	this should print a
+int	execute_command(t_cmd *cmd, t_shell *shell)
 {
-	pid_t pid;
-	char *path;
-	int status;
-	int redirect_mode;
-	int stdin_fd = -1;
-	int stdout_fd = -1;
-	t_redirect_state state;
+	pid_t				pid;
+	char				*path;
+	int					status;
+	int					redirect_mode;
+	int					stdin_fd;
+	int					stdout_fd;
+	t_redirect_state	state;
 
+	stdin_fd = -1;
+	stdout_fd = -1;
 	redirect_mode = 0;
 	if (!cmd)
 		return (127);
-
 	if (cmd->redirects)
 	{
 		stdin_fd = dup(0);
@@ -268,7 +268,6 @@ int	execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a
 			return (status > 0 ? status : 1);
 		}
 	}
-
 	if (!cmd->cmd || !cmd->args || !cmd->args[0])
 	{
 		if (redirect_mode)
@@ -288,7 +287,7 @@ int	execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a
 		exec_fail(cmd->args[0]);
 		if (redirect_mode)
 			restore_fds(stdin_fd, stdout_fd, shell);
-		return (127); // TODO: needs to handle the error ??? manramasn
+		return (127);
 	}
 	pid = fork();
 	if (!pid)

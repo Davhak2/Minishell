@@ -21,17 +21,16 @@ int	has_special_chars(char *str)
 
 char	*get_var_name(char *str)
 {
-    int		i;
-    char	*name;
+	int		i;
+	char	*name;
 
-    if (!str || str[0] == '=')
-        return (ft_strdup(str));
-
-    i = 0;
-    while (str[i] && str[i] != '=')
-        i++;
-    name = ft_substr(str, 0, i);
-    return (name);
+	if (!str || str[0] == '=')
+		return (ft_strdup(str));
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	name = ft_substr(str, 0, i);
+	return (name);
 }
 
 char	**update_env_var(char **envp, char *new_var, int index)
@@ -152,13 +151,13 @@ int	is_valid_second_var(char *str)
 	free(var_name);
 	return (result);
 }
-int	ft_export(char **args, t_shell *shell) // TODO: export --
+int	ft_export(char **args, t_shell *shell)
 {
-	int i;
-	char *var_name;
-	char **current_envp;
-	char **new_envp;
-	char *equals_pos;
+	int		i;
+	char	*var_name;
+	char	**current_envp;
+	char	**new_envp;
+	char	*equals_pos;
 
 	current_envp = *(shell->envp);
 	if (!args[1])

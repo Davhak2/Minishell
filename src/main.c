@@ -148,8 +148,7 @@ int	main(int argc, char **argv, char **envp)
 			free(input);
 			continue ;
 		}
-		while (has_unclosed_quote(input)) // TODO: add needs continuation,
-											// example: ls &&
+		while (has_unclosed_quote(input))
 		{
 			next = readline("> ");
 			shell->heredoc_line++;
@@ -171,7 +170,6 @@ int	main(int argc, char **argv, char **envp)
 			tokens = tokenize(input);
 			shell->token = tokens;
 			// print_tokens(tokens);
-
 			// Validate syntax before parsing
 			if (validate_syntax(tokens))
 			{
@@ -182,7 +180,6 @@ int	main(int argc, char **argv, char **envp)
 				free(input);
 				continue ;
 			}
-
 			tokens_copy = tokens;
 			ast = parse(&tokens_copy);
 			shell->node = ast;
@@ -192,7 +189,6 @@ int	main(int argc, char **argv, char **envp)
 				if (tokens)
 					free_token_list(tokens);
 				shell->token = NULL; // Prevent double free
-
 				free(input);
 				continue ;
 			}
