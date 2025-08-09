@@ -1,4 +1,5 @@
 #include "signals.h"
+#include <unistd.h>
 
 volatile sig_atomic_t	g_received_signal = 0;
 
@@ -12,22 +13,10 @@ void	sigint_handler(int signo)
 	g_received_signal = SIGINT;
 }
 
-#include <termios.h>
-
-void sigint_heredoc_handler(int sig)
+void	sigint_heredoc_handler(int sig) // TODO: fix here-doc CTRL + C
 {
-	struct termios term;
-
 	(void)sig;
 	g_received_signal = SIGINT;
-	rl_replace_line("", 0);
-
-	tcgetattr(STDIN_FILENO, &term);
-	term.c_lflag &= ~(ECHO);
-	tcsetattr(STDIN_FILENO, TCSANOW, &term);
-
-	ioctl(STDIN_FILENO, TIOCSTI, "\n");
-
-	term.c_lflag |= ECHO;
-	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	write(STDOUT_FILENO, "^C\n", 3);
+	rl_done = 1;
 }

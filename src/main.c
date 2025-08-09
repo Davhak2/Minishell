@@ -129,8 +129,10 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	shell->envp = &my_envp;
 	shell->last_status = 0;
-	init_signals();
 	shell->heredoc_line = 1;
+	shell->stdin_backup = -1;
+	shell->stdout_backup = -1;
+	init_signals();
 	while (1)
 	{
 		g_received_signal = 0;
@@ -141,13 +143,12 @@ int	main(int argc, char **argv, char **envp)
 			printf("exit\n");
 			break ;
 		}
-		if (input[0] == '\0')
+		if (*input == '\0')
 		{
 			free(input);
 			continue ;
 		}
-		while (has_unclosed_quote(input)) // TODO: add needs continuation,
-											// example: ls &&
+		while (has_unclosed_quote(input))
 		{
 			next = readline("> ");
 			shell->heredoc_line++;
@@ -169,6 +170,16 @@ int	main(int argc, char **argv, char **envp)
 			tokens = tokenize(input);
 			shell->token = tokens;
 			// print_tokens(tokens);
+			// Validate syntax before parsing
+			if (validate_syntax(tokens))
+			{
+				if (tokens)
+					free_token_list(tokens);
+				shell->token = NULL;
+				shell->last_status = 2;
+				free(input);
+				continue ;
+			}
 			tokens_copy = tokens;
 			ast = parse(&tokens_copy);
 			shell->node = ast;
@@ -178,13 +189,11 @@ int	main(int argc, char **argv, char **envp)
 				if (tokens)
 					free_token_list(tokens);
 				shell->token = NULL; // Prevent double free
-
 				free(input);
 				continue ;
 			}
 			// printf("\n🌳 \033[1;35mAST:\033[0m\n");
 			// print_ast(ast, 0);
-			expand_ast(ast, *(shell->envp), shell);
 			execute_ast(ast, shell);
 			// printf("\n\n🌳 \033[1;35mAST after expand:\033[0m\n");
 			// print_ast(ast, 0);

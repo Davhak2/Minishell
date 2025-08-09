@@ -1,10 +1,14 @@
 #include "expander.h"
 #include "libft.h"
 #include "parser.h"
+#include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-static char	*expand_word(const char *word, char **envp, int last_status);
+static char		*expand_word(const char *word, char **envp, int last_status);
 
 static char	*expand_var(const char *str, char **envp, int last_status)
 {
@@ -36,7 +40,6 @@ static char	*expand_tilde(char *arg, char **envp)
 		pwd_value = get_env_value("PWD", envp);
 		if (!pwd_value)
 			return (ft_strdup(arg));
-
 		if (*(arg + 2) == '\0')
 			expanded = ft_strdup(pwd_value);
 		else
@@ -49,7 +52,6 @@ static char	*expand_tilde(char *arg, char **envp)
 		pwd_value = get_env_value("OLDPWD", envp);
 		if (!pwd_value)
 			return (ft_strdup(arg));
-
 		if (*(arg + 2) == '\0')
 			expanded = ft_strdup(pwd_value);
 		else
@@ -73,7 +75,6 @@ static char	*expand_tilde(char *arg, char **envp)
 		}
 		if (!home)
 			return (ft_strdup(arg));
-
 		if (*(arg + 1) == '\0')
 			expanded = ft_strdup(home);
 		else
@@ -84,22 +85,86 @@ static char	*expand_tilde(char *arg, char **envp)
 	return (ft_strdup(arg));
 }
 
+static size_t	calculate_expanded_size(const char *word, char **envp,
+		int last_status)
+{
+	size_t	i;
+	size_t	total_size;
+	size_t	var_start;
+	char	*val;
+	size_t	var_len;
+	char	*var_name;
+
+	i = 0;
+	total_size = 0;
+	while (word[i])
+	{
+		if (word[i] == '$')
+		{
+			i++;
+			var_start = i;
+			if (word[i] == '?')
+			{
+				val = expand_var("?", envp, last_status);
+				if (val)
+				{
+					total_size += ft_strlen(val);
+					free(val);
+				}
+				i++;
+			}
+			else
+			{
+				while (word[i] && (ft_isalnum(word[i]) || word[i] == '_'))
+					i++;
+				var_len = i - var_start;
+				if (var_len > 0)
+				{
+					var_name = malloc(var_len + 1);
+					if (var_name)
+					{
+						ft_memcpy(var_name, word + var_start, var_len);
+						var_name[var_len] = '\0';
+						val = expand_var(var_name, envp, last_status);
+						if (val)
+						{
+							total_size += ft_strlen(val);
+							free(val);
+						}
+						free(var_name);
+					}
+				}
+				else
+				{
+					total_size += 1;
+				}
+			}
+		}
+		else
+		{
+			total_size += 1;
+			i++;
+		}
+	}
+	return (total_size);
+}
+
 static char	*expand_word(const char *word, char **envp, int last_status)
 {
 	char	*result;
 	size_t	i;
 	size_t	j;
-	size_t	len;
 	size_t	var_start;
 	char	*val;
 	size_t	vlen;
 	size_t	var_len;
 	char	*var_name;
+	size_t	result_size;
 
 	i = 0;
 	j = 0;
-	len = ft_strlen(word);
-	result = malloc(len * 2 + 1);
+	result_size = calculate_expanded_size(word, envp, last_status);
+	result = malloc(result_size + 1);
 	if (!result)
 		return (NULL);
 	while (word[i])
@@ -111,10 +176,13 @@ static char	*expand_word(const char *word, char **envp, int last_status)
 			if (word[i] == '?')
 			{
 				val = expand_var("?", envp, last_status);
-				vlen = ft_strlen(val);
-				ft_memcpy(result + j, val, vlen);
-				j += vlen;
-				free(val);
+				if (val)
+				{
+					vlen = ft_strlen(val);
+					ft_memcpy(result + j, val, vlen);
+					j += vlen;
+					free(val);
+				}
 				i++;
 			}
 			else
@@ -133,10 +201,13 @@ static char	*expand_word(const char *word, char **envp, int last_status)
 					ft_memcpy(var_name, word + var_start, var_len);
 					var_name[var_len] = '\0';
 					val = expand_var(var_name, envp, last_status);
-					vlen = ft_strlen(val);
-					ft_memcpy(result + j, val, vlen);
-					j += vlen;
-					free(val);
+					if (val)
+					{
+						vlen = ft_strlen(val);
+						ft_memcpy(result + j, val, vlen);
+						j += vlen;
+						free(val);
+					}
 					free(var_name);
 				}
 				else
@@ -151,6 +222,95 @@ static char	*expand_word(const char *word, char **envp, int last_status)
 		}
 	}
 	result[j] = '\0';
+	return (result);
+}
+
+static int	wildcard_match(const char *pattern, const char *str)
+{
+	while (*pattern && *str)
+	{
+		if (*pattern == '*')
+		{
+			pattern++;
+			if (!*pattern)
+				return (1);
+			while (*str)
+			{
+				if (wildcard_match(pattern, str))
+					return (1);
+				str++;
+			}
+			return (0);
+		}
+		else if (*pattern == *str)
+		{
+			pattern++;
+			str++;
+		}
+		else
+			return (0);
+	}
+	if (*pattern == '*')
+		++pattern;
+	return (!*pattern && !*str);
+}
+
+static char	**wildcard_expand(const char *pattern)
+{
+	DIR				*dir;
+	struct dirent	*entry;
+	char			**result;
+	int				count;
+	int				cap;
+	int				i;
+	struct stat		st;
+	char			**tmp;
+
+	result = NULL;
+	count = 0;
+	cap = 8;
+	dir = opendir(".");
+	if (!dir)
+		return (NULL);
+	result = malloc(sizeof(char *) * cap);
+	if (!result)
+	{
+		closedir(dir);
+		return (NULL);
+	}
+	while ((entry = readdir(dir)))
+	{
+		if (entry->d_name[0] == '.')
+			continue ;
+		if (wildcard_match(pattern, entry->d_name))
+		{
+			if (count + 2 > cap)
+			{
+				cap *= 2;
+				tmp = malloc(sizeof(char *) * cap);
+				if (!tmp)
+				{
+					for (i = 0; i < count; ++i)
+						free(result[i]);
+					free(result);
+					closedir(dir);
+					return (NULL);
+				}
+				for (i = 0; i < count; i++)
+					tmp[i] = result[i];
+				free(result);
+				result = tmp;
+			}
+			result[count++] = ft_strdup(entry->d_name);
+		}
+	}
+	closedir(dir);
+	if (count == 0)
+	{
+		free(result);
+		return (NULL);
+	}
+	result[count] = NULL;
 	return (result);
 }
 
@@ -173,10 +333,14 @@ char	*get_env_value(const char *name, char **envp)
 void	expand_ast(t_node *node, char **envp, t_shell *shell)
 {
 	t_cmd		*cmd;
-	int			i;
 	char		*expanded;
 	t_redirect	*redir;
+	char		**wildcards;
+	int			new_argc;
+	char		**new_args;
+	t_tokens	*new_types;
 
+	int i, j, k;
 	if (!node)
 		return ;
 	if (node->type == WORD && node->value)
@@ -189,7 +353,8 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 			{
 				if (cmd->arg_types[i] != SINGLE_QUOTED)
 				{
-					expanded = expand_word(cmd->args[i], envp, shell->last_status);
+					expanded = expand_word(cmd->args[i], envp,
+							shell->last_status);
 					if (expanded)
 					{
 						free(cmd->args[i]);
@@ -207,14 +372,80 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 				}
 				i++;
 			}
+			new_argc = 0;
+			for (i = 0; cmd->args[i]; ++i)
+			{
+				if (cmd->arg_types[i] == WORD && strchr(cmd->args[i], '*'))
+				{
+					wildcards = wildcard_expand(cmd->args[i]);
+					// TODO: fix wildcard with hidden files,example: "echo .*c "
+					if (wildcards)
+					{
+						for (j = 0; wildcards[j]; ++j)
+							new_argc++;
+						for (j = 0; wildcards[j]; ++j)
+							free(wildcards[j]);
+						free(wildcards);
+					}
+					else
+					{
+						new_argc++;
+					}
+				}
+				else
+				{
+					new_argc++;
+				}
+			}
+			new_args = malloc(sizeof(char *) * (new_argc + 1));
+			new_types = malloc(sizeof(t_tokens) * (new_argc + 1));
+			k = 0;
+			for (i = 0; cmd->args[i]; ++i)
+			{
+				if (cmd->arg_types[i] == WORD && strchr(cmd->args[i], '*'))
+				{
+					wildcards = wildcard_expand(cmd->args[i]);
+					if (wildcards)
+					{
+						for (j = 0; wildcards[j]; ++j)
+						{
+							new_args[k] = strdup(wildcards[j]);
+							new_types[k] = WORD;
+							k++;
+						}
+						for (j = 0; wildcards[j]; ++j)
+							free(wildcards[j]);
+						free(wildcards);
+						free(cmd->args[i]);
+					}
+					else
+					{
+						new_args[k] = cmd->args[i];
+						new_types[k] = cmd->arg_types[i];
+						k++;
+					}
+				}
+				else
+				{
+					new_args[k] = cmd->args[i];
+					new_types[k] = cmd->arg_types[i];
+					k++;
+				}
+			}
+			new_args[k] = NULL;
+			free(cmd->args);
+			free(cmd->arg_types);
+			cmd->args = new_args;
+			cmd->arg_types = new_types;
 		}
 		redir = cmd->redirects;
 		while (redir)
 		{
 			if (redir->filename)
 			{
-				expanded = expand_word(redir->filename, envp, shell->last_status);
-				if (expanded)
+				expanded = expand_word(redir->filename, envp,
+						shell->last_status);
+				if (expanded && expanded != redir->filename)
 				{
 					free(redir->filename);
 					redir->filename = expanded;
@@ -222,7 +453,7 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 				if (redir->filename && redir->filename[0] == '~')
 				{
 					expanded = expand_tilde(redir->filename, envp);
-					if (expanded)
+					if (expanded && expanded != redir->filename)
 					{
 						free(redir->filename);
 						redir->filename = expanded;

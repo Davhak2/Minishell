@@ -1,6 +1,46 @@
 #include "libft.h"
 #include "parser.h"
 
+int	validate_syntax(t_token *tokens)
+{
+	t_token	*curr;
+	t_token	*prev;
+
+	if (!tokens)
+		return (0);
+	curr = tokens;
+	prev = NULL;
+	if (curr->type == PIPE || curr->type == AND || curr->type == OR)
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+		ft_putstr_fd(curr->value, 2);
+		ft_putstr_fd("'\n", 2);
+		return (1);
+	}
+	while (curr)
+	{
+		if ((curr->type == PIPE || curr->type == AND || curr->type == OR)
+			&& prev && (prev->type == PIPE || prev->type == AND
+				|| prev->type == OR))
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+			ft_putstr_fd(curr->value, 2);
+			ft_putstr_fd("'\n", 2);
+			return (1);
+		}
+		if ((curr->type == PIPE || curr->type == AND || curr->type == OR)
+			&& !curr->next) // TODO: make decision about handling  "ls &&"
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token `es hly pti jogenq senc enq toxum te che'\n",
+				2);
+			return (1);
+		}
+		prev = curr;
+		curr = curr->next;
+	}
+	return (0);
+}
+
 t_node	*simple_command(t_token **list)
 {
 	int			argc;
@@ -17,14 +57,16 @@ t_node	*simple_command(t_token **list)
 	cur = *list;
 	redir_head = NULL;
 	while (cur && (cur->type == WORD || cur->type == SINGLE_QUOTED
-			|| cur->type == REDIRECT_IN || cur->type == REDIRECT_OUT
-			|| cur->type == REDIRECT_HEREDOC || cur->type == REDIRECT_APPEND))
+			|| cur->type == DOUBLE_QUOTED || cur->type == REDIRECT_IN
+			|| cur->type == REDIRECT_OUT || cur->type == REDIRECT_HEREDOC
+			|| cur->type == REDIRECT_APPEND))
 	{
-		if (cur->type == WORD || cur->type == SINGLE_QUOTED)
+		if (cur->type == WORD || cur->type == SINGLE_QUOTED
+			|| cur->type == DOUBLE_QUOTED)
 			argc++;
 		else
 		{
-			redir = malloc(sizeof(t_redirect));
+			redir = ft_calloc(1, sizeof(t_redirect));
 			if (!redir)
 			{
 				free_redirects(redir_head);
@@ -32,7 +74,8 @@ t_node	*simple_command(t_token **list)
 			}
 			redir->type = cur->type;
 			cur = cur->next;
-			if (!cur || (cur->type != WORD && cur->type != SINGLE_QUOTED))
+			if (!cur || (cur->type != WORD && cur->type != SINGLE_QUOTED
+					&& cur->type != DOUBLE_QUOTED))
 			{
 				free_redirects(redir_head);
 				return (NULL);
@@ -43,7 +86,7 @@ t_node	*simple_command(t_token **list)
 		}
 		cur = cur->next;
 	}
-	argv = malloc(sizeof(char *) * (argc + 1));
+	argv = ft_calloc(argc + 1, sizeof(char *));
 	arg_types = malloc(sizeof(t_tokens) * argc);
 	if (!argv || !arg_types)
 	{
@@ -55,10 +98,12 @@ t_node	*simple_command(t_token **list)
 	cur = *list;
 	i = 0;
 	while (cur && (cur->type == WORD || cur->type == SINGLE_QUOTED
-			|| cur->type == REDIRECT_IN || cur->type == REDIRECT_OUT
-			|| cur->type == REDIRECT_HEREDOC || cur->type == REDIRECT_APPEND))
+			|| cur->type == DOUBLE_QUOTED || cur->type == REDIRECT_IN
+			|| cur->type == REDIRECT_OUT || cur->type == REDIRECT_HEREDOC
+			|| cur->type == REDIRECT_APPEND))
 	{
-		if (cur->type == WORD || cur->type == SINGLE_QUOTED)
+		if (cur->type == WORD || cur->type == SINGLE_QUOTED
+			|| cur->type == DOUBLE_QUOTED)
 		{
 			argv[i] = ft_strdup(cur->value);
 			arg_types[i] = cur->type;
@@ -71,15 +116,14 @@ t_node	*simple_command(t_token **list)
 		cur = cur->next;
 	}
 	argv[i] = NULL;
-	if (argc == 0)
+	if (argc == 0 && !redir_head)
 	{
 		free(argv);
 		free(arg_types);
-		free_redirects(redir_head);
 		return (NULL);
 	}
-	cmd = malloc(sizeof(t_cmd));
-	node = malloc(sizeof(t_node));
+	cmd = ft_calloc(1, sizeof(t_cmd));
+	node = ft_calloc(1, sizeof(t_node));
 	if (!cmd || !node)
 	{
 		free(argv);
@@ -89,7 +133,10 @@ t_node	*simple_command(t_token **list)
 		free_redirects(redir_head);
 		return (NULL);
 	}
-	cmd->cmd = argv[0];
+	if (argc > 0)
+		cmd->cmd = argv[0];
+	else
+		cmd->cmd = NULL;
 	cmd->args = argv;
 	cmd->arg_types = arg_types;
 	cmd->redirects = redir_head;

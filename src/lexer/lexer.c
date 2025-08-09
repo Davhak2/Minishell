@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "utils.h"
 
-char	*process_quotes(char **ptr)
+char	*process_quotes(char **ptr, t_tokens *quote_type)
 {
 	char	*result;
 	char	*temp;
@@ -24,11 +24,19 @@ char	*process_quotes(char **ptr)
 	result = ft_strdup("");
 	if (!result)
 		return (NULL);
+	*quote_type = WORD;
 	while (**ptr)
 	{
 		if (is_quote(**ptr))
 		{
 			quote = **ptr;
+			if (*quote_type == WORD)
+			{
+				if (quote == '\'')
+					*quote_type = SINGLE_QUOTED;
+				else if (quote == '"')
+					*quote_type = DOUBLE_QUOTED;
+			}
 			(*ptr)++;
 			start = *ptr;
 			while (**ptr && **ptr != quote)
@@ -78,14 +86,15 @@ char	*process_quotes(char **ptr)
 
 t_token	*tokenize(char *line)
 {
-	t_token	*list;
-	char	*ptr;
-	t_type	type;
-	char	*start;
-	int		len;
-	char	*word;
-	char	quote;
-	char	*processed;
+	t_token		*list;
+	char		*ptr;
+	t_type		type;
+	char		*start;
+	int			len;
+	char		*word;
+	char		quote;
+	char		*processed;
+	t_tokens	quote_type;
 
 	list = NULL;
 	ptr = line;
@@ -104,13 +113,13 @@ t_token	*tokenize(char *line)
 		}
 		if (is_quote(*ptr))
 		{
-			processed = process_quotes(&ptr);
+			processed = process_quotes(&ptr, &quote_type);
 			if (!processed)
 			{
 				free_token_list(list);
 				return (NULL);
 			}
-			type.type = WORD;
+			type.type = quote_type;
 			type.value = processed;
 			create_and_add(&list, type);
 		}

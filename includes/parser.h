@@ -5,7 +5,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-typedef enum e_tokens // TODO: implement *
+typedef enum e_tokens
 {
 	WORD,             // CMD, arguments, filenames
 	REDIRECT_IN,      // <
@@ -19,6 +19,7 @@ typedef enum e_tokens // TODO: implement *
 	RPAREN,           // )
 	EOF_,             // EOF
 	SINGLE_QUOTED,    // for expander
+	DOUBLE_QUOTED,    // for expander
 
 	/* future - > VARIABLE, EXIT_STATUS, S_QUOTE, D_QUOTE,
 		WHITESPACE, NEWLINE_,
@@ -50,6 +51,7 @@ typedef struct s_redirect
 {
 	t_tokens			type;
 	char				*filename;
+	char				*heredoc_filename;
 	struct s_redirect	*next;
 }						t_redirect;
 
@@ -68,10 +70,13 @@ typedef struct s_shell
 	t_token				*token;
 	char				***envp;
 	int					last_status;
-	int heredoc_line; // номер строки для heredoc warning
+	int					heredoc_line; // номер строки для heredoc warning
+	int					stdin_backup;
+	int					stdout_backup;
 }						t_shell;
 
 t_token					*tokenize(char *line);
+int						validate_syntax(t_token *tokens);
 t_node					*parse_or(t_token **list);
 t_node					*parse_and(t_token **list);
 t_node					*parse_pipe(t_token **list);
