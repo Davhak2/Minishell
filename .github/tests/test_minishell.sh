@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MINISHELL=./minishell
-c
+
 OK=0
 FAIL=0
 
