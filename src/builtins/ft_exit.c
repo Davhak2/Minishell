@@ -49,7 +49,7 @@ int	ft_exit(char **args, t_shell *shell)
 	}
 	else
 	{
-		if (!is_numeric_string(args[1]))
+		if (!is_numeric(args[1]))
 		{
 			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(args[1], STDERR_FILENO);

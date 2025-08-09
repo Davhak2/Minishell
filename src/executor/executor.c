@@ -253,7 +253,6 @@ int execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a &&
 	if (!cmd)
 		return (127);
 
-	// Handle redirects even if there's no command (e.g., just "<< eof")
 	if (cmd->redirects)
 	{
 		stdin_fd = dup(0);
@@ -265,12 +264,10 @@ int execute_command(t_cmd *cmd, t_shell *shell) // TODO: fix -> export test=a &&
 		if (status != 0)
 		{
 			restore_fds(stdin_fd, stdout_fd, shell);
-			// Return the actual status from handle_redirects (e.g., 130 for SIGINT)
 			return (status > 0 ? status : 1);
 		}
 	}
 
-	// If there's no actual command, just clean up redirects and return success
 	if (!cmd->cmd || !cmd->args || !cmd->args[0])
 	{
 		if (redirect_mode)
@@ -459,6 +456,24 @@ void execute_ast(t_node *node, t_shell *shell)
 		int status1, status2;
 		t_cmd *left_cmd, *right_cmd;
 		int heredoc_status = 0;
+		int right_has_heredoc = 0;
+		if (node->right && node->right->type == WORD && node->right->value)
+		{
+			right_cmd = (t_cmd *)node->right->value;
+			if (right_cmd->redirects)
+			{
+				t_redirect *current = right_cmd->redirects;
+				while (current)
+				{
+					if (current->type == REDIRECT_HEREDOC)
+					{
+						right_has_heredoc = 1;
+						break;
+					}
+					current = current->next;
+				}
+			}
+		}
 
 		if (pipe(pipefd) == -1)
 		{
@@ -502,7 +517,21 @@ void execute_ast(t_node *node, t_shell *shell)
 			shell->stdout_backup = -1;
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
-			dup2(pipefd[1], STDOUT_FILENO);
+
+			if (right_has_heredoc)
+			{
+				// If right side has heredoc, discard left output
+				int dev_null = open("/dev/null", O_WRONLY);
+				if (dev_null != -1)
+				{
+					dup2(dev_null, STDOUT_FILENO);
+					close(dev_null);
+				}
+			}
+			else
+			{
+				dup2(pipefd[1], STDOUT_FILENO);
+			}
 			close(pipefd[0]);
 			close(pipefd[1]);
 			if (node->left && node->left->type == WORD && node->left->value)
@@ -584,7 +613,12 @@ void execute_ast(t_node *node, t_shell *shell)
 			shell->stdout_backup = -1;
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
-			dup2(pipefd[0], STDIN_FILENO);
+
+			// Only redirect stdin from pipe if right side doesn't have heredoc
+			if (!right_has_heredoc)
+			{
+				dup2(pipefd[0], STDIN_FILENO);
+			}
 			close(pipefd[1]);
 			close(pipefd[0]);
 			execute_ast(node->right, shell);
