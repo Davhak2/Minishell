@@ -2,7 +2,8 @@ name: minishell CI
 
 on:
   push:
-    branches: [ test ]
+    branches:
+      - '*'
 
 permissions:
   contents: read
