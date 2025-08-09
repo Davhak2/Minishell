@@ -441,7 +441,7 @@ void expand_ast(t_node *node, char **envp, t_shell *shell)
 			if (redir->filename)
 			{
 				expanded = expand_word(redir->filename, envp, shell->last_status);
-				if (expanded)
+				if (expanded && expanded != redir->filename)
 				{
 					free(redir->filename);
 					redir->filename = expanded;
@@ -449,7 +449,7 @@ void expand_ast(t_node *node, char **envp, t_shell *shell)
 				if (redir->filename && redir->filename[0] == '~')
 				{
 					expanded = expand_tilde(redir->filename, envp);
-					if (expanded)
+					if (expanded && expanded != redir->filename)
 					{
 						free(redir->filename);
 						redir->filename = expanded;

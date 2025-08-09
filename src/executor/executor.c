@@ -124,7 +124,7 @@ int handle_redirects(t_redirect *redirects, t_redirect_state *state,
 			}
 			close(fd);
 		}
-		else if (current->type == REDIRECT_IN)
+		else if (current->type == REDIRECT_IN) // TODO: grep hi <./test_files/infile_big <./test_files/infile-i vaxt segfault ka ete karas aravoty debug ara jogi inchic a u tenc eli redirectionnerum manr munr caseer kan
 		{
 			fd = open(current->filename, O_RDONLY);
 			if (fd == -1)
