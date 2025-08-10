@@ -6,20 +6,28 @@
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 01:14:44 by luminous          #+#    #+#             */
-/*   Updated: 2025/08/10 15:16:28 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/10 15:56:43 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "utils.h"
 
+static int	read_plain(char **p, char **res)
+{
+	char	*start;
+
+	start = *p;
+	while (**p && !is_whitespace(**p) && !is_quote(**p))
+		(*p)++;
+	if (append_slice(res, start, (size_t)(*p - start)) < 0)
+		return (-1);
+	return (0);
+}
+
 char	*process_quotes(char **ptr, t_tokens *quote_type)
 {
 	char	*result;
-	char	*temp;
-	char	quote;
-	char	*start;
-	char	*joined;
 
 	result = ft_strdup("");
 	if (!result)
@@ -29,54 +37,13 @@ char	*process_quotes(char **ptr, t_tokens *quote_type)
 	{
 		if (is_quote(**ptr))
 		{
-			quote = **ptr;
-			if (*quote_type == WORD)
-			{
-				if (quote == '\'')
-					*quote_type = SINGLE_QUOTED;
-				else if (quote == '"')
-					*quote_type = DOUBLE_QUOTED;
-			}
-			(*ptr)++;
-			start = *ptr;
-			while (**ptr && **ptr != quote)
-				(*ptr)++;
-			if (**ptr == quote)
-			{
-				temp = ft_substr(start, 0, *ptr - start);
-				if (!temp)
-				{
-					free(result);
-					return (NULL);
-				}
-				joined = ft_strjoin(result, temp);
-				free(temp);
-				free(result);
-				result = joined;
-				(*ptr)++;
-			}
-			else
-			{
-				printf("minishell: syntax error: unclosed quote\n");
-				free(result);
+			if (read_quoted(ptr, quote_type, &result) < 0)
 				return (NULL);
-			}
 		}
-		else if (!is_whitespace(**ptr) && **ptr != '\0')
+		else if (!is_whitespace(**ptr))
 		{
-			start = *ptr;
-			while (**ptr && !is_whitespace(**ptr) && !is_quote(**ptr))
-				(*ptr)++;
-			temp = ft_substr(start, 0, *ptr - start);
-			if (!temp)
-			{
-				free(result);
+			if (read_plain(ptr, &result) < 0)
 				return (NULL);
-			}
-			joined = ft_strjoin(result, temp);
-			free(temp);
-			free(result);
-			result = joined;
 		}
 		else
 			break ;
