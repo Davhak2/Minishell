@@ -34,7 +34,18 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)parser/parser2.c \
 					$(SRC_DIR)parser/parser3.c \
 					$(SRC_DIR)expander/expander.c \
-					$(SRC_DIR)executor/executor.c \
+					$(SRC_DIR)executor/executor_main.c \
+					$(SRC_DIR)executor/executor_cmd.c \
+					$(SRC_DIR)executor/executor_exec.c \
+					$(SRC_DIR)executor/executor_fork.c \
+					$(SRC_DIR)executor/executor_redirects.c \
+					$(SRC_DIR)executor/executor_heredoc.c \
+					$(SRC_DIR)executor/executor_heredoc_fork.c \
+					$(SRC_DIR)executor/executor_heredoc_utils.c \
+					$(SRC_DIR)executor/executor_pipe.c \
+					$(SRC_DIR)executor/executor_pipe_utils.c \
+					$(SRC_DIR)executor/executor_utils.c \
+					$(SRC_DIR)executor/executor_utils2.c \
 					$(SRC_DIR)builtins/ft_pwd.c \
 					$(SRC_DIR)builtins/ft_echo.c \
 					$(SRC_DIR)builtins/cd/ft_cd1.c \

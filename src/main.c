@@ -133,6 +133,10 @@ int	main(int argc, char **argv, char **envp)
 	init_signals();
 	while (1)
 	{
+		if (g_received_signal == SIGINT)
+		{
+			shell->last_status = 130;
+		}
 		g_received_signal = 0;
 		input = readline("\001\033[1;32m\002🐚 ms: ➜\001\033[0m\002 ");
 		shell->heredoc_line++;
