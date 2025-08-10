@@ -1,4 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_shell.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/10 18:00:45 by letto             #+#    #+#             */
+/*   Updated: 2025/08/10 18:01:06 by letto            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "unistd.h"
 #include "parser.h"
 #include "utils.h"
 
@@ -6,8 +18,6 @@ void	free_shell(t_shell *shell)
 {
 	if (!shell)
 		return ;
-	// if (shell->cmd)
-	// 	free_cmd(shell->cmd);
 	if (shell->redir)
 		free_redirects(shell->redir);
 	if (shell->token)
