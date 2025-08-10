@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/10 15:31:09 by letto             #+#    #+#             */
+/*   Updated: 2025/08/10 15:33:35 by letto            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSER_H
 # define PARSER_H
 
@@ -7,23 +19,19 @@
 
 typedef enum e_tokens
 {
-	WORD,             // CMD, arguments, filenames
-	REDIRECT_IN,      // <
-	REDIRECT_OUT,     // >
-	REDIRECT_APPEND,  // >>
-	REDIRECT_HEREDOC, // <<
-	PIPE,             // |
-	AND,              // &&
-	OR,               // ||
-	LPAREN,           // (
-	RPAREN,           // )
-	EOF_,             // EOF
-	SINGLE_QUOTED,    // for expander
-	DOUBLE_QUOTED,    // for expander
-
-	/* future - > VARIABLE, EXIT_STATUS, S_QUOTE, D_QUOTE,
-		WHITESPACE, NEWLINE_,
-		CUR_DIR*/
+	WORD,
+	REDIRECT_IN,
+	REDIRECT_OUT,
+	REDIRECT_APPEND,
+	REDIRECT_HEREDOC,
+	PIPE,
+	AND,
+	OR,
+	LPAREN,
+	RPAREN,
+	EOF_,
+	SINGLE_QUOTED,
+	DOUBLE_QUOTED,
 }						t_tokens;
 
 typedef struct s_token
@@ -70,7 +78,7 @@ typedef struct s_shell
 	t_token				*token;
 	char				***envp;
 	int					last_status;
-	int					heredoc_line; // номер строки для heredoc warning
+	int					heredoc_line;
 	int					stdin_backup;
 	int					stdout_backup;
 }						t_shell;
