@@ -1,29 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strstr.c                                        :+:      :+:    :+:   */
+/*   lexer_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/10 15:39:54 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 15:40:01 by letto            ###   ########.fr       */
+/*   Created: 2025/08/10 15:18:10 by letto             #+#    #+#             */
+/*   Updated: 2025/08/10 16:59:11 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "parser.h"
+#include "utils.h"
 
-char	*ft_strstr(const char *haystack, const char *needle)
+void	create_and_add(t_token **list, t_type type)
 {
-	size_t	needle_len;
+	t_token	*token;
 
-	if (!*needle)
-		return ((char *)haystack);
-	needle_len = ft_strlen(needle);
-	while (*haystack)
+	token = create_token(type.type, type.value);
+	if (!token)
 	{
-		if (!ft_strncmp(haystack, needle, needle_len))
-			return ((char *)haystack);
-		haystack++;
+		free(type.value);
+		return ;
 	}
-	return (NULL);
+	add_token_to_list(list, token);
+}
+
+void	syntax_exit(char ptr, t_token *list)
+{
+	printf("minishell: syntax error near unexpected token `%c'\n", ptr);
+	free_token_list(list);
 }

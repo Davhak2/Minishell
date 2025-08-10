@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strstr.c                                        :+:      :+:    :+:   */
+/*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/10 15:39:54 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 15:40:01 by letto            ###   ########.fr       */
+/*   Created: 2025/08/10 17:05:59 by letto             #+#    #+#             */
+/*   Updated: 2025/08/10 17:06:17 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef LEXER_H
+# define LEXER_H
 
-char	*ft_strstr(const char *haystack, const char *needle)
-{
-	size_t	needle_len;
+# include "parser.h"
 
-	if (!*needle)
-		return ((char *)haystack);
-	needle_len = ft_strlen(needle);
-	while (*haystack)
-	{
-		if (!ft_strncmp(haystack, needle, needle_len))
-			return ((char *)haystack);
-		haystack++;
-	}
-	return (NULL);
-}
+int	handle_quotes(t_token **list, char **ptr);
+int	read_operator(t_type *type, char **ptr);
+int	handle_word(t_token **list, char **ptr);
+int	dispatch_token(t_token **list, char **ptr);
+int	append_slice(char **dest, const char *start, size_t len);
+int	read_quoted(char **p, t_tokens *qt, char **res);
+
+#endif

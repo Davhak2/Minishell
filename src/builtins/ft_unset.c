@@ -1,76 +1,93 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/10 17:20:25 by letto             #+#    #+#             */
+/*   Updated: 2025/08/10 18:12:07 by letto            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 #include "libft.h"
 #include "utils.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 
-char	**remove_env_var(char **envp, int index)
+static void	free_partial(char **arr, int upto)
 {
-	int		count;
-	char	**new_envp;
+	while (--upto >= 0)
+		free(arr[upto]);
+	free(arr);
+}
+
+static char	**dup_env_without(char **envp, int index)
+{
+	int		n;
+	char	**neu;
 	int		i;
 	int		j;
 
-	count = count_env_vars(envp);
-
-	new_envp = malloc(sizeof(char *) * count);
-	if (!new_envp)
+	n = env_len(envp);
+	neu = malloc(sizeof(char *) * n);
+	if (!neu)
 		return (NULL);
-	i = 0;
+	i = -1;
 	j = 0;
-	
-  while (envp[i])
+	while (envp[++i])
 	{
-		if (i != index)
-		{
-			new_envp[j] = ft_strdup(envp[i]);
-			if (!new_envp[j])
-			{
-				while (--j >= 0)
-					free(new_envp[j]);
-				free(new_envp);
-				return (NULL);
-			}
-			j++;
-		}
-		i++;
+		if (i == index)
+			continue ;
+		neu[j] = ft_strdup(envp[i]);
+		if (!neu[j])
+			return (free_partial(neu, j), NULL);
+		j++;
 	}
-	new_envp[j] = NULL;
-	return (new_envp);
+	neu[j] = NULL;
+	return (neu);
+}
+
+static int	unset_one(char *name, t_shell *shell)
+{
+	int		idx;
+	char	**old;
+	char	**neu;
+
+	if (!is_valid_identifier(name))
+	{
+		printf("bash: unset: `%s': not a valid identifier\n", name);
+		return (0);
+	}
+	old = *(shell->envp);
+	idx = find_env_var(old, name);
+	if (idx < 0)
+		return (0);
+	neu = dup_env_without(old, idx);
+	if (!neu)
+		return (1);
+	*(shell->envp) = neu;
+	free_envp(old);
+	return (0);
 }
 
 int	ft_unset(char **args, t_shell *shell)
 {
-	int i;
-	int index;
-	char **current_envp;
-	char **new_envp;
+	int	i;
+	int	rc;
+	int	ret;
 
-	current_envp = *(shell->envp);
-	if (!args[1])
-		return (0);
+	if (!args || !shell || !shell->envp)
+		return (1);
 	i = 1;
-
+	ret = 0;
 	while (args[i])
 	{
-		if (!is_valid_identifier(args[i]))
-		{
-			printf("bash: unset: `%s': not a valid identifier\n", args[i]);
-			i++;
-			continue ;
-		}
-		index = find_env_var(current_envp, args[i]);
-		if (index >= 0)
-		{
-			new_envp = remove_env_var(current_envp, index);
-			if (!new_envp)
-				return (1);
-			*(shell->envp) = new_envp;
-			free_envp(current_envp);
-			current_envp = new_envp;
-		}
+		rc = unset_one(args[i], shell);
+		if (rc != 0)
+			ret = rc;
 		i++;
 	}
-	return (0);
+	return (ret);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/10 15:31:15 by letto             #+#    #+#             */
+/*   Updated: 2025/08/10 19:45:15 by letto            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef UTILS_H
 # define UTILS_H
 
@@ -19,18 +31,31 @@ void	free_token_list(t_token *head);
 t_type	set_type(char op, bool mode);
 void	create_and_add(t_token **list, t_type type);
 char	*process_quotes(char **ptr, t_tokens *quote_type);
+void	syntax_exit(char ptr, t_token *list);
 
 void	free_shell(t_shell *shell);
+
+// parser_utils
+void	syntax_error(char *str);
+void	free_ast(t_node *node);
+void	free_redirects(t_redirect *redir);
+int		is_arg_token(t_tokens t);
+int		is_redir_token(t_tokens t);
+int		in_simple_span(t_tokens t);
 
 // envp utils
 char	**duplicate_envp(char **envp);
 void	free_envp(char **envp);
 int		update_env_value(const char *name, const char *value, t_shell *shell);
+int		has_special_chars(char *str);
 
+// builtin utils
 int		is_valid_identifier(char *str);
 int		count_env_vars(char **envp);
 int		find_env_var(char **envp, char *var_name);
 int		update_env_value(const char *name, const char *value, t_shell *shell);
-
+int		env_len(char **envp);
+int		matches_name(const char *entry, const char *name);
+int		replace_in_place(char ***envp_ref, int idx, char *new_var);
 
 #endif // UTILS_H

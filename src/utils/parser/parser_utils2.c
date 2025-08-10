@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strstr.c                                        :+:      :+:    :+:   */
+/*   parser_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/10 15:39:54 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 15:40:01 by letto            ###   ########.fr       */
+/*   Created: 2025/08/10 16:55:39 by letto             #+#    #+#             */
+/*   Updated: 2025/08/10 18:00:35 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "utils.h"
 
-char	*ft_strstr(const char *haystack, const char *needle)
+int	is_arg_token(t_tokens t)
 {
-	size_t	needle_len;
+	return (t == WORD || t == SINGLE_QUOTED || t == DOUBLE_QUOTED);
+}
 
-	if (!*needle)
-		return ((char *)haystack);
-	needle_len = ft_strlen(needle);
-	while (*haystack)
-	{
-		if (!ft_strncmp(haystack, needle, needle_len))
-			return ((char *)haystack);
-		haystack++;
-	}
-	return (NULL);
+int	is_redir_token(t_tokens t)
+{
+	return (t == REDIRECT_IN || t == REDIRECT_OUT || t == REDIRECT_HEREDOC
+		|| t == REDIRECT_APPEND);
+}
+
+int	in_simple_span(t_tokens t)
+{
+	return (is_arg_token(t) || is_redir_token(t));
 }
