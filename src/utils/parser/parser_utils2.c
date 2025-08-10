@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_utils1.c                                     :+:      :+:    :+:   */
+/*   parser_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/10 15:18:10 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 16:59:11 by letto            ###   ########.fr       */
+/*   Created: 2025/08/10 16:55:39 by letto             #+#    #+#             */
+/*   Updated: 2025/08/10 16:55:39 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
 #include "utils.h"
 
-void	create_and_add(t_token **list, t_type type)
+int	is_arg_token(t_tokens t)
 {
-	t_token	*token;
-
-	token = create_token(type.type, type.value);
-	if (!token)
-	{
-		free(type.value);
-		return ;
-	}
-	add_token_to_list(list, token);
+	return (t == WORD || t == SINGLE_QUOTED || t == DOUBLE_QUOTED);
 }
 
-void	syntax_exit(char ptr, t_token *list)
+int	is_redir_token(t_tokens t)
 {
-	printf("minishell: syntax error near unexpected token `%c'\n", ptr);
-	free_token_list(list);
+	return (t == REDIRECT_IN || t == REDIRECT_OUT
+		|| t == REDIRECT_HEREDOC || t == REDIRECT_APPEND);
+}
+
+int	in_simple_span(t_tokens t)
+{
+	return (is_arg_token(t) || is_redir_token(t));
 }

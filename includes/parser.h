@@ -6,7 +6,7 @@
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:31:09 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 15:33:35 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/10 17:05:51 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,11 @@ t_node					*parse_and(t_token **list);
 t_node					*parse_pipe(t_token **list);
 t_node					*parse_parenthesis(t_token **list);
 t_node					*parse(t_token **list);
-
-// FREE
-void					free_ast(t_node *node);
-void					free_redirects(t_redirect *redir);
+t_node					*simple_command(t_token **list);
+int						scan_and_collect(t_token *cur, t_token **end,
+							t_redirect **rh);
+int						count_args(t_token *cur);
+int						alloc_arrays(int argc, char ***argv, t_tokens **types);
+int						fill_args(t_token *cur, char **argv, t_tokens *types);
 
 #endif // PARSER_H

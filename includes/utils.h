@@ -6,7 +6,7 @@
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:31:15 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 15:55:56 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/10 17:05:39 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,17 @@ void	free_token_list(t_token *head);
 t_type	set_type(char op, bool mode);
 void	create_and_add(t_token **list, t_type type);
 char	*process_quotes(char **ptr, t_tokens *quote_type);
-int		handle_quotes(t_token **list, char **ptr);
-int		read_operator(t_type *type, char **ptr);
-int		handle_word(t_token **list, char **ptr);
-int		dispatch_token(t_token **list, char **ptr);
 void	syntax_exit(char ptr, t_token *list);
-int		append_slice(char **dest, const char *start, size_t len);
-int		read_quoted(char **p, t_tokens *qt, char **res);
 
 void	free_shell(t_shell *shell);
+
+// parser_utils
+void	syntax_error(char *str);
+void	free_ast(t_node *node);
+void	free_redirects(t_redirect *redir);
+int		is_arg_token(t_tokens t);
+int		is_redir_token(t_tokens t);
+int		in_simple_span(t_tokens t);
 
 // envp utils
 char	**duplicate_envp(char **envp);
