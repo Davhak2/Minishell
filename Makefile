@@ -24,11 +24,15 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)utils/token_utils.c \
 					$(SRC_DIR)utils/lexer/lexer_utils1.c \
 					$(SRC_DIR)utils/lexer/lexer_utils2.c \
-					$(SRC_DIR)utils/lexer/lexer_utils3.c \
-					$(SRC_DIR)utils/parser_utils.c \
+					$(SRC_DIR)utils/parser/parser_utils1.c \
+					$(SRC_DIR)utils/parser/parser_utils2.c \
 					$(SRC_DIR)utils/free_shell.c \
-					$(SRC_DIR)lexer/lexer.c \
-					$(SRC_DIR)parser/parser.c \
+					$(SRC_DIR)lexer/lexer1.c \
+					$(SRC_DIR)lexer/lexer2.c \
+					$(SRC_DIR)lexer/lexer3.c \
+					$(SRC_DIR)parser/parser1.c \
+					$(SRC_DIR)parser/parser2.c \
+					$(SRC_DIR)parser/parser3.c \
 					$(SRC_DIR)expander/expander.c \
 					$(SRC_DIR)executor/executor.c \
 					$(SRC_DIR)builtins/ft_pwd.c \
