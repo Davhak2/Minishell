@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
+/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 01:14:44 by luminous          #+#    #+#             */
-/*   Updated: 2025/07/31 18:50:59 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/10 15:16:28 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,82 +84,26 @@ char	*process_quotes(char **ptr, t_tokens *quote_type)
 	return (result);
 }
 
+static void	skip_spaces(char **ptr)
+{
+	while (**ptr && is_whitespace(**ptr))
+		(*ptr)++;
+}
+
 t_token	*tokenize(char *line)
 {
-	t_token		*list;
-	char		*ptr;
-	t_type		type;
-	char		*start;
-	int			len;
-	char		*word;
-	char		quote;
-	char		*processed;
-	t_tokens	quote_type;
+	t_token	*list;
+	char	*ptr;
 
 	list = NULL;
 	ptr = line;
 	while (*ptr)
 	{
-		while (is_whitespace(*ptr))
-			++ptr;
+		skip_spaces(&ptr);
 		if (!*ptr)
 			break ;
-		if ((*ptr == ';' || *ptr == '\\') && !is_quote(*ptr))
-		{
-			printf("minishell: syntax error near unexpected token `%c'\n",
-				*ptr);
-			free_token_list(list);
+		if (!dispatch_token(&list, &ptr))
 			return (NULL);
-		}
-		if (is_quote(*ptr))
-		{
-			processed = process_quotes(&ptr, &quote_type);
-			if (!processed)
-			{
-				free_token_list(list);
-				return (NULL);
-			}
-			type.type = quote_type;
-			type.value = processed;
-			create_and_add(&list, type);
-		}
-		else if (is_operator_char(*ptr))
-		{
-			if ((*ptr == '<' && *(ptr + 1) == '<') || (*ptr == '>' && *(ptr
-						+ 1) == '>') || (*ptr == '|' && *(ptr + 1) == '|')
-				|| (*ptr == '&' && *(ptr + 1) == '&'))
-			{
-				type = set_type(*ptr, 0);
-				ptr += 2;
-			}
-			else
-			{
-				type = set_type(*ptr, 1);
-				ptr++;
-			}
-			create_and_add(&list, type);
-		}
-		else if (is_word_char(*ptr))
-		{
-			start = ptr;
-			while (*ptr && is_word_char(*ptr))
-				ptr++;
-			len = ptr - start;
-			word = malloc(len + 1);
-			if (!word)
-				return (free_token_list(list), NULL);
-			ft_strlcpy(word, start, len + 1);
-			type.type = WORD;
-			type.value = word;
-			create_and_add(&list, type);
-		}
-		else
-		{
-			printf("minishell: syntax error near unexpected token `%c'\n",
-				*ptr);
-			free_token_list(list);
-			return (NULL);
-		}
 	}
 	return (list);
 }

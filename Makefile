@@ -22,7 +22,9 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)signals/signal_setup.c \
 					$(SRC_DIR)utils/char_utils.c \
 					$(SRC_DIR)utils/token_utils.c \
-					$(SRC_DIR)utils/lexer_utils.c \
+					$(SRC_DIR)utils/lexer/lexer_utils1.c \
+					$(SRC_DIR)utils/lexer/lexer_utils2.c \
+					$(SRC_DIR)utils/lexer/lexer_utils3.c \
 					$(SRC_DIR)utils/parser_utils.c \
 					$(SRC_DIR)utils/free_shell.c \
 					$(SRC_DIR)lexer/lexer.c \
