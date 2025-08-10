@@ -43,6 +43,7 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)builtins/export/ft_export1.c \
 					$(SRC_DIR)builtins/export/ft_export2.c \
 					$(SRC_DIR)builtins/export/ft_export3.c \
+					$(SRC_DIR)builtins/export/ft_export4.c \
 					$(SRC_DIR)utils/builtins/builtin_utils1.c \
 					$(SRC_DIR)utils/builtins/builtin_utils2.c \
 					$(SRC_DIR)utils/builtins/builtin_utils3.c \
