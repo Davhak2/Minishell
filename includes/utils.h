@@ -6,7 +6,7 @@
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:31:15 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 17:05:39 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/10 18:19:19 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,15 @@ int		in_simple_span(t_tokens t);
 char	**duplicate_envp(char **envp);
 void	free_envp(char **envp);
 int		update_env_value(const char *name, const char *value, t_shell *shell);
+int	has_special_chars(char *str);
 
+// builtin utils
 int		is_valid_identifier(char *str);
 int		count_env_vars(char **envp);
 int		find_env_var(char **envp, char *var_name);
 int		update_env_value(const char *name, const char *value, t_shell *shell);
+int		env_len(char **envp);
+int		matches_name(const char *entry, const char *name);
+int		replace_in_place(char ***envp_ref, int idx, char *new_var);
 
 #endif // UTILS_H

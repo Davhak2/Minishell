@@ -40,8 +40,12 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)builtins/cd/ft_cd1.c \
 					$(SRC_DIR)builtins/cd/ft_cd2.c \
 					$(SRC_DIR)builtins/ft_exit.c \
-					$(SRC_DIR)builtins/ft_export.c \
-					$(SRC_DIR)utils/builtin_utils.c \
+					$(SRC_DIR)builtins/export/ft_export1.c \
+					$(SRC_DIR)builtins/export/ft_export2.c \
+					$(SRC_DIR)builtins/export/ft_export3.c \
+					$(SRC_DIR)utils/builtins/builtin_utils1.c \
+					$(SRC_DIR)utils/builtins/builtin_utils2.c \
+					$(SRC_DIR)utils/builtins/builtin_utils3.c \
 					$(SRC_DIR)builtins/ft_env.c \
 					$(SRC_DIR)builtins/ft_unset.c
 
