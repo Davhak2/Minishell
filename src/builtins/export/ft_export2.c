@@ -49,7 +49,7 @@ char	**update_or_add_env_var(char **envp, char *new_var)
 {
 	int		index;
 	char	*var_name;
-	char	**new_envp;
+	// char	**new_envp;
 
 	var_name = get_var_name(new_var);
 	if (!var_name)

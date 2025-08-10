@@ -46,9 +46,9 @@ static int	parse_status_or_error(char *s, int *status_out)
 
 	if (!is_numeric(s))
 	{
-		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-		ft_putstr_fd((char *)s, STDERR_FILENO);
-		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd((char *)s, 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
 		*status_out = 2;
 		return (0);
 	}

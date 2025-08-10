@@ -35,7 +35,7 @@ int	ft_echo(char **args, t_shell *shell)
 {
 	int		i;
 	int		newline;
-	char	*expanded;
+	// char	*expanded;
 
 	i = 1;
 	newline = 1;

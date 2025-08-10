@@ -51,6 +51,7 @@ static int	execute_external_command(t_cmd *cmd, t_shell *shell)
 	}
 	status = handle_command_fork(cmd, shell, path);
 	free(path);
+	(void)status;
 	return (shell->last_status);
 }
 

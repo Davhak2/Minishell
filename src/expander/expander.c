@@ -263,7 +263,6 @@ static char	**wildcard_expand(const char *pattern)
 	int				count;
 	int				cap;
 	int				i;
-	struct stat		st;
 	char			**tmp;
 
 	result = NULL;
@@ -280,25 +279,25 @@ static char	**wildcard_expand(const char *pattern)
 	}
 	while ((entry = readdir(dir)))
 	{
-		if (entry->d_name[0] == '.')
+		if (entry->d_name[0] == '.' && pattern[0] != '.')
 			continue ;
 		if (wildcard_match(pattern, entry->d_name))
 		{
+			if (!ft_strcmp(entry->d_name, ".") || !ft_strcmp(entry->d_name, ".."))
+				continue ;
 			if (count + 2 > cap)
 			{
 				cap *= 2;
 				tmp = malloc(sizeof(char *) * cap);
 				if (!tmp)
 				{
-					for (i = 0; i < count; ++i)
-						free(result[i]);
-					free(result);
+					ft_free_array(result);
 					closedir(dir);
 					return (NULL);
 				}
 				for (i = 0; i < count; i++)
 					tmp[i] = result[i];
-				free(result);
+				ft_free_array(result);
 				result = tmp;
 			}
 			result[count++] = ft_strdup(entry->d_name);
@@ -306,10 +305,7 @@ static char	**wildcard_expand(const char *pattern)
 	}
 	closedir(dir);
 	if (count == 0)
-	{
-		free(result);
-		return (NULL);
-	}
+		return (free(result), NULL);
 	result[count] = NULL;
 	return (result);
 }
@@ -375,47 +371,40 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 			new_argc = 0;
 			for (i = 0; cmd->args[i]; ++i)
 			{
-				if (cmd->arg_types[i] == WORD && strchr(cmd->args[i], '*'))
+				if (cmd->arg_types[i] == WORD && ft_strchr(cmd->args[i], '*'))
 				{
 					wildcards = wildcard_expand(cmd->args[i]);
-					// TODO: fix wildcard with hidden files,example: "echo .*c "
 					if (wildcards)
 					{
-						for (j = 0; wildcards[j]; ++j)
+						j = -1;
+						while (wildcards[++j])
 							new_argc++;
-						for (j = 0; wildcards[j]; ++j)
-							free(wildcards[j]);
-						free(wildcards);
+						j = -1;
+						ft_free_array(wildcards);
 					}
 					else
-					{
 						new_argc++;
-					}
 				}
 				else
-				{
 					new_argc++;
-				}
 			}
 			new_args = malloc(sizeof(char *) * (new_argc + 1));
 			new_types = malloc(sizeof(t_tokens) * (new_argc + 1));
 			k = 0;
 			for (i = 0; cmd->args[i]; ++i)
 			{
-				if (cmd->arg_types[i] == WORD && strchr(cmd->args[i], '*'))
+				if (cmd->arg_types[i] == WORD && ft_strchr(cmd->args[i], '*'))
 				{
 					wildcards = wildcard_expand(cmd->args[i]);
 					if (wildcards)
 					{
 						for (j = 0; wildcards[j]; ++j)
 						{
-							new_args[k] = strdup(wildcards[j]);
+							new_args[k] = ft_strdup(wildcards[j]);
 							new_types[k] = WORD;
 							k++;
 						}
-						for (j = 0; wildcards[j]; ++j)
-							free(wildcards[j]);
-						free(wildcards);
+						ft_free_array(wildcards);
 						free(cmd->args[i]);
 					}
 					else

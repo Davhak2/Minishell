@@ -115,7 +115,7 @@ int	main(int argc, char **argv, char **envp)
 	char	*next;
 	char	*tmp;
 	char	*joined;
-	char	*test;
+//	char	*test;
 	t_shell	*shell;
 	char	**my_envp;
 
