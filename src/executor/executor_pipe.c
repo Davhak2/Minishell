@@ -106,4 +106,6 @@ void	wait_for_children(pid_t pid1, pid_t pid2, int *status1,
 		cleanup_pid1(pid1, status1);
 	if (!pid2_done)
 		cleanup_pid2(pid2, status2);
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

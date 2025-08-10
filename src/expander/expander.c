@@ -297,7 +297,7 @@ static char	**wildcard_expand(const char *pattern)
 				}
 				for (i = 0; i < count; i++)
 					tmp[i] = result[i];
-				ft_free_array(result);
+				free(result);
 				result = tmp;
 			}
 			result[count++] = ft_strdup(entry->d_name);
