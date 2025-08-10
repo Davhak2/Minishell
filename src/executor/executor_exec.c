@@ -45,7 +45,8 @@ static int	execute_external_command(t_cmd *cmd, t_shell *shell)
 	path = exec_path(cmd, *(shell->envp));
 	if (!path)
 	{
-		exec_fail(cmd->args[0]);
+		if (shell->stdin_backup != -1 || shell->stdout_backup != -1)
+			exec_fail(cmd->args[0]);
 		return (127);
 	}
 	status = handle_command_fork(cmd, shell, path);

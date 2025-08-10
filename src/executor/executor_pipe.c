@@ -1,5 +1,7 @@
 #include "executor.h"
 #include "signals.h"
+#include "parser.h"
+#include "utils.h"
 #include <signal.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -49,35 +51,24 @@ void	handle_pipe_signals(int status1, int status2, t_shell *shell)
 
 void	check_command_not_found(int status1, int status2, t_node *node)
 {
-	t_cmd	*cmd;
-
-	if (WEXITSTATUS(status1) == 127)
-	{
-		cmd = (t_cmd *)node->left->value;
-		if (cmd && cmd->args && cmd->args[0])
-			exec_fail(cmd->args[0]);
-	}
-	if (WEXITSTATUS(status2) == 127)
-	{
-		cmd = (t_cmd *)node->right->value;
-		if (cmd && cmd->args && cmd->args[0])
-			exec_fail(cmd->args[0]);
-	}
+	if (WIFEXITED(status1) && WEXITSTATUS(status1) == 127 && node->left
+		&& node->left->type == WORD)
+		exec_fail(((t_cmd *)node->left->value)->args[0]);
+	if (WIFEXITED(status2) && WEXITSTATUS(status2) == 127 && node->right
+		&& node->right->type == WORD)
+		exec_fail(((t_cmd *)node->right->value)->args[0]);
 }
 
-static void	cleanup_remaining_children(pid_t pid1, pid_t pid2, int pid1_done,
-		int pid2_done)
+static void	cleanup_pid1(pid_t pid1, int *status1)
 {
-	if (!pid1_done)
-	{
-		kill(pid1, SIGTERM);
-		waitpid(pid1, NULL, 0);
-	}
-	if (!pid2_done)
-	{
-		kill(pid2, SIGTERM);
-		waitpid(pid2, NULL, 0);
-	}
+	kill(pid1, SIGTERM);
+	waitpid(pid1, status1, 0);
+}
+
+static void	cleanup_pid2(pid_t pid2, int *status2)
+{
+	kill(pid2, SIGTERM);
+	waitpid(pid2, status2, 0);
 }
 
 void	wait_for_children(pid_t pid1, pid_t pid2, int *status1,
@@ -111,5 +102,8 @@ void	wait_for_children(pid_t pid1, pid_t pid2, int *status1,
 			break ;
 		}
 	}
-	cleanup_remaining_children(pid1, pid2, pid1_done, pid2_done);
+	if (!pid1_done)
+		cleanup_pid1(pid1, status1);
+	if (!pid2_done)
+		cleanup_pid2(pid2, status2);
 }
