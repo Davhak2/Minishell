@@ -37,7 +37,8 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)executor/executor.c \
 					$(SRC_DIR)builtins/ft_pwd.c \
 					$(SRC_DIR)builtins/ft_echo.c \
-					$(SRC_DIR)builtins/ft_cd.c \
+					$(SRC_DIR)builtins/cd/ft_cd1.c \
+					$(SRC_DIR)builtins/cd/ft_cd2.c \
 					$(SRC_DIR)builtins/ft_exit.c \
 					$(SRC_DIR)builtins/ft_export.c \
 					$(SRC_DIR)utils/builtin_utils.c \

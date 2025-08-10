@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/10 17:15:16 by letto             #+#    #+#             */
+/*   Updated: 2025/08/10 17:20:15 by letto            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
-#include "minishell.h"
+#include "libft.h"
 #include "parser.h"
 #include "utils.h"
-#include "libft.h"
 
 static int	is_numeric(char *str)
 {
@@ -18,7 +29,6 @@ static int	is_numeric(char *str)
 	}
 	return (1);
 }
-
 
 int	ft_exit(char **args, t_shell *shell)
 {
@@ -58,7 +68,8 @@ int	ft_exit(char **args, t_shell *shell)
 		}
 		else
 		{
-			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+			ft_putstr_fd("minishell: exit: too many arguments\n",
+				STDERR_FILENO);
 			return (1);
 		}
 	}
