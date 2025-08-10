@@ -25,7 +25,7 @@ static char	*expand_var(const char *str, char **envp, int last_status)
 	return (buf);
 }
 
-static char	*expand_tilde(char *arg, char **envp)
+char	*expand_tilde(char *arg, char **envp)
 {
 	char	*home;
 	char	*expanded;
