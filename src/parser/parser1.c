@@ -14,8 +14,11 @@
 #include "parser.h"
 #include "utils.h"
 
-/* TODO: add syntax error when no argument after redirection and "<|" example 
+/* TODO: add syntax error when no argument after redirection and "<|" example
 : "echo >>", "echo <", ">>"*/
+
+// TODO: export ARG="*" not a valid identifier
+// TODO: () is valid needs to fix it:
 
 int	validate_syntax(t_token *tokens)
 {
