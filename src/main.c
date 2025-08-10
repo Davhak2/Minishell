@@ -1,7 +1,5 @@
 #include "executor.h"
-#include "expander.h"
 #include "libft.h"
-#include "minishell.h"
 #include "parser.h"
 #include "signals.h"
 #include "utils.h"
@@ -170,7 +168,6 @@ int	main(int argc, char **argv, char **envp)
 			tokens = tokenize(input);
 			shell->token = tokens;
 			// print_tokens(tokens);
-			// Validate syntax before parsing
 			if (validate_syntax(tokens))
 			{
 				if (tokens)
@@ -188,7 +185,7 @@ int	main(int argc, char **argv, char **envp)
 			{
 				if (tokens)
 					free_token_list(tokens);
-				shell->token = NULL; // Prevent double free
+				shell->token = NULL;
 				free(input);
 				continue ;
 			}

@@ -1,7 +1,7 @@
 #include "libft.h"
 #include "parser.h"
 
-int	validate_syntax(t_token *tokens)
+int	validate_syntax(t_token *tokens) // TODO: add syntax error when no argument after redirection and "<|", example: "echo >>", "echo <", ">>"
 {
 	t_token	*curr;
 	t_token	*prev;

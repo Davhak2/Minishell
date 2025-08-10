@@ -151,7 +151,9 @@ int	is_valid_second_var(char *str)
 	free(var_name);
 	return (result);
 }
-int	ft_export(char **args, t_shell *shell)
+int	ft_export(char **args, t_shell *shell) 
+// TODO: export with quotes is valid always, export test="something" is always valid
+// TODO: export variables should add in bottom of env
 {
 	int		i;
 	char	*var_name;
