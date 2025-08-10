@@ -6,7 +6,7 @@
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:31:15 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 15:31:16 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/10 15:55:56 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int		read_operator(t_type *type, char **ptr);
 int		handle_word(t_token **list, char **ptr);
 int		dispatch_token(t_token **list, char **ptr);
 void	syntax_exit(char ptr, t_token *list);
+int		append_slice(char **dest, const char *start, size_t len);
+int		read_quoted(char **p, t_tokens *qt, char **res);
 
 void	free_shell(t_shell *shell);
 
