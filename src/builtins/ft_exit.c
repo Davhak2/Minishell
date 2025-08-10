@@ -6,7 +6,7 @@
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:15:16 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 17:20:15 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/10 19:57:02 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,48 +30,57 @@ static int	is_numeric(char *str)
 	return (1);
 }
 
+static int	count_args_exit(char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args && args[i])
+		i++;
+	return (i);
+}
+
+static int	parse_status_or_error(char *s, int *status_out)
+{
+	long	tmp;
+
+	if (!is_numeric(s))
+	{
+		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+		ft_putstr_fd((char *)s, STDERR_FILENO);
+		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+		*status_out = 2;
+		return (0);
+	}
+	tmp = ft_atoi(s);
+	*status_out = (unsigned char)tmp;
+	return (1);
+}
+
 int	ft_exit(char **args, t_shell *shell)
 {
-	int		exit_status;
-	long	tmp;
-	int		cnt;
+	int	cnt;
+	int	exit_status;
+	int	ret;
 
 	printf("exit\n");
-	cnt = 0;
-	while (args[cnt])
-		cnt++;
+	cnt = count_args_exit(args);
 	if (cnt == 1)
 		exit_status = shell->last_status;
 	else if (cnt == 2)
-	{
-		if (!is_numeric(args[1]))
-		{
-			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-			ft_putstr_fd(args[1], STDERR_FILENO);
-			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-			exit_status = 2;
-		}
-		else
-		{
-			tmp = ft_atoi(args[1]);
-			exit_status = (unsigned char)tmp;
-		}
-	}
+		parse_status_or_error(args[1], &exit_status);
 	else
 	{
-		if (!is_numeric(args[1]))
-		{
-			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-			ft_putstr_fd(args[1], STDERR_FILENO);
-			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-			exit_status = 2;
-		}
-		else
+		if (parse_status_or_error(args[1], &exit_status))
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n",
 				STDERR_FILENO);
-			return (1);
+			ret = 1;
 		}
+		else
+			ret = 0;
+		if (ret == 1)
+			return (1);
 	}
 	free_shell(shell);
 	exit(exit_status);

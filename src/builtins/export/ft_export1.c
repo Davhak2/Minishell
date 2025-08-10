@@ -6,7 +6,7 @@
 /*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:21:49 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 18:23:24 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/10 20:15:49 by letto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,116 +15,89 @@
 #include "utils.h"
 #include <stdio.h>
 
-char	**add_env_var(char **envp, char *new_var)
+static char	**dup_env_with_capacity(char **envp, int *count_out)
 {
 	int		count;
-	char	**new_envp;
+	char	**neu;
 	int		i;
 
 	count = count_env_vars(envp);
-	new_envp = malloc(sizeof(char *) * (count + 2));
-	if (!new_envp)
+	neu = malloc(sizeof(char *) * (count + 2));
+	if (!neu)
 		return (NULL);
 	i = 0;
 	while (i < count)
 	{
-		new_envp[i] = ft_strdup(envp[i]);
-		if (!new_envp[i])
+		neu[i] = ft_strdup(envp[i]);
+		if (!neu[i])
 		{
 			while (--i >= 0)
-				free(new_envp[i]);
-			free(new_envp);
+				free(neu[i]);
+			free(neu);
 			return (NULL);
 		}
 		i++;
 	}
-	new_envp[i] = ft_strdup(new_var);
-	if (!new_envp[i])
-	{
-		while (--i >= 0)
-			free(new_envp[i]);
-		free(new_envp);
-		return (NULL);
-	}
-	new_envp[i + 1] = NULL;
-	return (new_envp);
+	neu[count] = NULL;
+	neu[count + 1] = NULL;
+	*count_out = count;
+	return (neu);
 }
 
-int	ft_export(char **args, t_shell *shell)
-// TODO: export with quotes is valid always, export test = "something" is always valid
+char	**add_env_var(char **envp, char *new_var)
 {
-	int i;
-	char *var_name;
-	char **current_envp;
-	char **new_envp;
-	char *equals_pos;
+	char	**neu;
+	int		count;
+	int		i;
 
-	current_envp = *(shell->envp);
-	if (!args[1])
+	neu = dup_env_with_capacity(envp, &count);
+	if (!neu)
+		return (NULL);
+	neu[count] = ft_strdup(new_var);
+	if (!neu[count])
 	{
-		i = 0;
-		while (current_envp[i])
-		{
-			printf("declare -x ");
-			equals_pos = ft_strchr(current_envp[i], '=');
-			if (equals_pos)
-			{
-				*equals_pos = '\0';
-				printf("%s=\"%s\"\n", current_envp[i], equals_pos + 1);
-				*equals_pos = '=';
-			}
-			else
-				printf("%s\n", current_envp[i]);
-			i++;
-		}
-		return (0);
+		i = count;
+		while (--i >= 0)
+			free(neu[i]);
+		free(neu);
+		return (NULL);
 	}
-	i = 1;
-	while (args[i])
+	neu[count + 1] = NULL;
+	return (neu);
+}
+
+// TODO: export with quotes is valid always, export test = "something" is always valid
+void	print_declared(char **envp)
+{
+	int		i;
+	char	*eq;
+
+	i = 0;
+	while (envp && envp[i])
 	{
-		var_name = get_var_name(args[i]);
-		if (!var_name)
+		printf("declare -x ");
+		eq = ft_strchr(envp[i], '=');
+		if (eq)
 		{
-			i++;
-			continue ;
-		}
-		if (!is_valid_identifier(var_name))
-		{
-			ft_putstr_fd("minishell: export: `", 2);
-			ft_putstr_fd(var_name, 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-			free(var_name);
-			return (1);
-			// i++;
-			// continue ;
-		}
-		equals_pos = ft_strchr(args[i], '=');
-		if (equals_pos)
-		{
-			new_envp = update_or_add_env_var(current_envp, args[i]);
-			if (!new_envp)
-			{
-				free(var_name);
-				return (1);
-			}
-			*(shell->envp) = new_envp;
-			free_envp(current_envp);
-			current_envp = new_envp;
+			*eq = '\0';
+			printf("%s=\"%s\"\n", envp[i], eq + 1);
+			*eq = '=';
 		}
 		else
-		{
-			new_envp = add_env_var(current_envp, var_name);
-			if (!new_envp)
-			{
-				free(var_name);
-				return (1);
-			}
-			*(shell->envp) = new_envp;
-			free_envp(current_envp);
-			current_envp = new_envp;
-		}
-		free(var_name);
+			printf("%s\n", envp[i]);
 		i++;
 	}
+}
+
+int	handle_assignment(char *arg, char ***cur_ref, t_shell *shell)
+{
+	char	**neu;
+
+	neu = update_or_add_env_var(*cur_ref, arg);
+	if (!neu)
+		return (1);
+	*(shell->envp) = neu;
+	free_envp(*cur_ref);
+	*cur_ref = neu;
 	return (0);
 }
