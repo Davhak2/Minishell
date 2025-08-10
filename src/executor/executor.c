@@ -355,9 +355,7 @@ static void	do_child_process(char *delimiter, char *filename, t_shell *shell,
 	char	*heredoc_line;
 	int		fd;
 
-	rl_catch_signals = 0;
-	g_received_signal = 0;
-	signal(SIGINT, sigint_heredoc_handler);
+	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	if (pipefd && pipefd[0] >= 0)
 		close(pipefd[0]);
@@ -383,14 +381,6 @@ static void	do_child_process(char *delimiter, char *filename, t_shell *shell,
 	while (1)
 	{
 		heredoc_line = readline("> ");
-		if (g_received_signal == SIGINT)
-		{
-			// write(STDOUT_FILENO, "\n", 1);
-			close(fd);
-			unlink(filename);
-			free_shell(shell);
-			exit(130);
-		}
 		if (!heredoc_line)
 		{
 			here_msg(shell->heredoc_line, delimiter);

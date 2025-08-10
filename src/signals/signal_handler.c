@@ -17,6 +17,5 @@ void	sigint_heredoc_handler(int sig) // TODO: fix here-doc CTRL + C
 {
 	(void)sig;
 	g_received_signal = SIGINT;
-	write(STDOUT_FILENO, "^C\n", 3);
 	rl_done = 1;
 }
