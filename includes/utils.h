@@ -55,4 +55,13 @@ int		env_len(char **envp);
 int		matches_name(const char *entry, const char *name);
 int		replace_in_place(char ***envp_ref, int idx, char *new_var);
 
+// main_utils
+bool	has_unclosed_quote(const char *str);
+char	*handle_multiline_input(char *input, t_shell *shell);
+int	validate_and_parse(t_shell *shell, t_token **tokens, t_node **ast);
+void	cleanup_resources(t_node *ast, t_token *tokens, t_shell *shell);
+t_shell	*init_minishell(char **envp, char ***my_envp);
+int		handle_input_line(t_shell *shell);
+int		process_input(char *input, t_shell *shell);
+
 #endif // UTILS_H

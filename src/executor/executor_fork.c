@@ -12,6 +12,16 @@
 
 #include "minishell.h"
 
+static void	less_than_25(char *path, t_shell *shell, t_cmd *cmd)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	execve(path, cmd->args, *(shell->envp));
+	perror("execve");
+	free(path);
+	free_shell(shell);
+}
+
 int	handle_command_fork(t_cmd *cmd, t_shell *shell, char *path)
 {
 	pid_t	pid;
@@ -20,12 +30,7 @@ int	handle_command_fork(t_cmd *cmd, t_shell *shell, char *path)
 	pid = fork();
 	if (!pid)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		execve(path, cmd->args, *(shell->envp));
-		perror("execve");
-		free(path);
-		free_shell(shell);
+		less_than_25(path, shell, cmd);
 		exit(1);
 	}
 	else if (pid < 0)
@@ -50,7 +55,7 @@ void	handle_signal_status(int status, t_shell *shell)
 	if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGQUIT)
-			write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+			ft_putstr_fd("Quit (core dumped)\n", 1);
 		shell->last_status = 128 + WTERMSIG(status);
 	}
 	else

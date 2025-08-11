@@ -56,14 +56,12 @@ void	handle_pipe_signals(int status1, int status2, t_shell *shell)
 }
 
 void	wait_for_children(pid_t pid1, pid_t pid2, int *status1,
-        int *status2)
+		int *status2)
 {
-    signal(SIGINT, SIG_IGN);
-    signal(SIGQUIT, SIG_IGN);
-    
-    waitpid(pid1, status1, 0);
-    waitpid(pid2, status2, 0);
-    
-    signal(SIGINT, sigint_handler);
-    signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	waitpid(pid1, status1, 0);
+	waitpid(pid2, status2, 0);
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
