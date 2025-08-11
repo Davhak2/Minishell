@@ -85,4 +85,26 @@ typedef struct s_redirect_state
 	int	has_pipe;
 }						t_redirect_state;
 
+typedef struct s_expand
+{
+	char	**result;
+	size_t	*j;
+	char	**envp;
+	int		last_status;
+}						t_expand;
+
+typedef struct s_size
+{
+	char	**envp;
+	int		last_status;
+}						t_size;
+
+typedef struct s_process
+{
+	char		***result;
+	int			*count;
+	int			*cap;
+	const char	*dir_path;
+}						t_process;
+
 #endif // STRUCTS_H

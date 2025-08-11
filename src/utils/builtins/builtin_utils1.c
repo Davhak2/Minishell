@@ -23,8 +23,8 @@ int	find_env_var(char **envp, char *var_name)
 	i = 0;
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i], var_name, len) == 0 \
-		&& (envp[i][len] == '=' || envp[i][len] == '\0'))
+		if (ft_strncmp(envp[i], var_name, len) == 0
+			&& (envp[i][len] == '=' || envp[i][len] == '\0'))
 			return (i);
 		i++;
 	}

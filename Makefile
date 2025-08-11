@@ -34,6 +34,16 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)parser/parser2.c \
 					$(SRC_DIR)parser/parser3.c \
 					$(SRC_DIR)expander/expander.c \
+					$(SRC_DIR)expander/expander_utils.c \
+					$(SRC_DIR)expander/expander_word.c \
+					$(SRC_DIR)expander/expander_word_helper.c \
+					$(SRC_DIR)expander/expander_word_utils.c \
+					$(SRC_DIR)expander/expander_tilde.c \
+					$(SRC_DIR)expander/wildcard_utils.c \
+					$(SRC_DIR)expander/wildcard.c \
+					$(SRC_DIR)expander/wildcard_helpers.c \
+					$(SRC_DIR)expander/wildcard_expansion.c \
+					$(SRC_DIR)expander/wildcard_expansion_helper.c \
 					$(SRC_DIR)executor/executor_main.c \
 					$(SRC_DIR)executor/executor_cmd.c \
 					$(SRC_DIR)executor/executor_exec.c \
