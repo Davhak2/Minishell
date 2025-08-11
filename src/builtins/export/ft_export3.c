@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:30:55 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 18:30:55 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:14:38 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include "utils.h"
-#include <stdio.h>
+#include "minishell.h"
 
 char	*create_second_var(char *str)
 {

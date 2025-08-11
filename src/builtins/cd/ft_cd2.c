@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:38:38 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 17:40:13 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:14:43 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "expander.h"
-#include "libft.h"
-#include "utils.h"
-#include <unistd.h>
+#include "minishell.h"
 
 int	cd_oldpwd(t_shell *shell)
 {

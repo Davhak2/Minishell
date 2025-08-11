@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:58:19 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 17:58:19 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:16:19 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "utils.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 static char	*make_env_kv(const char *name, const char *value)
 {

@@ -13,9 +13,6 @@
 #ifndef UTILS_H
 # define UTILS_H
 
-# include "parser.h"
-# include <stdbool.h>
-
 // char_utils
 bool	is_whitespace(char c);
 bool	is_operator_char(char c);

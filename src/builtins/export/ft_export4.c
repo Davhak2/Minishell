@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export4.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 20:09:45 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 20:13:47 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:15:44 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include "utils.h"
+#include "minishell.h"
 
 static int	handle_name_only(char *name, char ***cur_ref, t_shell *shell)
 {

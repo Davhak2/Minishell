@@ -1,8 +1,4 @@
-#include "executor.h"
-#include "libft.h"
-#include "parser.h"
-#include "signals.h"
-#include "utils.h"
+#include "minishell.h"
 
 char	*get_token_type_name(t_tokens type)
 {
@@ -115,7 +111,7 @@ int	main(int argc, char **argv, char **envp)
 	char	*next;
 	char	*tmp;
 	char	*joined;
-	char	*test;
+//	char	*test;
 	t_shell	*shell;
 	char	**my_envp;
 
@@ -136,6 +132,8 @@ int	main(int argc, char **argv, char **envp)
 		g_received_signal = 0;
 		input = readline("\001\033[1;32m\002🐚 ms: ➜\001\033[0m\002 ");
 		shell->heredoc_line++;
+		if (g_received_signal == SIGINT)
+			shell->last_status = 130;
 		if (!input)
 		{
 			printf("exit\n");
@@ -203,7 +201,10 @@ int	main(int argc, char **argv, char **envp)
 			shell->node = NULL;
 			shell->token = NULL;
 		}
-		free(input);
+		else
+		{
+			free(input);
+		}
 	}
 	if (my_envp)
 		free_envp(my_envp);

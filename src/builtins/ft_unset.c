@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:20:25 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 18:12:07 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:15:04 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include "utils.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "minishell.h"
 
 static void	free_partial(char **arr, int upto)
 {

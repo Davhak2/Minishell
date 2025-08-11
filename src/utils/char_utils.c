@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   char_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:01:16 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 18:01:16 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:16:44 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "utils.h"
+#include "minishell.h"
 
 bool	is_whitespace(char c)
 {

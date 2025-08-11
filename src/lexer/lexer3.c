@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:59:25 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 17:00:53 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:17:39 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
+#include "minishell.h"
 
 int	append_slice(char **dest, const char *start, size_t len)
 {

@@ -1,26 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/10 17:14:22 by letto             #+#    #+#             */
-/*   Updated: 2025/08/11 21:15:16 by ganersis         ###   ########.fr       */
+/*   Created: 2025/08/11 19:28:51 by ganersis          #+#    #+#             */
+/*   Updated: 2025/08/11 19:28:51 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(char **envp)
+void	restore_fds(int stdin_fd, int stdout_fd, t_shell *shell)
 {
-	char	*pwd;
-
-	pwd = get_env_value("PWD", envp);
-	if (pwd)
+	if (stdin_fd >= 0)
 	{
-		printf("%s\n", pwd);
-		free(pwd);
+		dup2(stdin_fd, 0);
+		close(stdin_fd);
+		shell->stdin_backup = -1;
 	}
-	return (0);
+	if (stdout_fd >= 0)
+	{
+		dup2(stdout_fd, 1);
+		close(stdout_fd);
+		shell->stdout_backup = -1;
+	}
+}
+
+void	exec_fail(char *str)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(": command not found\n", 2);
 }

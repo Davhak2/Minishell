@@ -1,12 +1,4 @@
-#include "expander.h"
-#include "libft.h"
-#include "parser.h"
-#include <dirent.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include "minishell.h"
 
 static char		*expand_word(const char *word, char **envp, int last_status);
 
@@ -211,15 +203,11 @@ static char	*expand_word(const char *word, char **envp, int last_status)
 					free(var_name);
 				}
 				else
-				{
 					result[j++] = '$';
-				}
 			}
 		}
 		else
-		{
 			result[j++] = word[i++];
-		}
 	}
 	result[j] = '\0';
 	return (result);
@@ -255,6 +243,34 @@ static int	wildcard_match(const char *pattern, const char *str)
 	return (!*pattern && !*str);
 }
 
+static char	*get_dir_from_pattern(const char *pattern)
+{
+	const char	*last_slash;
+	char		*dir_path;
+
+	last_slash = ft_strrchr(pattern, '/');
+	if (!last_slash)
+		return (ft_strdup("."));
+	if (last_slash == pattern)
+		return (ft_strdup("/"));
+	dir_path = malloc(last_slash - pattern + 1);
+	if (!dir_path)
+		return (NULL);
+	ft_memcpy(dir_path, pattern, last_slash - pattern);
+	dir_path[last_slash - pattern] = '\0';
+	return (dir_path);
+}
+
+static char	*get_filename_pattern(const char *pattern)
+{
+	const char	*last_slash;
+
+	last_slash = ft_strrchr(pattern, '/');
+	if (!last_slash)
+		return (ft_strdup(pattern));
+	return (ft_strdup(last_slash + 1));
+}
+
 static char	**wildcard_expand(const char *pattern)
 {
 	DIR				*dir;
@@ -263,53 +279,69 @@ static char	**wildcard_expand(const char *pattern)
 	int				count;
 	int				cap;
 	int				i;
-	struct stat		st;
 	char			**tmp;
+	char			*dir_path;
+	char			*filename_pattern;
+	char			*full_path;
 
 	result = NULL;
 	count = 0;
 	cap = 8;
-	dir = opendir(".");
+	dir_path = get_dir_from_pattern(pattern);
+	filename_pattern = get_filename_pattern(pattern);
+	if (!dir_path || !filename_pattern)
+		return (free(dir_path), free(filename_pattern), NULL);
+	dir = opendir(dir_path);
 	if (!dir)
-		return (NULL);
+		return (free(dir_path), free(filename_pattern), NULL);
 	result = malloc(sizeof(char *) * cap);
 	if (!result)
 	{
 		closedir(dir);
-		return (NULL);
+		return (free(dir_path), free(filename_pattern), NULL);
 	}
 	while ((entry = readdir(dir)))
 	{
-		if (entry->d_name[0] == '.')
+		if (entry->d_name[0] == '.' && filename_pattern[0] != '.')
 			continue ;
-		if (wildcard_match(pattern, entry->d_name))
+		if (wildcard_match(filename_pattern, entry->d_name))
 		{
+			if (!ft_strcmp(entry->d_name, ".") || !ft_strcmp(entry->d_name, ".."))
+				continue ;
 			if (count + 2 > cap)
 			{
 				cap *= 2;
 				tmp = malloc(sizeof(char *) * cap);
 				if (!tmp)
 				{
-					for (i = 0; i < count; ++i)
-						free(result[i]);
-					free(result);
+					ft_free_array(result);
 					closedir(dir);
-					return (NULL);
+					return (free(dir_path), free(filename_pattern), NULL);
 				}
 				for (i = 0; i < count; i++)
 					tmp[i] = result[i];
 				free(result);
 				result = tmp;
 			}
-			result[count++] = ft_strdup(entry->d_name);
+			if (!ft_strcmp(dir_path, "."))
+				result[count++] = ft_strdup(entry->d_name);
+			else
+			{
+				full_path = ft_strjoin(dir_path, "/");
+				if (full_path)
+				{
+					result[count] = ft_strjoin(full_path, entry->d_name);
+					free(full_path);
+					count++;
+				}
+			}
 		}
 	}
 	closedir(dir);
+	free(dir_path);
+	free(filename_pattern);
 	if (count == 0)
-	{
-		free(result);
-		return (NULL);
-	}
+		return (free(result), NULL);
 	result[count] = NULL;
 	return (result);
 }
@@ -375,47 +407,40 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 			new_argc = 0;
 			for (i = 0; cmd->args[i]; ++i)
 			{
-				if (cmd->arg_types[i] == WORD && strchr(cmd->args[i], '*'))
+				if (cmd->arg_types[i] == WORD && ft_strchr(cmd->args[i], '*'))
 				{
 					wildcards = wildcard_expand(cmd->args[i]);
-					// TODO: fix wildcard with hidden files,example: "echo .*c "
 					if (wildcards)
 					{
-						for (j = 0; wildcards[j]; ++j)
+						j = -1;
+						while (wildcards[++j])
 							new_argc++;
-						for (j = 0; wildcards[j]; ++j)
-							free(wildcards[j]);
-						free(wildcards);
+						j = -1;
+						ft_free_array(wildcards);
 					}
 					else
-					{
 						new_argc++;
-					}
 				}
 				else
-				{
 					new_argc++;
-				}
 			}
 			new_args = malloc(sizeof(char *) * (new_argc + 1));
 			new_types = malloc(sizeof(t_tokens) * (new_argc + 1));
 			k = 0;
 			for (i = 0; cmd->args[i]; ++i)
 			{
-				if (cmd->arg_types[i] == WORD && strchr(cmd->args[i], '*'))
+				if (cmd->arg_types[i] == WORD && ft_strchr(cmd->args[i], '*'))
 				{
 					wildcards = wildcard_expand(cmd->args[i]);
 					if (wildcards)
 					{
 						for (j = 0; wildcards[j]; ++j)
 						{
-							new_args[k] = strdup(wildcards[j]);
+							new_args[k] = ft_strdup(wildcards[j]);
 							new_types[k] = WORD;
 							k++;
 						}
-						for (j = 0; wildcards[j]; ++j)
-							free(wildcards[j]);
-						free(wildcards);
+						ft_free_array(wildcards);
 						free(cmd->args[i]);
 					}
 					else

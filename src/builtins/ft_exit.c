@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:15:16 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 19:57:02 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:17:52 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include "parser.h"
-#include "utils.h"
+#include "minishell.h"
 
 static int	is_numeric(char *str)
 {
@@ -46,9 +43,9 @@ static int	parse_status_or_error(char *s, int *status_out)
 
 	if (!is_numeric(s))
 	{
-		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-		ft_putstr_fd((char *)s, STDERR_FILENO);
-		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd((char *)s, 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
 		*status_out = 2;
 		return (0);
 	}

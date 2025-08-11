@@ -21,5 +21,21 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <stdlib.h>
+# include <string.h>
+# include <stddef.h>
+# include <dirent.h>
+# include <fcntl.h>
+# include <errno.h>
+
+# include "libft.h"
+# include "structs.h"
+# include "builtins.h"
+# include "executor.h"
+# include "expander.h"
+# include "lexer.h"
+# include "parser.h"
+# include "signals.h"
+# include "utils.h"
 
 #endif // MINISHELL_H

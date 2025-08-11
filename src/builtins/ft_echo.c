@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:41:10 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 17:41:16 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:15:38 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "expander.h"
-#include "libft.h"
-#include "stdio.h"
+#include "minishell.h"
 
 static void	ft_echo_helper(char **args, int i, t_shell *shell)
 {
@@ -35,7 +32,7 @@ int	ft_echo(char **args, t_shell *shell)
 {
 	int		i;
 	int		newline;
-	char	*expanded;
+	// char	*expanded;
 
 	i = 1;
 	newline = 1;

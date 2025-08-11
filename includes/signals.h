@@ -3,18 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:31:12 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 17:05:41 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:13:48 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SIGNALS_H
 # define SIGNALS_H
-
-# include "minishell.h"
-# include <sys/ioctl.h>
 
 extern volatile sig_atomic_t	g_received_signal;
 

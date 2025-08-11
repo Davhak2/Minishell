@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:55:42 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 17:04:29 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:16:09 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "parser.h"
-#include "utils.h"
+#include "minishell.h"
 
 int	scan_and_collect(t_token *cur, t_token **end, t_redirect **rh)
 {

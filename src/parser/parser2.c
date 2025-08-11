@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:55:50 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 18:00:08 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:18:05 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include "utils.h"
+#include "minishell.h"
 
 t_node	*parse_or(t_token **list)
 {

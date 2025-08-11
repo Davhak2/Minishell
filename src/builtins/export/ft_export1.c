@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:21:49 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 20:15:49 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:14:42 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include "utils.h"
-#include <stdio.h>
+#include "minishell.h"
 
 static char	**dup_env_with_capacity(char **envp, int *count_out)
 {

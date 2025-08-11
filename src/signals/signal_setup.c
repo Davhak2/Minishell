@@ -1,4 +1,4 @@
-#include "signals.h"
+#include "minishell.h"
 
 void	init_signals(void)
 {

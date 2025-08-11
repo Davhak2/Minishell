@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   parser1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:55:46 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 17:05:20 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 21:15:58 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "parser.h"
-#include "utils.h"
+#include "minishell.h"
 
-/* TODO: add syntax error when no argument after redirection and "<|" example 
+/* TODO: add syntax error when no argument after redirection and "<|" example
 : "echo >>", "echo <", ">>"*/
+
+// TODO: export ARG="*" not a valid identifier
+// TODO: () is valid needs to fix it:
 
 int	validate_syntax(t_token *tokens)
 {
