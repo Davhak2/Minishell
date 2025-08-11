@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor_redirects.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/11 19:28:45 by ganersis          #+#    #+#             */
+/*   Updated: 2025/08/11 19:28:45 by ganersis         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	handle_output_redirect(t_redirect *current)
@@ -6,7 +18,7 @@ static int	handle_output_redirect(t_redirect *current)
 
 	fd = open(current->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
-		return (perror("open"), -1);
+		return (perror(current->filename), -1);
 	if (dup2(fd, 1) == -1)
 	{
 		perror("dup2");
@@ -23,7 +35,7 @@ static int	handle_append_redirect(t_redirect *current)
 
 	fd = open(current->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
-		return (perror("open"), -1);
+		return (perror(current->filename), -1);
 	if (dup2(fd, 1) == -1)
 	{
 		perror("dup2");
@@ -40,7 +52,7 @@ static int	handle_input_redirect(t_redirect *current)
 
 	fd = open(current->filename, O_RDONLY);
 	if (fd == -1)
-		return (perror("open"), -1);
+		return (perror(current->filename), -1);
 	if (dup2(fd, 0) == -1)
 	{
 		perror("dup2");

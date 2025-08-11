@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:30:57 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 15:35:00 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/11 19:25:35 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	setup_pipe_child1(int pipefd[2], t_shell *shell);
 void	setup_pipe_child2(int pipefd[2], t_shell *shell);
 void	wait_for_children(pid_t pid1, pid_t pid2, int *status1, int *status2);
 void	handle_pipe_signals(int status1, int status2, t_shell *shell);
-void	check_command_not_found(int status1, int status2, t_node *node);
 
 void	restore_fds(int stdin_fd, int stdout_fd, t_shell *shell);
 

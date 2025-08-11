@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor_pipe_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/11 19:28:41 by ganersis          #+#    #+#             */
+/*   Updated: 2025/08/11 19:28:41 by ganersis         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 pid_t	create_pipe_child1(t_node *node, t_shell *shell, int pipefd[2])
@@ -8,20 +20,8 @@ pid_t	create_pipe_child1(t_node *node, t_shell *shell, int pipefd[2])
 	pid = fork();
 	if (pid == 0)
 	{
-		int stderr_backup = dup(STDERR_FILENO);
-		int null_fd = open("/dev/null", O_WRONLY);
 		setup_pipe_child1(pipefd, shell);
-		if (null_fd >= 0 && stderr_backup >= 0)
-		{
-			dup2(null_fd, STDERR_FILENO);
-			close(null_fd);
-		}
 		execute_ast_internal(node->left, shell, 1);
-		if (stderr_backup >= 0)
-		{
-			dup2(stderr_backup, STDERR_FILENO);
-			close(stderr_backup);
-		}
 		exit_status = shell->last_status;
 		free_shell(shell);
 		exit(exit_status);
@@ -44,20 +44,8 @@ pid_t	create_pipe_child2(t_node *node, t_shell *shell, int pipefd[2],
 	pid = fork();
 	if (pid == 0)
 	{
-		int stderr_backup = dup(STDERR_FILENO);
-		int null_fd = open("/dev/null", O_WRONLY);
 		setup_pipe_child2(pipefd, shell);
-		if (null_fd >= 0 && stderr_backup >= 0)
-		{
-			dup2(null_fd, STDERR_FILENO);
-			close(null_fd);
-		}
 		execute_ast_internal(node->right, shell, 1);
-		if (stderr_backup >= 0)
-		{
-			dup2(stderr_backup, STDERR_FILENO);
-			close(stderr_backup);
-		}
 		exit_status = shell->last_status;
 		free_shell(shell);
 		exit(exit_status);

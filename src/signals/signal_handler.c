@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal_handler.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/11 19:29:16 by ganersis          #+#    #+#             */
+/*   Updated: 2025/08/11 21:08:26 by ganersis         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 volatile sig_atomic_t	g_received_signal = 0;
@@ -12,7 +24,7 @@ void	sigint_handler(int signo)
 	g_received_signal = SIGINT;
 }
 
-void	sigint_heredoc_handler(int sig) // TODO: fix here-doc CTRL + C
+void	sigint_heredoc_handler(int sig)
 {
 	(void)sig;
 	g_received_signal = SIGINT;

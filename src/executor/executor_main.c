@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor_main.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/11 19:28:39 by ganersis          #+#    #+#             */
+/*   Updated: 2025/08/11 19:28:39 by ganersis         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	handle_heredocs_if_needed(t_node *node, t_shell *shell,
@@ -40,7 +52,6 @@ static void	execute_pipe(t_node *node, t_shell *shell)
 	{
 		wait_for_children(pid1, pid2, &status1, &status2);
 		handle_pipe_signals(status1, status2, shell);
-		check_command_not_found(status1, status2, node);
 	}
 	else
 		shell->last_status = 1;
