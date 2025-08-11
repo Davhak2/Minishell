@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+volatile sig_atomic_t	g_received_signal = 0;
+
 int	handle_input_line(t_shell *shell)
 {
 	char	*input;
@@ -8,22 +10,11 @@ int	handle_input_line(t_shell *shell)
 	input = readline("\001\033[1;32m\002🐚 ms: ➜\001\033[0m\002 ");
 	shell->heredoc_line++;
 	if (g_received_signal == SIGINT)
-	{
 		shell->last_status = 130;
-		if (input)
-			free(input);
-		return (1);
-	}
 	if (!input)
-	{
-		printf("exit\n");
-		return (0);
-	}
+		return (printf("exit\n"), 0);
 	if (*input == '\0')
-	{
-		free(input);
-		return (1);
-	}
+		return (free(input),1);
 	input = handle_multiline_input(input, shell);
 	if (!input)
 		return (1);

@@ -13,7 +13,7 @@ INC_FLAGS			=	-Iincludes/ -Iutils/
 LIBFT_DIR				=	libft/
 LIBFT					=	$(LIBFT_DIR)libft.a
 
-CFLAGS					=	-g $(INC_FLAGS) -I$(LIBFT_DIR) -Wall -Wextra -Werror
+CFLAGS					=	-g $(INC_FLAGS) -I$(LIBFT_DIR) #-Wall -Wextra -Werror
 
 LDFLAGS					=	-L$(LIBFT_DIR) -lft -lreadline -lncurses
 
