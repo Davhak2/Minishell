@@ -81,5 +81,6 @@ void	do_child_process(char *delimiter, char *filename, t_shell *shell,
 	write_heredoc_lines(fd, delimiter, shell);
 	close(fd);
 	free_shell(shell);
+	free(filename);
 	exit(0);
 }
