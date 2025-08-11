@@ -13,7 +13,7 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-# include "parser.h"
+# include "structs.h"
 
 int		ft_echo(char **args, t_shell *shell);
 

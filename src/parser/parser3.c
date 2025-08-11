@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "parser.h"
-#include "utils.h"
+#include "minishell.h"
 
 int	scan_and_collect(t_token *cur, t_token **end, t_redirect **rh)
 {

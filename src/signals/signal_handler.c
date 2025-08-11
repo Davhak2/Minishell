@@ -1,5 +1,4 @@
-#include "signals.h"
-#include <unistd.h>
+#include "minishell.h"
 
 volatile sig_atomic_t	g_received_signal = 0;
 

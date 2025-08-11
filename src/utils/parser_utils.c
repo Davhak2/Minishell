@@ -1,6 +1,4 @@
-#include "parser.h"
-#include "libft.h"
-#include <unistd.h>
+#include "minishell.h"
 
 void	free_redirects(t_redirect *redir)
 {

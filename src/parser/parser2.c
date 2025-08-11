@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include "utils.h"
+#include "minishell.h"
 
 t_node	*parse_or(t_token **list)
 {

@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "utils.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 void	free_envp(char **envp)
 {

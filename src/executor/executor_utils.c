@@ -1,5 +1,3 @@
-#include "executor.h"
-#include "libft.h"
 #include "minishell.h"
 
 void	restore_fds(int stdin_fd, int stdout_fd, t_shell *shell)

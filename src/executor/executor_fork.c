@@ -1,8 +1,4 @@
-#include "executor.h"
-#include "signals.h"
-#include "utils.h"
-#include <sys/wait.h>
-#include <unistd.h>
+#include "minishell.h"
 
 int	handle_command_fork(t_cmd *cmd, t_shell *shell, char *path)
 {

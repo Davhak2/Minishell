@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "expander.h"
+#include "minishell.h"
 
 int	ft_pwd(char **envp)
 {

@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "utils.h"
+#include "minishell.h"
 
 bool	is_whitespace(char c)
 {

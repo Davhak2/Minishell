@@ -1,14 +1,4 @@
-#include "executor.h"
-#include "libft.h"
 #include "minishell.h"
-#include "signals.h"
-#include "utils.h"
-#include <fcntl.h>
-#include <readline/readline.h>
-#include <stdio.h>
-#include <sys/ioctl.h>
-#include <sys/wait.h>
-#include <unistd.h>
 
 static int	process_single_heredoc(t_redirect *current, t_shell *shell,
 		int *heredoc_counter)

@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include "utils.h"
+#include "minishell.h"
 
 void	create_and_add(t_token **list, t_type type)
 {

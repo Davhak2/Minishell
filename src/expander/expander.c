@@ -1,12 +1,4 @@
-#include "expander.h"
-#include "libft.h"
-#include "parser.h"
-#include <dirent.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include "minishell.h"
 
 static char		*expand_word(const char *word, char **envp, int last_status);
 

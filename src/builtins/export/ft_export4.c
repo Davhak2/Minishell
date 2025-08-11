@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include "utils.h"
+#include "minishell.h"
 
 static int	handle_name_only(char *name, char ***cur_ref, t_shell *shell)
 {

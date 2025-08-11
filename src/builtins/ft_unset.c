@@ -10,11 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include "utils.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "minishell.h"
 
 static void	free_partial(char **arr, int upto)
 {

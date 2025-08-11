@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include "utils.h"
-#include <stdio.h>
+#include "minishell.h"
 
 static char	**dup_env_with_capacity(char **envp, int *count_out)
 {

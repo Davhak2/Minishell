@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "utils.h"
-#include "lexer.h"
+#include "minishell.h"
 
 static int	read_plain(char **p, char **res)
 {

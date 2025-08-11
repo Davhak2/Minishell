@@ -1,8 +1,4 @@
 #include "minishell.h"
-#include "executor.h"
-#include "signals.h"
-#include <sys/wait.h>
-#include <unistd.h>
 
 static int	handle_signal_exit(int status)
 {

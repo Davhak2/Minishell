@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "parser.h"
-#include "utils.h"
+#include "minishell.h"
 
 /* TODO: add syntax error when no argument after redirection and "<|" example
 : "echo >>", "echo <", ">>"*/

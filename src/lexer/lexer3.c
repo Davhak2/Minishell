@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
-#include "libft.h"
+#include "minishell.h"
 
 int	append_slice(char **dest, const char *start, size_t len)
 {

@@ -10,11 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "expander.h"
-#include "libft.h"
-#include "utils.h"
-#include <unistd.h>
+#include "minishell.h"
 
 int	cd_oldpwd(t_shell *shell)
 {

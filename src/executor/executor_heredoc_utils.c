@@ -1,12 +1,4 @@
-#include "executor.h"
-#include "libft.h"
 #include "minishell.h"
-#include "signals.h"
-#include "utils.h"
-#include <fcntl.h>
-#include <readline/readline.h>
-#include <stdio.h>
-#include <unistd.h>
 
 static void	here_msg(int line, char *s)
 {

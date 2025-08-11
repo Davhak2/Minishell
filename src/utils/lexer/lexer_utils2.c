@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "utils.h"
+#include "minishell.h"
 
 static void	set_paren(char op, t_type *type)
 {

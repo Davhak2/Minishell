@@ -1,9 +1,4 @@
-#include "executor.h"
-#include "expander.h"
-#include "signals.h"
-#include "utils.h"
-#include <sys/wait.h>
-#include <unistd.h>
+#include "minishell.h"
 
 static int	handle_heredocs_if_needed(t_node *node, t_shell *shell,
 		int skip_heredocs)

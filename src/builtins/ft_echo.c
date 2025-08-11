@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "expander.h"
-#include "libft.h"
-#include "stdio.h"
+#include "minishell.h"
 
 static void	ft_echo_helper(char **args, int i, t_shell *shell)
 {

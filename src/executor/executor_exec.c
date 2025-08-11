@@ -1,8 +1,4 @@
-#include "executor.h"
-#include "signals.h"
-#include "utils.h"
-#include <sys/wait.h>
-#include <unistd.h>
+#include "minishell.h"
 
 static int	setup_redirects_and_check_cmd(t_cmd *cmd, t_shell *shell,
 		int *stdin_fd, int *stdout_fd)

@@ -1,8 +1,4 @@
-#include "executor.h"
-#include "libft.h"
-#include "parser.h"
-#include "signals.h"
-#include "utils.h"
+#include "minishell.h"
 
 char	*get_token_type_name(t_tokens type)
 {

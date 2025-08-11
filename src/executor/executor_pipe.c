@@ -1,10 +1,4 @@
-#include "executor.h"
-#include "signals.h"
-#include "parser.h"
-#include "utils.h"
-#include <signal.h>
-#include <sys/wait.h>
-#include <unistd.h>
+#include "minishell.h"
 
 void	setup_pipe_child1(int pipefd[2], t_shell *shell)
 {

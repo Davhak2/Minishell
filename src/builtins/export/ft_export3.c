@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include "utils.h"
-#include <stdio.h>
+#include "minishell.h"
 
 char	*create_second_var(char *str)
 {

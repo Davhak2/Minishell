@@ -1,10 +1,4 @@
-#include "executor.h"
-#include "expander.h"
-#include "signals.h"
-#include "utils.h"
-#include <sys/wait.h>
-#include <unistd.h>
-#include <fcntl.h>
+#include "minishell.h"
 
 pid_t	create_pipe_child1(t_node *node, t_shell *shell, int pipefd[2])
 {

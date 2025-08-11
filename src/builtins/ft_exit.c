@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include "parser.h"
-#include "utils.h"
+#include "minishell.h"
 
 static int	is_numeric(char *str)
 {

@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "utils.h"
+#include "minishell.h"
 
 int	handle_quotes(t_token **list, char **ptr)
 {

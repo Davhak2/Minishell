@@ -1,6 +1,4 @@
-#include "executor.h"
 #include "minishell.h"
-#include <unistd.h>
 
 void	cleanup_heredoc_files(t_node *node)
 {

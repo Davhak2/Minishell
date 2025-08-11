@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "utils.h"
+#include "minishell.h"
 
 void	syntax_error(char *str)
 {

@@ -13,10 +13,8 @@
 #ifndef EXPANDER_H
 # define EXPANDER_H
 
-# include "parser.h"
-
 void	expand_ast(t_node *node, char **envp, t_shell *shell);
 char	*get_env_value(const char *name, char **envp);
 char	*expand_tilde(char *arg, char **envp);
 
-#endif
+#endif // EXPANDER_H

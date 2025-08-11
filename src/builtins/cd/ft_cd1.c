@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
-#include "libft.h"
-#include <unistd.h>
+#include "minishell.h"
 
 char	*path_join_fallback(char *base, char *rel)
 {

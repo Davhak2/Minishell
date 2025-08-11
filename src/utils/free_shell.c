@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "unistd.h"
-#include "parser.h"
-#include "utils.h"
+#include "minishell.h"
 
 void	free_shell(t_shell *shell)
 {

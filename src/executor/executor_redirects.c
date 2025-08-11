@@ -1,7 +1,4 @@
-#include "executor.h"
-#include <fcntl.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "minishell.h"
 
 static int	handle_output_redirect(t_redirect *current)
 {

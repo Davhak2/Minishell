@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "utils.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 int	find_env_var(char **envp, char *var_name)
 {

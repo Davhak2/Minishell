@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "utils.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 static char	*make_env_kv(const char *name, const char *value)
 {

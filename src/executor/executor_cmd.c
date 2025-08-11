@@ -1,12 +1,4 @@
-#include "builtins.h"
-#include "executor.h"
-#include "expander.h"
-#include "libft.h"
 #include "minishell.h"
-#include "signals.h"
-#include "utils.h"
-#include <sys/wait.h>
-#include <unistd.h>
 
 int	is_builtin(char *cmd)
 {
