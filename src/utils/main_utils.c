@@ -28,7 +28,11 @@ char	*handle_multiline_input(char *input, t_shell *shell)
 		shell->heredoc_line++;
 		if (!next)
 		{
+			ft_putstr_fd("bash: unexpected EOF while looking for matching `\"'\n", 2);
 			free(input);
+			free_shell(shell);
+			ft_putstr_fd("exit\n", 2);
+			exit(2);
 			return (NULL);
 		}
 		tmp = ft_strjoin(input, "\n");
@@ -85,9 +89,12 @@ t_shell	*init_minishell(char **envp, char ***my_envp)
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	if (!shell)
 		return (NULL);
+	shell->node = NULL;
+	shell->redir = NULL;
+	shell->token = NULL;
 	shell->envp = my_envp;
 	shell->last_status = 0;
-	shell->heredoc_line = 1;
+	shell->heredoc_line = 0;
 	shell->stdin_backup = -1;
 	shell->stdout_backup = -1;
 	init_signals();
