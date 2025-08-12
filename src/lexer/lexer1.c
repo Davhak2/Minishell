@@ -27,11 +27,24 @@ static int	handle_unquoted(char **ptr, t_segment **segments,
 	return (0);
 }
 
+static int	set_quote_type(t_tokens *quote_type, char qc)
+{
+	if (*quote_type == WORD)
+	{
+		if (qc == '\'')
+			*quote_type = SINGLE_QUOTED;
+		else
+			*quote_type = DOUBLE_QUOTED;
+	}
+	return (0);
+}
+
 char	*process_quotes(char **ptr, t_tokens *quote_type,
 		t_segment **segments)
 {
 	char	*result;
 	int		has_segments;
+	char	qc;
 
 	result = ft_strdup("");
 	if (!result)
@@ -43,6 +56,8 @@ char	*process_quotes(char **ptr, t_tokens *quote_type,
 	{
 		if (is_quote(**ptr))
 		{
+			qc = **ptr;
+			set_quote_type(quote_type, qc);
 			if (handle_quoted(ptr, segments, &result, &has_segments) < 0)
 				return (NULL);
 		}
@@ -50,7 +65,7 @@ char	*process_quotes(char **ptr, t_tokens *quote_type,
 			return (NULL);
 	}
 	if (has_segments)
-		return (free(result), ft_strdup(""));
+		return (free(result),ft_strdup(""));
 	return (result);
 }
 

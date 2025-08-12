@@ -1,21 +1,5 @@
 #include "minishell.h"
 
-static void	free_segments(t_segment *segments)
-{
-	t_segment	*current;
-	t_segment	*next;
-
-	current = segments;
-	while (current)
-	{
-		next = current->next;
-		if (current->value)
-			free(current->value);
-		free(current);
-		current = next;
-	}
-}
-
 static char	*expand_segment_content(t_segment *segment, char **envp,
 		int last_status)
 {
@@ -71,7 +55,6 @@ void	expand_all_tokens(t_token *tokens, char **envp, int last_status)
 {
 	t_token	*current;
 	char	*expanded;
-	int		norminette;
 
 	current = tokens;
 	while (current)

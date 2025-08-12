@@ -33,8 +33,7 @@ void	add_segment(t_segment **head, t_segment *new_segment)
 	current->next = new_segment;
 }
 
-static int	parse_quoted_content_ctx(char **ptr, char **result,
-		char **temp_value)
+int	parse_quoted_content(char **ptr, char **result, char **temp_value)
 {
 	char	quote_char;
 	char	*start;
@@ -54,8 +53,8 @@ static int	parse_quoted_content_ctx(char **ptr, char **result,
 	return (quote_char);
 }
 
-static int	add_quoted_segment_ctx(t_segment **segments, char **result,
-		char *temp_value, int quote_char)
+int	add_quoted_segment(t_segment **segments, char **result,
+		char *temp_value, char quote_char, int *has_segments)
 {
 	t_segment	*segment;
 	int			type;
@@ -68,6 +67,7 @@ static int	add_quoted_segment_ctx(t_segment **segments, char **result,
 	if (!segment)
 		return (free(*result), free(temp_value), -1);
 	add_segment(segments, segment);
+	*has_segments = 1;
 	if (append_slice(result, temp_value, ft_strlen(temp_value)) < 0)
 		return (free(temp_value), -1);
 	free(temp_value);
@@ -77,15 +77,12 @@ static int	add_quoted_segment_ctx(t_segment **segments, char **result,
 int	handle_quoted(char **ptr, t_segment **segments,
 		char **result, int *has_segments)
 {
-	int		quote_char;
+	char	quote_char;
 	char	*temp_value;
-	int		ret;
 
-	quote_char = parse_quoted_content_ctx(ptr, result, &temp_value);
+	quote_char = parse_quoted_content(ptr, result, &temp_value);
 	if (quote_char < 0)
 		return (-1);
-	ret = add_quoted_segment_ctx(segments, result, temp_value, quote_char);
-	if (ret == 0)
-		*has_segments = 1;
-	return (ret);
+	return (add_quoted_segment(segments, result, temp_value,
+			quote_char, has_segments));
 }
