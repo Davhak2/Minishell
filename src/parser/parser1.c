@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:55:46 by letto             #+#    #+#             */
-/*   Updated: 2025/08/12 16:30:11 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:13:02 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	validate_syntax(t_token *tokens)
 		return (syntax_error(curr->final_value), 1);
 	while (curr)
 	{
+		if (curr->type == LPAREN && curr->next && curr->next->type == RPAREN)
+			return (syntax_error(")"), 1);
 		if ((curr->type == PIPE || curr->type == AND || curr->type == OR)
 			&& prev && (prev->type == PIPE || prev->type == AND
 				|| prev->type == OR))
