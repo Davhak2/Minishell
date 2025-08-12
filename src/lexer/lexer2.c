@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:17:50 by letto             #+#    #+#             */
-/*   Updated: 2025/08/11 21:17:35 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/12 16:03:14 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,40 @@
 int	handle_quotes(t_token **list, char **ptr)
 {
 	char		*processed;
-	t_type		type;
 	t_tokens	qt;
+	t_segment	*segments;
+	t_token		*token;
+	t_token		*current;
 
-	processed = process_quotes(ptr, &qt);
+	processed = process_quotes(ptr, &qt, &segments);
 	if (!processed)
 		return (free_token_list(*list), 0);
-	type.type = qt;
-	type.value = processed;
-	create_and_add(list, type);
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (free_token_list(*list), 0);
+	token->type = qt;
+	if (segments)
+	{
+		token->final_value = NULL;
+		token->segments = segments;
+	}
+	else
+	{
+		token->final_value = processed;
+		token->segments = NULL;
+	}
+	token->next = NULL;
+	if (!*list)
+		*list = token;
+	else
+	{
+		current = *list;
+		while (current->next)
+			current = current->next;
+		current->next = token;
+	}
+	if (segments)
+		free(processed);
 	return (1);
 }
 
@@ -71,9 +96,8 @@ int	dispatch_token(t_token **list, char **ptr)
 {
 	t_type	type;
 
-	if (((**ptr == ';') || (**ptr == '\\') ||
-		((**ptr == '&') && (*(*ptr + 1) != '&')))
-		&& !is_quote(**ptr))
+	if (((**ptr == ';') || (**ptr == '\\') || ((**ptr == '&') && (*(*ptr
+						+ 1) != '&'))) && !is_quote(**ptr))
 		return (syntax_exit(**ptr, *list), 0);
 	if (is_quote(**ptr))
 		return (handle_quotes(list, ptr));

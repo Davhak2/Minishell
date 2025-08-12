@@ -40,6 +40,7 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)expander/expander_word_helper.c \
 					$(SRC_DIR)expander/expander_word_utils.c \
 					$(SRC_DIR)expander/expander_tilde.c \
+					$(SRC_DIR)expander/expander_token.c \
 					$(SRC_DIR)expander/wildcard_utils.c \
 					$(SRC_DIR)expander/wildcard.c \
 					$(SRC_DIR)expander/wildcard_helpers.c \

@@ -4,6 +4,8 @@ static void	expand_single_arg(t_cmd *cmd, int i, char **envp, t_shell *shell)
 {
 	char	*expanded;
 
+	if (!cmd->args[i])
+		return ;
 	expanded = expand_word(cmd->args[i], envp, shell->last_status);
 	if (expanded)
 	{
@@ -80,7 +82,6 @@ void	expand_ast(t_node *node, char **envp, t_shell *shell)
 		cmd = (t_cmd *)node->value;
 		if (cmd->args && cmd->arg_types)
 		{
-			expand_args(cmd, envp, shell);
 			handle_wildcard_expansion(cmd);
 		}
 		expand_redirects(cmd, envp, shell);

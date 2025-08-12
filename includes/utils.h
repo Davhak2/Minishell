@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:31:15 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 19:45:15 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/12 16:00:35 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,18 @@ bool	is_word_char(char c);
 bool	is_quote(char c);
 
 // token_utils
-t_token	*create_token(t_tokens type, char *value);
+t_token	*create_token(t_tokens type, t_segment *segments);
 void	add_token_to_list(t_token **head, t_token *new_token);
 void	free_token_list(t_token *head);
+
+// token expansion
+void	expand_token_segments(t_token *token, char **envp, int last_status);
+void	expand_all_tokens(t_token *tokens, char **envp, int last_status);
 
 // lexer_utils
 t_type	set_type(char op, bool mode);
 void	create_and_add(t_token **list, t_type type);
-char	*process_quotes(char **ptr, t_tokens *quote_type);
+char 	*process_quotes(char **ptr, t_tokens *quote_type, t_segment **segments);
 void	syntax_exit(char ptr, t_token *list);
 
 void	free_shell(t_shell *shell);
@@ -58,7 +62,7 @@ int		replace_in_place(char ***envp_ref, int idx, char *new_var);
 // main_utils
 bool	has_unclosed_quote(const char *str);
 char	*handle_multiline_input(char *input, t_shell *shell);
-int	validate_and_parse(t_shell *shell, t_token **tokens, t_node **ast);
+int		validate_and_parse(t_shell *shell, t_token **tokens, t_node **ast);
 void	cleanup_resources(t_node *ast, t_token *tokens, t_shell *shell);
 t_shell	*init_minishell(char **envp, char ***my_envp);
 int		handle_input_line(t_shell *shell);

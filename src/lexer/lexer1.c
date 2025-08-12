@@ -1,51 +1,111 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lexer1.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/23 01:14:44 by luminous          #+#    #+#             */
-/*   Updated: 2025/08/11 21:17:31 by ganersis         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
-static int	read_plain(char **p, char **res)
+static t_segment	*create_segment(t_tokens type, char *value)
 {
-	char	*start;
+	t_segment	*segment;
 
-	start = *p;
-	while (**p && !is_whitespace(**p) && !is_quote(**p))
-		(*p)++;
-	if (append_slice(res, start, (size_t)(*p - start)) < 0)
-		return (-1);
-	return (0);
+	segment = malloc(sizeof(t_segment));
+	if (!segment)
+		return (NULL);
+	segment->type = type;
+	segment->value = ft_strdup(value);
+	segment->next = NULL;
+	if (!segment->value)
+	{
+		free(segment);
+		return (NULL);
+	}
+	return (segment);
 }
 
-char	*process_quotes(char **ptr, t_tokens *quote_type)
+static void	add_segment(t_segment **head, t_segment *new_segment)
 {
-	char	*result;
+	t_segment	*current;
+
+	if (!*head)
+	{
+		*head = new_segment;
+		return ;
+	}
+	current = *head;
+	while (current->next)
+		current = current->next;
+	current->next = new_segment;
+}
+
+char	*process_quotes(char **ptr, t_tokens *quote_type, t_segment **segments)
+{
+	char		*result;
+	t_segment	*segment;
+	char		*temp_value;
+	char		quote_char;
+	char		*start;
+	int			has_segments;
 
 	result = ft_strdup("");
+	has_segments = 0;
 	if (!result)
 		return (NULL);
 	*quote_type = WORD;
-	while (**ptr)
+	*segments = NULL;
+	while (**ptr && !is_whitespace(**ptr) && !is_operator_char(**ptr))
 	{
 		if (is_quote(**ptr))
 		{
-			if (read_quoted(ptr, quote_type, &result) < 0)
+			quote_char = **ptr;
+			(*ptr)++;
+			start = *ptr;
+			while (**ptr && **ptr != quote_char)
+				(*ptr)++;
+			if (!**ptr)
+			{
+				printf("minishell: syntax error: unclosed quote\n");
+				free(result);
 				return (NULL);
-		}
-		else if (!is_whitespace(**ptr))
-		{
-			if (read_plain(ptr, &result) < 0)
-				return (NULL);
+			}
+			temp_value = ft_substr(start, 0, *ptr - start);
+			if (!temp_value)
+				return (free(result), NULL);
+			if (quote_char == '\'')
+				segment = create_segment(SINGLE_QUOTED, temp_value);
+			else
+				segment = create_segment(DOUBLE_QUOTED, temp_value);
+			if (!segment)
+				return (free(result), free(temp_value), NULL);
+			add_segment(segments, segment);
+			has_segments = 1;
+			if (append_slice(&result, temp_value, ft_strlen(temp_value)) < 0)
+				return (free(temp_value), NULL);
+			free(temp_value);
+			(*ptr)++;
 		}
 		else
-			break ;
+		{
+			start = *ptr;
+			while (**ptr && !is_whitespace(**ptr) && !is_quote(**ptr)
+				&& !is_operator_char(**ptr))
+				(*ptr)++;
+			if (*ptr > start)
+			{
+				temp_value = ft_substr(start, 0, *ptr - start);
+				if (!temp_value)
+					return (free(result), NULL);
+				segment = create_segment(WORD, temp_value);
+				if (!segment)
+					return (free(result), free(temp_value), NULL);
+				add_segment(segments, segment);
+				has_segments = 1;
+				if (append_slice(&result, temp_value,
+						ft_strlen(temp_value)) < 0)
+					return (free(temp_value), NULL);
+				free(temp_value);
+			}
+		}
+	}
+	if (has_segments)
+	{
+		free(result);
+		return (ft_strdup(""));
 	}
 	return (result);
 }
@@ -54,11 +114,6 @@ static void	skip_spaces(char **ptr)
 {
 	while (**ptr && is_whitespace(**ptr))
 		(*ptr)++;
-}
-
-static void print_error(char *s)
-{
-
 }
 
 t_token	*tokenize(char *line)
@@ -76,13 +131,5 @@ t_token	*tokenize(char *line)
 		if (!dispatch_token(&list, &ptr))
 			return (NULL);
 	}
-	// if (!check_word_token(list))
-	// {
-	// 	while (*(ptr - 1) == ' ')
-	// 		ptr--;
-	// 	print_error(&ptr - 2)
-	// 	syntax_exit(*(ptr - 1) , list);
-	// 	return (NULL);
-	// }
 	return (list);
 }
