@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 /* TODO: add syntax error when no argument after redirection and "<|" example
-: "echo >>", "echo <", ">>", "&"*/
+: "echo >>", "echo <", ">>"*/
 
 // TODO: export ARG="*" not a valid identifier
 // TODO: () is valid needs to fix it:
