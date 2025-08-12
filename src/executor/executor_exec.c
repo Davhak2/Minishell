@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+// TODO: << eof cat && (pwd | clear) + ctrl D problem is from subshell
+
 static int	setup_redirects_and_check_cmd(t_cmd *cmd, t_shell *shell,
 		int *stdin_fd, int *stdout_fd)
 {

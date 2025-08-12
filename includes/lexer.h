@@ -19,5 +19,6 @@ int	handle_word(t_token **list, char **ptr);
 int	dispatch_token(t_token **list, char **ptr);
 int	append_slice(char **dest, const char *start, size_t len);
 int	read_quoted(char **p, t_tokens *qt, char **res);
+int	check_word_token(t_token *list);
 
 #endif // LEXER_H

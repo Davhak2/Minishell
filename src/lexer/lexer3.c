@@ -33,6 +33,20 @@ int	append_slice(char **dest, const char *start, size_t len)
 	return (0);
 }
 
+int	check_word_token(t_token *list)
+{
+	t_token	*curr;
+
+	curr = list;
+	while (curr)
+	{
+		if (curr->type == WORD)
+			return (1);
+		curr = curr->next;
+	}
+	return (0);
+}
+
 int	read_quoted(char **p, t_tokens *qt, char **res)
 {
 	char	quote;

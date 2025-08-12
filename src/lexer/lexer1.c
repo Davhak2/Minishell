@@ -56,6 +56,11 @@ static void	skip_spaces(char **ptr)
 		(*ptr)++;
 }
 
+static void print_error(char *s)
+{
+
+}
+
 t_token	*tokenize(char *line)
 {
 	t_token	*list;
@@ -71,5 +76,13 @@ t_token	*tokenize(char *line)
 		if (!dispatch_token(&list, &ptr))
 			return (NULL);
 	}
+	// if (!check_word_token(list))
+	// {
+	// 	while (*(ptr - 1) == ' ')
+	// 		ptr--;
+	// 	print_error(&ptr - 2)
+	// 	syntax_exit(*(ptr - 1) , list);
+	// 	return (NULL);
+	// }
 	return (list);
 }

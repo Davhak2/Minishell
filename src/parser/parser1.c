@@ -35,9 +35,11 @@ int	validate_syntax(t_token *tokens)
 			&& prev && (prev->type == PIPE || prev->type == AND
 				|| prev->type == OR))
 			return (syntax_error(curr->value), 1);
-		if ((curr->type == PIPE || curr->type == AND || curr->type == OR)
+		if ((curr->type == PIPE || curr->type == AND || curr->type == OR
+			|| curr->type == REDIRECT_APPEND || curr->type == REDIRECT_HEREDOC
+			|| curr->type == REDIRECT_IN || curr->type == REDIRECT_OUT)
 			&& !curr->next)
-			return (syntax_error(curr->value), 1);
+			return (syntax_error("newline"), 1);
 		prev = curr;
 		curr = curr->next;
 	}
