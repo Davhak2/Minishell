@@ -28,12 +28,11 @@ char	*handle_multiline_input(char *input, t_shell *shell)
 		shell->heredoc_line++;
 		if (!next)
 		{
-			ft_putstr_fd("bash: unexpected EOF while looking for matching `\"'\n", 2);
+			ft_putstr_fd("bash: unexpected EOF", 2);
+			ft_putstr_fd(" while looking for matching `\"'\n", 2);
 			free(input);
 			free_shell(shell);
-			ft_putstr_fd("exit\n", 2);
-			exit(2);
-			return (NULL);
+			return (ft_putstr_fd("exit\n", 2), exit(2), NULL);
 		}
 		tmp = ft_strjoin(input, "\n");
 		joined = ft_strjoin(tmp, next);
