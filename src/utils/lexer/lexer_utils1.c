@@ -34,3 +34,20 @@ void	syntax_exit(char ptr, t_token *list)
 	printf("minishell: syntax error near unexpected token `%c'\n", ptr);
 	free_token_list(list);
 }
+
+void	scan_mixed_lookahead(char *ptr, int *has_word, int *has_quote)
+{
+	char	*tmp;
+
+	*has_word = 0;
+	*has_quote = 0;
+	tmp = ptr;
+	while (*tmp && !is_whitespace(*tmp) && !is_operator_char(*tmp))
+	{
+		if (is_quote(*tmp))
+			*has_quote = 1;
+		else if (is_word_char(*tmp))
+			*has_word = 1;
+		tmp++;
+	}
+}

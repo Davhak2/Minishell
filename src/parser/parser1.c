@@ -12,32 +12,28 @@
 
 #include "minishell.h"
 
-int	validate_syntax(t_token *tokens)
+int	update_paren_depth(t_token *curr, int *paren_depth)
 {
-	t_token	*curr;
-	t_token	*prev;
-
-	if (!tokens)
-		return (0);
-	curr = tokens;
-	prev = NULL;
-	if (curr->type == PIPE || curr->type == AND || curr->type == OR)
-		return (syntax_error(curr->final_value), 1);
-	while (curr)
+	if (curr->type == LPAREN)
+		(*paren_depth)++;
+	else if (curr->type == RPAREN)
 	{
-		if (curr->type == LPAREN && curr->next && curr->next->type == RPAREN)
+		if (*paren_depth == 0)
 			return (syntax_error(")"), 1);
-		if ((curr->type == PIPE || curr->type == AND || curr->type == OR)
-			&& prev && (prev->type == PIPE || prev->type == AND
-				|| prev->type == OR))
-			return (syntax_error(curr->final_value), 1);
-		if ((curr->type == PIPE || curr->type == AND || curr->type == OR
-				|| curr->type == REDIRECT_APPEND
-				|| curr->type == REDIRECT_HEREDOC || curr->type == REDIRECT_IN
-				|| curr->type == REDIRECT_OUT) && !curr->next)
+		(*paren_depth)--;
+	}
+	return (0);
+}
+
+int	check_trailing_op_or_redir(t_token *curr)
+{
+	if (!curr->next)
+	{
+		if (is_binary_op(curr->type))
 			return (syntax_error("newline"), 1);
-		prev = curr;
-		curr = curr->next;
+		if (curr->type == REDIRECT_APPEND || curr->type == REDIRECT_HEREDOC
+			|| curr->type == REDIRECT_IN || curr->type == REDIRECT_OUT)
+			return (syntax_error("newline"), 1);
 	}
 	return (0);
 }

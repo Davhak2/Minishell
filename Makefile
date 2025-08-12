@@ -31,9 +31,11 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)lexer/lexer1.c \
 					$(SRC_DIR)lexer/lexer2.c \
 					$(SRC_DIR)lexer/lexer3.c \
+					$(SRC_DIR)lexer/lexer4.c \
 					$(SRC_DIR)parser/parser1.c \
 					$(SRC_DIR)parser/parser2.c \
 					$(SRC_DIR)parser/parser3.c \
+					$(SRC_DIR)parser/parser4.c \
 					$(SRC_DIR)expander/expander.c \
 					$(SRC_DIR)expander/expander_utils.c \
 					$(SRC_DIR)expander/expander_word.c \

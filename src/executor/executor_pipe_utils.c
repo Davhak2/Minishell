@@ -65,14 +65,16 @@ void	execute_logical_ops(t_node *node, t_shell *shell, int skip_heredocs)
 {
 	if (node->type == AND)
 	{
-		execute_ast_internal(node->left, shell, skip_heredocs);
+		(void)skip_heredocs;
+		execute_ast_internal(node->left, shell, 1);
 		if (shell->last_status == 0)
-			execute_ast_internal(node->right, shell, skip_heredocs);
+			execute_ast_internal(node->right, shell, 1);
 	}
 	else if (node->type == OR)
 	{
-		execute_ast_internal(node->left, shell, skip_heredocs);
+		(void)skip_heredocs;
+		execute_ast_internal(node->left, shell, 1);
 		if (shell->last_status != 0)
-			execute_ast_internal(node->right, shell, skip_heredocs);
+			execute_ast_internal(node->right, shell, 1);
 	}
 }

@@ -30,7 +30,7 @@ int	scan_and_collect(t_token *cur, t_token **end, t_redirect **rh)
 			cur = cur->next;
 			if (!cur || !is_arg_token(cur->type))
 				return (free_redirects(*rh), -1);
-			r->filename = ft_strdup(cur->final_value); // Изменено
+			r->filename = ft_strdup(cur->final_value);
 			r->next = *rh;
 			*rh = r;
 			cur = cur->next;
@@ -49,7 +49,7 @@ int	fill_args(t_token *cur, char **argv, t_tokens *types)
 	{
 		if (is_arg_token(cur->type))
 		{
-			argv[i] = ft_strdup(cur->final_value); // Изменено
+			argv[i] = ft_strdup(cur->final_value);
 			if (!argv[i])
 				return (-1);
 			types[i++] = cur->type;

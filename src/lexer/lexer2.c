@@ -12,17 +12,11 @@
 
 #include "minishell.h"
 
-int	handle_quotes(t_token **list, char **ptr)
+static int	create_token_from_quotes(t_token **list, t_tokens qt,
+		t_segment *segments, char *processed)
 {
-	char		*processed;
-	t_tokens	qt;
-	t_segment	*segments;
-	t_token		*token;
-	t_token		*current;
+	t_token	*token;
 
-	processed = process_quotes(ptr, &qt, &segments);
-	if (!processed)
-		return (free_token_list(*list), 0);
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (free_token_list(*list), 0);
@@ -38,15 +32,21 @@ int	handle_quotes(t_token **list, char **ptr)
 		token->segments = NULL;
 	}
 	token->next = NULL;
-	if (!*list)
-		*list = token;
-	else
-	{
-		current = *list;
-		while (current->next)
-			current = current->next;
-		current->next = token;
-	}
+	add_token_to_list(list, token);
+	return (1);
+}
+
+int	handle_quotes(t_token **list, char **ptr)
+{
+	char		*processed;
+	t_tokens	qt;
+	t_segment	*segments;
+
+	processed = process_quotes(ptr, &qt, &segments);
+	if (!processed)
+		return (free_token_list(*list), 0);
+	if (!create_token_from_quotes(list, qt, segments, processed))
+		return (0);
 	if (segments)
 		free(processed);
 	return (1);
@@ -69,26 +69,6 @@ int	read_operator(t_type *type, char **ptr)
 		(*ptr)++;
 	}
 	return (1);
-}
-
-static int	has_mixed_content(char *ptr)
-{
-	char	*temp;
-	int		has_word;
-	int		has_quote;
-
-	temp = ptr;
-	has_word = 0;
-	has_quote = 0;
-	while (*temp && !is_whitespace(*temp) && !is_operator_char(*temp))
-	{
-		if (is_quote(*temp))
-			has_quote = 1;
-		else if (is_word_char(*temp))
-			has_word = 1;
-		temp++;
-	}
-	return (has_word && has_quote);
 }
 
 int	handle_word(t_token **list, char **ptr)
@@ -115,11 +95,17 @@ int	handle_word(t_token **list, char **ptr)
 int	dispatch_token(t_token **list, char **ptr)
 {
 	t_type	type;
+	int		has_word;
+	int		has_quote;
+	int		has_single_amp;
+	int		is_forbidden;
 
-	if (((**ptr == ';') || (**ptr == '\\') || ((**ptr == '&') && (*(*ptr
-						+ 1) != '&'))) && !is_quote(**ptr))
+	has_single_amp = ((**ptr == '&') && (*(*ptr + 1) != '&'));
+	is_forbidden = ((**ptr == ';') || (**ptr == '\\') || has_single_amp);
+	if (is_forbidden && !is_quote(**ptr))
 		return (syntax_exit(**ptr, *list), 0);
-	if ((is_word_char(**ptr) || is_quote(**ptr)) && has_mixed_content(*ptr))
+	scan_mixed_lookahead(*ptr, &has_word, &has_quote);
+	if ((is_word_char(**ptr) || is_quote(**ptr)) && (has_word && has_quote))
 		return (handle_quotes(list, ptr));
 	if (is_quote(**ptr))
 		return (handle_quotes(list, ptr));
