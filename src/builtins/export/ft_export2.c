@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:21:16 by letto             #+#    #+#             */
-/*   Updated: 2025/08/12 16:03:36 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/12 16:08:11 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	has_special_chars(char *str)
 	int		i;
 	char	*special;
 
-	special = "(){}[]<>|&;$`\"'*?~";
+	special = "(){}[]<>|&;$`*?~";
 	i = 0;
 	while (str[i])
 	{

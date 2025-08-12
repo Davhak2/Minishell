@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:17:50 by letto             #+#    #+#             */
-/*   Updated: 2025/08/12 16:03:14 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/12 16:29:04 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,26 @@ int	read_operator(t_type *type, char **ptr)
 	return (1);
 }
 
+static int	has_mixed_content(char *ptr)
+{
+	char	*temp;
+	int		has_word;
+	int		has_quote;
+
+	temp = ptr;
+	has_word = 0;
+	has_quote = 0;
+	while (*temp && !is_whitespace(*temp) && !is_operator_char(*temp))
+	{
+		if (is_quote(*temp))
+			has_quote = 1;
+		else if (is_word_char(*temp))
+			has_word = 1;
+		temp++;
+	}
+	return (has_word && has_quote);
+}
+
 int	handle_word(t_token **list, char **ptr)
 {
 	const char	*start;
@@ -99,6 +119,8 @@ int	dispatch_token(t_token **list, char **ptr)
 	if (((**ptr == ';') || (**ptr == '\\') || ((**ptr == '&') && (*(*ptr
 						+ 1) != '&'))) && !is_quote(**ptr))
 		return (syntax_exit(**ptr, *list), 0);
+	if ((is_word_char(**ptr) || is_quote(**ptr)) && has_mixed_content(*ptr))
+		return (handle_quotes(list, ptr));
 	if (is_quote(**ptr))
 		return (handle_quotes(list, ptr));
 	if (is_operator_char(**ptr))

@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:21:49 by letto             #+#    #+#             */
-/*   Updated: 2025/08/11 21:14:42 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/12 16:30:21 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ char	**add_env_var(char **envp, char *new_var)
 	return (neu);
 }
 
-// TODO: export with quotes is valid always, export test = "something" is always valid
 void	print_declared(char **envp)
 {
 	int		i;
