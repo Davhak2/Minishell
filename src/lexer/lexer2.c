@@ -71,7 +71,8 @@ int	dispatch_token(t_token **list, char **ptr)
 {
 	t_type	type;
 
-	if ((**ptr == ';' || **ptr == '\\') && !is_quote(**ptr))
+	if ((**ptr == ';' || **ptr == '\\' || !ft_strcmp(*ptr, "&"))
+		&& !is_quote(**ptr))
 		return (syntax_exit(**ptr, *list), 0);
 	if (is_quote(**ptr))
 		return (handle_quotes(list, ptr));
