@@ -53,36 +53,40 @@ int	parse_quoted_content(char **ptr, char **result, char **temp_value)
 	return (quote_char);
 }
 
-int	add_quoted_segment(t_segment **segments, char **result,
-		char *temp_value, char quote_char, int *has_segments)
+int	add_quoted_segment(t_quote_data d)
 {
 	t_segment	*segment;
 	int			type;
 
-	if (quote_char == '\'')
+	if (d.quote_char == '\'')
 		type = SINGLE_QUOTED;
 	else
 		type = DOUBLE_QUOTED;
-	segment = create_segment(type, temp_value);
+	segment = create_segment(type, d.temp_value);
 	if (!segment)
-		return (free(*result), free(temp_value), -1);
-	add_segment(segments, segment);
-	*has_segments = 1;
-	if (append_slice(result, temp_value, ft_strlen(temp_value)) < 0)
-		return (free(temp_value), -1);
-	free(temp_value);
+		return (free(*d.result), free(d.temp_value), -1);
+	add_segment(d.segments, segment);
+	*d.has_segments = 1;
+	if (append_slice(d.result, d.temp_value, ft_strlen(d.temp_value)) < 0)
+		return (free(d.temp_value), -1);
+	free(d.temp_value);
 	return (0);
 }
 
 int	handle_quoted(char **ptr, t_segment **segments,
 		char **result, int *has_segments)
 {
-	char	quote_char;
-	char	*temp_value;
+	char			quote_char;
+	char			*temp_value;
+	t_quote_data	data;
 
 	quote_char = parse_quoted_content(ptr, result, &temp_value);
 	if (quote_char < 0)
 		return (-1);
-	return (add_quoted_segment(segments, result, temp_value,
-			quote_char, has_segments));
+	data.segments = segments;
+	data.result = result;
+	data.temp_value = temp_value;
+	data.quote_char = quote_char;
+	data.has_segments = has_segments;
+	return (add_quoted_segment(data));
 }

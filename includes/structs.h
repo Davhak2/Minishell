@@ -115,4 +115,13 @@ typedef struct s_process
 	const char			*dir_path;
 }						t_process;
 
+typedef struct s_quote_data
+{
+	t_segment	**segments;
+	char		**result;
+	char		*temp_value;
+	char		quote_char;
+	int			*has_segments;
+}						t_quote_data;
+
 #endif // STRUCTS_H

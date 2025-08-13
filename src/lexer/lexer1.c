@@ -65,7 +65,7 @@ char	*process_quotes(char **ptr, t_tokens *quote_type,
 			return (NULL);
 	}
 	if (has_segments)
-		return (free(result),ft_strdup(""));
+		return (free(result), ft_strdup(""));
 	return (result);
 }
 
