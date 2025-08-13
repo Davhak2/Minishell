@@ -108,6 +108,7 @@ t_shell	*init_minishell(char **envp, char ***my_envp)
 	shell->heredoc_line = 0;
 	shell->stdin_backup = -1;
 	shell->stdout_backup = -1;
+	shell->subshell_depth = 0;
 	init_signals();
 	return (shell);
 }

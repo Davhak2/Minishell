@@ -25,6 +25,7 @@ typedef enum e_tokens
 	OR,
 	LPAREN,
 	RPAREN,
+	SUBSHELL,
 	EOF_,
 	SINGLE_QUOTED,
 	DOUBLE_QUOTED,
@@ -85,6 +86,7 @@ typedef struct s_shell
 	int					heredoc_line;
 	int					stdin_backup;
 	int					stdout_backup;
+	int					subshell_depth;
 }						t_shell;
 
 typedef struct s_redirect_state

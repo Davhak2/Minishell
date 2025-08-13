@@ -90,6 +90,7 @@ t_node	*parse_pipe(t_token **list)
 t_node	*parse_parenthesis(t_token **list)
 {
 	t_node	*node;
+	t_node	*subshell_node;
 
 	if (*list && (*list)->type == LPAREN)
 	{
@@ -103,7 +104,14 @@ t_node	*parse_parenthesis(t_token **list)
 			return (NULL);
 		}
 		*list = (*list)->next;
-		return (node);
+		subshell_node = malloc(sizeof(t_node));
+		if (!subshell_node)
+			return (free_ast(node), NULL);
+		subshell_node->type = SUBSHELL;
+		subshell_node->left = node;
+		subshell_node->right = NULL;
+		subshell_node->value = NULL;
+		return (subshell_node);
 	}
 	return (simple_command(list));
 }

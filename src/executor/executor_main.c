@@ -30,33 +30,6 @@ static int	handle_heredocs_if_needed(t_node *node, t_shell *shell,
 	return (0);
 }
 
-static void	execute_pipe(t_node *node, t_shell *shell)
-{
-	int		pipefd[2];
-	pid_t	pid1;
-	pid_t	pid2;
-	int		status1;
-	int		status2;
-
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		shell->last_status = 1;
-		return ;
-	}
-	pid1 = create_pipe_child1(node, shell, pipefd);
-	pid2 = create_pipe_child2(node, shell, pipefd, pid1);
-	close(pipefd[0]);
-	close(pipefd[1]);
-	if (pid1 > 0 && pid2 > 0)
-	{
-		wait_for_children(pid1, pid2, &status1, &status2);
-		handle_pipe_signals(status1, status2, shell);
-	}
-	else
-		shell->last_status = 1;
-}
-
 void	execute_ast_internal(t_node *node, t_shell *shell, int skip_heredocs)
 {
 	t_cmd	*cmd;
@@ -77,6 +50,8 @@ void	execute_ast_internal(t_node *node, t_shell *shell, int skip_heredocs)
 		execute_pipe(node, shell);
 	else if (node->type == AND || node->type == OR)
 		execute_logical_ops(node, shell, skip_heredocs);
+	else if (node->type == SUBSHELL)
+		execute_subshell(node, shell, skip_heredocs);
 	if (!skip_heredocs)
 		cleanup_heredoc_files(node);
 }

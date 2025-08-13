@@ -55,4 +55,7 @@ void	handle_pipe_signals(int status1, int status2, t_shell *shell);
 
 void	restore_fds(int stdin_fd, int stdout_fd, t_shell *shell);
 
+void	execute_pipe(t_node *node, t_shell *shell);
+void	execute_subshell(t_node *node, t_shell *shell, int skip_heredocs);
+
 #endif // EXECUTOR_H
