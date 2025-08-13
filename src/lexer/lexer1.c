@@ -3,50 +3,81 @@
 /*                                                        :::      ::::::::   */
 /*   lexer1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
+/*   By: davihako <davihako@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/23 01:14:44 by luminous          #+#    #+#             */
-/*   Updated: 2025/08/11 21:17:31 by ganersis         ###   ########.fr       */
+/*   Created: 2025/08/13 11:20:12 by davihako          #+#    #+#             */
+/*   Updated: 2025/08/13 11:20:13 by davihako         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	read_plain(char **p, char **res)
+static int	handle_unquoted(char **ptr, t_segment **segments,
+		char **result, int *has_segments)
 {
-	char	*start;
+	char		*start;
+	char		*temp_value;
+	t_segment	*segment;
 
-	start = *p;
-	while (**p && !is_whitespace(**p) && !is_quote(**p))
-		(*p)++;
-	if (append_slice(res, start, (size_t)(*p - start)) < 0)
-		return (-1);
+	start = *ptr;
+	while (**ptr && !is_whitespace(**ptr) && !is_quote(**ptr)
+		&& !is_operator_char(**ptr))
+		(*ptr)++;
+	if (*ptr <= start)
+		return (0);
+	temp_value = ft_substr(start, 0, *ptr - start);
+	if (!temp_value)
+		return (free(*result), -1);
+	segment = create_segment(WORD, temp_value);
+	if (!segment)
+		return (free(*result), free(temp_value), -1);
+	add_segment(segments, segment);
+	*has_segments = 1;
+	if (append_slice(result, temp_value, ft_strlen(temp_value)) < 0)
+		return (free(temp_value), -1);
+	free(temp_value);
 	return (0);
 }
 
-char	*process_quotes(char **ptr, t_tokens *quote_type)
+static int	set_quote_type(t_tokens *quote_type, char qc)
+{
+	if (*quote_type == WORD)
+	{
+		if (qc == '\'')
+			*quote_type = SINGLE_QUOTED;
+		else
+			*quote_type = DOUBLE_QUOTED;
+	}
+	return (0);
+}
+
+char	*process_quotes(char **ptr, t_tokens *quote_type,
+		t_segment **segments)
 {
 	char	*result;
+	int		has_segments;
+	char	qc;
 
 	result = ft_strdup("");
 	if (!result)
 		return (NULL);
+	has_segments = 0;
 	*quote_type = WORD;
-	while (**ptr)
+	*segments = NULL;
+	while (**ptr && !is_whitespace(**ptr) && !is_operator_char(**ptr))
 	{
 		if (is_quote(**ptr))
 		{
-			if (read_quoted(ptr, quote_type, &result) < 0)
+			qc = **ptr;
+			set_quote_type(quote_type, qc);
+			if (handle_quoted(ptr, segments, &result, &has_segments) < 0)
 				return (NULL);
 		}
-		else if (!is_whitespace(**ptr))
-		{
-			if (read_plain(ptr, &result) < 0)
-				return (NULL);
-		}
-		else
-			break ;
+		else if (handle_unquoted(ptr, segments, &result, &has_segments) < 0)
+			return (NULL);
 	}
+	if (has_segments)
+		return (free(result), ft_strdup(""));
 	return (result);
 }
 
@@ -54,11 +85,6 @@ static void	skip_spaces(char **ptr)
 {
 	while (**ptr && is_whitespace(**ptr))
 		(*ptr)++;
-}
-
-static void print_error(char *s)
-{
-
 }
 
 t_token	*tokenize(char *line)
@@ -76,13 +102,5 @@ t_token	*tokenize(char *line)
 		if (!dispatch_token(&list, &ptr))
 			return (NULL);
 	}
-	// if (!check_word_token(list))
-	// {
-	// 	while (*(ptr - 1) == ' ')
-	// 		ptr--;
-	// 	print_error(&ptr - 2)
-	// 	syntax_exit(*(ptr - 1) , list);
-	// 	return (NULL);
-	// }
 	return (list);
 }

@@ -6,42 +6,34 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 16:55:46 by letto             #+#    #+#             */
-/*   Updated: 2025/08/11 21:15:58 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:13:02 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* TODO: add syntax error when no argument after redirection and "<|" example
-: "echo >>", "echo <", ">>"*/
-
-// TODO: export ARG="*" not a valid identifier
-// TODO: () is valid needs to fix it:
-
-int	validate_syntax(t_token *tokens)
+int	update_paren_depth(t_token *curr, int *paren_depth)
 {
-	t_token	*curr;
-	t_token	*prev;
-
-	if (!tokens)
-		return (0);
-	curr = tokens;
-	prev = NULL;
-	if (curr->type == PIPE || curr->type == AND || curr->type == OR)
-		return (syntax_error(curr->value), 1);
-	while (curr)
+	if (curr->type == LPAREN)
+		(*paren_depth)++;
+	else if (curr->type == RPAREN)
 	{
-		if ((curr->type == PIPE || curr->type == AND || curr->type == OR)
-			&& prev && (prev->type == PIPE || prev->type == AND
-				|| prev->type == OR))
-			return (syntax_error(curr->value), 1);
-		if ((curr->type == PIPE || curr->type == AND || curr->type == OR
-			|| curr->type == REDIRECT_APPEND || curr->type == REDIRECT_HEREDOC
-			|| curr->type == REDIRECT_IN || curr->type == REDIRECT_OUT)
-			&& !curr->next)
+		if (*paren_depth == 0)
+			return (syntax_error(")"), 1);
+		(*paren_depth)--;
+	}
+	return (0);
+}
+
+int	check_trailing_op_or_redir(t_token *curr)
+{
+	if (!curr->next)
+	{
+		if (is_binary_op(curr->type))
 			return (syntax_error("newline"), 1);
-		prev = curr;
-		curr = curr->next;
+		if (curr->type == REDIRECT_APPEND || curr->type == REDIRECT_HEREDOC
+			|| curr->type == REDIRECT_IN || curr->type == REDIRECT_OUT)
+			return (syntax_error("newline"), 1);
 	}
 	return (0);
 }

@@ -60,7 +60,8 @@ int	ft_exit(char **args, t_shell *shell)
 	int	exit_status;
 	int	ret;
 
-	printf("exit\n");
+	if (shell->subshell_depth == 0)
+		printf("exit\n");
 	cnt = count_args_exit(args);
 	if (cnt == 1)
 		exit_status = shell->last_status;
@@ -70,8 +71,7 @@ int	ft_exit(char **args, t_shell *shell)
 	{
 		if (parse_status_or_error(args[1], &exit_status))
 		{
-			ft_putstr_fd("minishell: exit: too many arguments\n",
-				STDERR_FILENO);
+			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 			ret = 1;
 		}
 		else

@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: letto <letto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:30:50 by letto             #+#    #+#             */
-/*   Updated: 2025/08/10 20:17:07 by letto            ###   ########.fr       */
+/*   Updated: 2025/08/13 16:58:19 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTINS_H
 # define BUILTINS_H
-
-# include "structs.h"
 
 int		ft_echo(char **args, t_shell *shell);
 

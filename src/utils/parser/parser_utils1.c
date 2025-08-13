@@ -56,3 +56,45 @@ void	free_ast(t_node *node)
 	}
 	free(node);
 }
+
+int	validate_syntax_loop(t_token *curr, t_token *prev, int *paren_depth)
+{
+	while (curr)
+	{
+		if (check_lparen_context(prev, curr))
+			return (1);
+		if (check_empty_paren(curr))
+			return (1);
+		if (update_paren_depth(curr, paren_depth))
+			return (1);
+		if (check_binary_sequence(prev, curr))
+			return (1);
+		if (check_redirect_delimiter(curr))
+			return (1);
+		if (check_trailing_op_or_redir(curr))
+			return (1);
+		prev = curr;
+		curr = curr->next;
+	}
+	return (0);
+}
+
+int	validate_syntax(t_token *tokens)
+{
+	t_token	*curr;
+	t_token	*prev;
+	int		paren_depth;
+
+	if (!tokens)
+		return (0);
+	curr = tokens;
+	prev = NULL;
+	paren_depth = 0;
+	if (is_binary_op(curr->type))
+		return (syntax_error(curr->final_value), 1);
+	if (validate_syntax_loop(curr, prev, &paren_depth))
+		return (1);
+	if (paren_depth > 0)
+		return (syntax_error("newline"), 1);
+	return (0);
+}

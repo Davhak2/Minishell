@@ -6,13 +6,11 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:28:32 by ganersis          #+#    #+#             */
-/*   Updated: 2025/08/11 19:28:32 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:56:17 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// TODO: << eof cat && (pwd | clear) + ctrl D problem is from subshell
 
 static int	setup_redirects_and_check_cmd(t_cmd *cmd, t_shell *shell,
 		int *stdin_fd, int *stdout_fd)

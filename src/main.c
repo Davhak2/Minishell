@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: davihako <davihako@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/13 11:20:57 by davihako          #+#    #+#             */
+/*   Updated: 2025/08/13 11:20:58 by davihako         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 volatile sig_atomic_t	g_received_signal = 0;
@@ -14,7 +26,7 @@ int	handle_input_line(t_shell *shell)
 	if (!input)
 		return (printf("exit\n"), 0);
 	if (*input == '\0')
-		return (free(input),1);
+		return (free(input), 1);
 	input = handle_multiline_input(input, shell);
 	if (!input)
 		return (1);
@@ -32,6 +44,7 @@ int	process_input(char *input, t_shell *shell)
 	add_history(input);
 	tokens = tokenize(input);
 	shell->token = tokens;
+	expand_all_tokens(tokens, *(shell->envp), shell->last_status);
 	if (validate_and_parse(shell, &tokens, &ast))
 		return (1);
 	execute_ast(ast, shell);

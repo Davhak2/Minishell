@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 18:21:16 by letto             #+#    #+#             */
-/*   Updated: 2025/08/11 21:14:40 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/12 16:08:11 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	has_special_chars(char *str)
 	int		i;
 	char	*special;
 
-	special = "(){}[]<>|&;$`\"'*?~";
+	special = "(){}[]<>|&;$`*?~";
 	i = 0;
 	while (str[i])
 	{
@@ -46,7 +46,6 @@ char	**update_or_add_env_var(char **envp, char *new_var)
 {
 	int		index;
 	char	*var_name;
-	// char	**new_envp;
 
 	var_name = get_var_name(new_var);
 	if (!var_name)

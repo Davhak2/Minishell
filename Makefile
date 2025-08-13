@@ -13,7 +13,7 @@ INC_FLAGS			=	-Iincludes/ -Iutils/
 LIBFT_DIR				=	libft/
 LIBFT					=	$(LIBFT_DIR)libft.a
 
-CFLAGS					=	-g $(INC_FLAGS) -I$(LIBFT_DIR) #-Wall -Wextra -Werror
+CFLAGS					=	-g $(INC_FLAGS) -I$(LIBFT_DIR) -Wall -Wextra -Werror
 
 LDFLAGS					=	-L$(LIBFT_DIR) -lft -lreadline -lncurses
 
@@ -31,15 +31,18 @@ SRC				=	$(SRC_DIR)main.c \
 					$(SRC_DIR)lexer/lexer1.c \
 					$(SRC_DIR)lexer/lexer2.c \
 					$(SRC_DIR)lexer/lexer3.c \
+					$(SRC_DIR)lexer/lexer4.c \
 					$(SRC_DIR)parser/parser1.c \
 					$(SRC_DIR)parser/parser2.c \
 					$(SRC_DIR)parser/parser3.c \
+					$(SRC_DIR)parser/parser4.c \
 					$(SRC_DIR)expander/expander.c \
 					$(SRC_DIR)expander/expander_utils.c \
 					$(SRC_DIR)expander/expander_word.c \
 					$(SRC_DIR)expander/expander_word_helper.c \
 					$(SRC_DIR)expander/expander_word_utils.c \
 					$(SRC_DIR)expander/expander_tilde.c \
+					$(SRC_DIR)expander/expander_token.c \
 					$(SRC_DIR)expander/wildcard_utils.c \
 					$(SRC_DIR)expander/wildcard.c \
 					$(SRC_DIR)expander/wildcard_helpers.c \

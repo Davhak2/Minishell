@@ -6,14 +6,12 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 15:30:57 by letto             #+#    #+#             */
-/*   Updated: 2025/08/11 21:12:46 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:58:09 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTOR_H
 # define EXECUTOR_H
-
-# include "structs.h"
 
 void	execute_ast(t_node *node, t_shell *shell);
 void	execute_ast_internal(t_node *node, t_shell *shell, int skip_heredocs);
@@ -54,5 +52,10 @@ void	wait_for_children(pid_t pid1, pid_t pid2, int *status1, int *status2);
 void	handle_pipe_signals(int status1, int status2, t_shell *shell);
 
 void	restore_fds(int stdin_fd, int stdout_fd, t_shell *shell);
+
+void	execute_pipe(t_node *node, t_shell *shell);
+void	execute_subshell(t_node *node, t_shell *shell, int skip_heredocs);
+void	execute_subshell_helper(t_shell **shell, t_node **node,
+			int *exit_status, int *skip_heredocs);
 
 #endif // EXECUTOR_H
