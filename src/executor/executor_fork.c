@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:28:33 by ganersis          #+#    #+#             */
-/*   Updated: 2025/08/11 19:28:34 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:27:37 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static void	less_than_25(char *path, t_shell *shell, t_cmd *cmd)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	execve(path, cmd->args, *(shell->envp));
-	perror("execve");
 	free(path);
 	free_shell(shell);
 }
