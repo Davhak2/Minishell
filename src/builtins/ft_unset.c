@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/10 17:20:25 by letto             #+#    #+#             */
-/*   Updated: 2025/08/11 21:15:04 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:59:21 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static int	unset_one(char *name, t_shell *shell)
 
 	if (!is_valid_identifier(name))
 	{
-		printf("bash: unset: `%s': not a valid identifier\n", name);
+		printf("minishell: unset: `%s': not a valid identifier\n", name);
 		return (0);
 	}
 	old = *(shell->envp);

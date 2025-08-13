@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:28:41 by ganersis          #+#    #+#             */
-/*   Updated: 2025/08/11 19:28:41 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:55:25 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,35 +79,14 @@ void	execute_logical_ops(t_node *node, t_shell *shell, int skip_heredocs)
 	}
 }
 
-void	execute_subshell(t_node *node, t_shell *shell, int skip_heredocs)
+void	execute_subshell_helper(t_shell **shell, t_node **node,
+		int *exit_status, int *skip_heredocs)
 {
-	pid_t	pid;
-	int		status;
-	int		exit_status;
-
-	pid = fork();
-	if (pid == 0)
-	{
-		shell->subshell_depth++;
-		execute_ast_internal(node->left, shell, skip_heredocs);
-		exit_status = shell->last_status;
-		free_shell(shell);
-		exit(exit_status);
-	}
-	else if (pid < 0)
-	{
-		perror("fork");
-		shell->last_status = 1;
-		return ;
-	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			shell->last_status = WEXITSTATUS(status);
-		else
-			shell->last_status = 1;
-	}
+	(*shell)->subshell_depth++;
+	execute_ast_internal((*node)->left, *shell, *skip_heredocs);
+	*exit_status = (*shell)->last_status;
+	free_shell(*shell);
+	exit(*exit_status);
 }
 
 void	execute_pipe(t_node *node, t_shell *shell)

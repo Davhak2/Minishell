@@ -6,7 +6,7 @@
 /*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:28:26 by ganersis          #+#    #+#             */
-/*   Updated: 2025/08/11 19:28:26 by ganersis         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:56:02 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*generate_heredoc_filename(int index)
 	index_str = ft_itoa(index);
 	if (!index_str)
 		return (NULL);
-	filename = ft_strjoin("/tmp/minishell_heredoc_", index_str);
+	filename = ft_strjoin("/tmp/minishell__heredoc_", index_str);
 	free(index_str);
 	return (filename);
 }

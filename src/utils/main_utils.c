@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davihako <davihako@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ganersis <ganersis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 11:20:52 by davihako          #+#    #+#             */
-/*   Updated: 2025/08/13 11:20:53 by davihako         ###   ########.fr       */
+/*   Updated: 2025/08/13 16:59:27 by ganersis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*handle_multiline_input(char *input, t_shell *shell)
 		shell->heredoc_line++;
 		if (!next)
 		{
-			ft_putstr_fd("bash: unexpected EOF", 2);
+			ft_putstr_fd("minishell: unexpected EOF", 2);
 			ft_putstr_fd(" while looking for matching `\"'\n", 2);
 			free(input);
 			free_shell(shell);
