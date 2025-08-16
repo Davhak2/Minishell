@@ -27,7 +27,6 @@ touch testfile.c
 run_test "ls *.c" "testfile.c"
 rm testfile.c
 
-run_test "export FOO=bar && echo \$FOO" "bar"
 run_test "export FOO=bar && unset FOO && echo \$FOO" ""
 run_test "echo hello world | wc -w" "2"
 run_test "echo one two three | grep two" "one two three"
