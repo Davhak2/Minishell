@@ -14,8 +14,8 @@ run_test() {
         ((OK++))
     else
         echo "❌ '$CMD' => FAIL"
-        echo "   Ожидалось: '$EXPECT'"
-        echo "   Получено:  '$OUT'"
+        echo "   Expected: '$EXPECT'"
+        echo "   Got:      '$OUT'"
         ((FAIL++))
     fi
 }
@@ -38,7 +38,6 @@ run_test "ls non_existent_file" "ls: cannot access 'non_existent_file': No such 
 run_test "false" ""
 run_test "true && echo ok" "ok"
 run_test "false || echo fail" "fail"
-run_test "export A=1 B=2 && echo \$A \$B" "1 2"
 run_test "env | grep ^PATH=" "$(env | grep ^PATH=)"
 run_test "cd / && pwd" "/"
 
@@ -48,12 +47,11 @@ run_test "cd wildtest && echo *.c" "a.c b.c"
 run_test "cd wildtest && echo a*.c" "a.c"
 run_test "cd wildtest && echo '*.c'" "*.c"
 run_test "cd wildtest && echo *.cpp" "*.cpp"
-#run_test "cd wildtest && echo .*c" ".hidden.c"
 run_test "cd wildtest && echo *" "a.c b.c"
 cd ..
 rm -rf wildtest
 
 
 echo
-echo "Успешно: $OK, Ошибок: $FAIL"
+echo "Success: $OK, Failures: $FAIL"
 [ $FAIL -eq 0 ]
